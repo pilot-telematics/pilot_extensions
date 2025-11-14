@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template App - PILOT Extensions Starter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        .file-structure {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            line-height: 1.4;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .tip {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🚀 Template Application</h1>
+    <p><strong>Starter template for building PILOT Extensions applications</strong></p>
+
+    <div class="section">
+        <h2>🎯 Purpose</h2>
+        <p>This template provides a solid foundation for building your own PILOT Extensions applications. It includes:</p>
+        <ul>
+            <li>Modular component structure</li>
+            <li>Example navigation tab with grid</li>
+            <li>Main content area ready for maps or other content</li>
+            <li>Configuration loading example</li>
+            <li>Custom styling setup</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>📁 File Structure</h2>
+        <div class="file-structure">
+            template-app/<br>
+            ├── <strong>Module.js</strong>      # Main application entry point<br>
+            ├── <strong>Tab.js</strong>         # Navigation tab component<br>
+            ├── <strong>Map.js</strong>         # Main content component<br>
+            ├── doc/<br>
+            │   └── <strong>index.html</strong> # Documentation (this file)<br>
+            ├── <strong>style.css</strong>      # Custom styles<br>
+            └── <strong>config.json</strong>    # Configuration file
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🛠️ Customization Guide</h2>
+
+        <h3>1. Rename the Application</h3>
+        <p>Replace all occurrences of <code>template-app</code> with your application name:</p>
+        <ul>
+            <li>Class names: <code>Store.template-app.Module</code> → <code>Store.your-app.Module</code></li>
+            <li>File names and directories</li>
+            <li>URL paths in CSS and configuration loading</li>
+        </ul>
+
+        <h3>2. Modify Components</h3>
+        <p>Customize <code>Tab.js</code> and <code>Map.js</code> to implement your specific functionality.</p>
+
+        <h3>3. Add Your Business Logic</h3>
+        <p>Implement your application's core functionality in the appropriate components.</p>
+
+        <h3>4. Update Documentation</h3>
+        <p>Modify this file to document your specific application.</p>
+    </div>
+
+    <div class="section">
+        <h2>🔧 Key Components</h2>
+
+        <h3>Module.js - Main Entry Point</h3>
+        <p>Coordinates the application setup and component integration.</p>
+
+        <h3>Tab.js - Navigation Component</h3>
+        <p>Appears in the left navigation panel. Typically contains lists, controls, or settings.</p>
+
+        <h3>Map.js - Main Content Component</h3>
+        <p>Appears in the main content area. Can contain maps, data visualizations, or forms.</p>
+    </div>
+
+    <div class="tip">
+        <strong>💡 Pro Tip:</strong> Start by copying this template to a new directory, then modify it to create your application.
+        This saves time and ensures you follow PILOT Extensions best practices.
+    </div>
+
+    <div class="section">
+        <h2>📚 Next Steps</h2>
+        <ol>
+            <li>Copy this template to create your application</li>
+            <li>Rename files and classes appropriately</li>
+            <li>Implement your specific functionality</li>
+            <li>Test thoroughly in your development environment</li>
+            <li>Deploy to production when ready</li>
+        </ol>
+    </div>
+
+    <p><em>Happy coding! Use this template as the foundation for your next great PILOT Extensions application.</em></p>
+</div>
+</body>
+</html>

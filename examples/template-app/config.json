@@ -1,0 +1,21 @@
+{
+  "appName": "Template Application",
+  "version": "1.0.0",
+  "description": "Starter template for PILOT Extensions applications",
+  "features": {
+    "navigation": true,
+    "maps": true,
+    "dataGrid": true,
+    "customStyles": true
+  },
+  "settings": {
+    "defaultZoom": 10,
+    "defaultLat": 55.75,
+    "defaultLon": 37.65,
+    "refreshInterval": 30000
+  },
+  "ui": {
+    "primaryColor": "#3498db",
+    "secondaryColor": "#2c3e50"
+  }
+}

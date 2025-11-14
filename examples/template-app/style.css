@@ -1,0 +1,56 @@
+/**
+ * Template Application Styles
+ * Custom CSS for the template application
+ * Modify these styles to match your application's design
+ */
+
+/* Main application styles */
+.template-app-container {
+    font-family: Arial, sans-serif;
+}
+
+.template-app-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.template-app-content {
+    padding: 15px;
+}
+
+/* Custom grid styles */
+.template-app-grid .x-grid-cell {
+    padding: 8px 12px;
+}
+
+.template-app-grid .x-grid-row-alt {
+    background-color: #f8f9fa;
+}
+
+/* Button styles */
+.template-app-btn-primary {
+    background: #3498db !important;
+    border-color: #3498db !important;
+    border-radius: 4px !important;
+}
+
+.template-app-btn-success {
+    background: #27ae60 !important;
+    border-color: #27ae60 !important;
+    border-radius: 4px !important;
+}
+
+/* Panel styles */
+.template-app-panel {
+    border: 1px solid #bdc3c7;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+.template-app-panel .x-panel-header {
+    background: #ecf0f1;
+    border-bottom: 1px solid #bdc3c7;
+}
