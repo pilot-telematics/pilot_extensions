@@ -214,7 +214,7 @@ We welcome your examples and improvements!
 
 ## 📖 Additional Resources
 
-- [**Official PILOT Documentation**](https://pilot-gps.com/docs) - complete developer guide
+- [**Official PILOT Documentation**](https://doc.pilot-gps.com) - complete PILOT guide
 - [**Ext JS Documentation**](https://docs.sencha.com/extjs/7.7.0/) - framework guide
 - [**Leaflet Documentation**](https://leafletjs.com/reference.html) - working with maps
 - [**FontAwesome Icons**](https://fontawesome.com/icons) - available icons for interface
