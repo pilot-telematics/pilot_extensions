@@ -2,7 +2,7 @@
 
 ![PILOT Extensions](https://img.shields.io/badge/PILOT-Extensions-blue)
 ![Ext JS](https://img.shields.io/badge/Ext%20JS-7.7%2B-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
+![License](https://img.shields.io/badge/License-Apache-green)
 
 This repository contains example extensions and applications for **PILOT Extensions** - a platform for developing custom applications in the PILOT monitoring system.
 
