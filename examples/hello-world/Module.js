@@ -13,11 +13,25 @@ Ext.define('Store.hello-world.Module', {
         console.log('Hello World application loaded!');
 
         // 1. CREATE NAVIGATION TAB FOR LEFT PANEL
-        var navTab = Ext.create('Ext.panel.Panel', {
+        var navTab = Ext.create('Pilot.utils.LeftBarPanel', {
             title: 'Hello World',          // Tab title
             iconCls: 'fa fa-globe',        // FontAwesome icon
             iconAlign: 'top',              // Icon position
-            html: `
+            minimized: true,
+            items: [{
+                xtype: 'panel',
+                title: 'Hello World!',
+                iconCls: 'fa fa-hand-pointer',
+                tools: [{
+                    xtype: 'button',
+                    iconCls: 'fa fa-globe',
+                    handler: function () {
+                        Ext.Msg.alert('Hello World!',
+                            'This is a custom button in the navigation tab.\n\n' +
+                            'You can add any content or functionality here!');
+                    }
+                }],
+                html: `
                 <div style="padding: 20px; text-align: center;">
                     <h1>🌍 Hello PILOT Extensions!</h1>
                     <p>This is your first application running in PILOT system.</p>
@@ -29,7 +43,28 @@ Ext.define('Store.hello-world.Module', {
                     </ul>
                 </div>
             `,
-            layout: 'fit'
+                layout: 'fit'},
+
+                {
+                    xtype: 'panel',
+                    title: 'Shakespeare',
+                    iconCls: 'fa fa-feather',
+                    layout: 'vbox',
+                    bodyPadding: 20,
+                    items:[
+                        {html: 'To be, or not to be, that is the question:'},
+                        {html: 'Whether ’tis nobler in the mind to suffer'},
+                        {html: '<pre>The slings and arrows of outrageous fortune,\n' +
+                                'Or to take arms against a sea of troubles\n' +
+                                'And by opposing end them. To die—to sleep,\n' +
+                                'No more; and by a sleep to say we end\n' +
+                                'The heart-ache and the thousand natural shocks\n' +
+                                'That flesh is heir to: ’tis a consummation\n' +
+                                'Devoutly to be wish’d. To die, to sleep;</pre>'}
+                    ]
+                }
+
+            ]
         });
 
         // 2. CREATE MAIN CONTENT PANEL
