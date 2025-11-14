@@ -20,8 +20,8 @@ This repository contains example extensions and applications for **PILOT Extensi
 pilot_extensions/
 ├── examples/              # Example applications
 │   ├── hello-world/      # Basic "Hello World" example
-│   ├── airports-list/    # Airports list with map
-│   ├── solar-system/     # Solar system planets example
+│   ├── airports/    # Airports list with map
+│   ├── planets/     # Solar system planets example
 │   └── template-app/     # Template for new applications
 ├── docs/                 # Documentation
 ├── tools/                # Utility tools
@@ -71,13 +71,13 @@ pilot_extensions/
 - Perfect for initial familiarization
 
 ### ✈️ Airports List
-**Path:** `examples/airports-list/`
+**Path:** `examples/airports/`
 - Airports list with map display
 - Demonstrates working with markers
 - Example of using map API
 
 ### 🪐 Solar System
-**Path:** `examples/solar-system/`
+**Path:** `examples/planets/`
 - Interactive solar system planets list
 - Example of working with data without maps
 - Demonstrates creating custom interfaces
