@@ -201,9 +201,9 @@ Ext.Ajax.request({
 We welcome your examples and improvements!
 
 1. **Fork the repository**
-2. **Create a branch for your example** (`git checkout -b feature/amazing-example`)
+2. **Create a branch for your example** (`git checkout -b store/amazing-example`)
 3. **Commit your changes** (`git commit -m 'Add amazing example'`)
-4. **Push the branch** (`git push origin feature/amazing-example`)
+4. **Push the branch** (`git push origin store/amazing-example`)
 5. **Create a Pull Request**
 
 ### Example Requirements:

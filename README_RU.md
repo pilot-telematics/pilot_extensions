@@ -201,9 +201,9 @@ Ext.Ajax.request({
 Мы приветствуем ваши примеры и улучшения!
 
 1. **Форкните репозиторий**
-2. **Создайте ветку для вашего примера** (`git checkout -b feature/amazing-example`)
+2. **Создайте ветку для вашего примера** (`git checkout -b store/amazing-example`)
 3. **Закоммитьте изменения** (`git commit -m 'Add amazing example'`)
-4. **Запушьте ветку** (`git push origin feature/amazing-example`)
+4. **Запушьте ветку** (`git push origin store/amazing-example`)
 5. **Создайте Pull Request**
 
 ### Требования к примерам:
