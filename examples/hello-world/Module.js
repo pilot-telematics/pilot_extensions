@@ -17,21 +17,25 @@ Ext.define('Store.hello-world.Module', {
             title: 'Hello World',          // Tab title
             iconCls: 'fa fa-globe',        // FontAwesome icon
             iconAlign: 'top',              // Icon position
-            minimized: true,
-            items: [{
-                xtype: 'panel',
-                title: 'Hello World!',
-                iconCls: 'fa fa-hand-pointer',
-                tools: [{
-                    xtype: 'button',
-                    iconCls: 'fa fa-globe',
-                    handler: function () {
-                        Ext.Msg.alert('Hello World!',
-                            'This is a custom button in the navigation tab.\n\n' +
-                            'You can add any content or functionality here!');
-                    }
-                }],
-                html: `
+            minimized: true,               // Start minimized left menu
+            items: [
+                //First panel with left menu button
+                {
+                    xtype: 'panel',
+                    title: 'Hello World!',
+                    iconCls: 'fa fa-hand-pointer',
+                    // Buttons in the navigation tab header
+                    tools: [
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-globe',
+                            handler: function () {
+                                Ext.Msg.alert('Hello World!',
+                                    'This is a custom button in the navigation tab.\n\n' +
+                                    'You can add any content or functionality here!');
+                            }
+                        }],
+                    html: `
                 <div style="padding: 20px; text-align: center;">
                     <h1>🌍 Hello PILOT Extensions!</h1>
                     <p>This is your first application running in PILOT system.</p>
@@ -43,24 +47,27 @@ Ext.define('Store.hello-world.Module', {
                     </ul>
                 </div>
             `,
-                layout: 'fit'},
-
+                    layout: 'fit'
+                },
+                //Second panel with left menu button
                 {
                     xtype: 'panel',
                     title: 'Shakespeare',
                     iconCls: 'fa fa-feather',
                     layout: 'vbox',
                     bodyPadding: 20,
-                    items:[
+                    items: [
                         {html: 'To be, or not to be, that is the question:'},
                         {html: 'Whether ’tis nobler in the mind to suffer'},
-                        {html: '<pre>The slings and arrows of outrageous fortune,\n' +
+                        {
+                            html: '<pre>The slings and arrows of outrageous fortune,\n' +
                                 'Or to take arms against a sea of troubles\n' +
                                 'And by opposing end them. To die—to sleep,\n' +
                                 'No more; and by a sleep to say we end\n' +
                                 'The heart-ache and the thousand natural shocks\n' +
                                 'That flesh is heir to: ’tis a consummation\n' +
-                                'Devoutly to be wish’d. To die, to sleep;</pre>'}
+                                'Devoutly to be wish’d. To die, to sleep;</pre>'
+                        }
                     ]
                 }
 
@@ -102,7 +109,7 @@ Ext.define('Store.hello-world.Module', {
             text: 'Hello!',
             iconCls: 'fa fa-rocket',
             tooltip: 'Click me!',
-            handler: function() {
+            handler: function () {
                 Ext.Msg.alert('Congratulations!',
                     'Your Hello World application is working! 🎉\n\n' +
                     'Now you can start building more complex applications.');
@@ -118,7 +125,7 @@ Ext.define('Store.hello-world.Module', {
     /**
      * Load custom CSS styles for the application
      */
-    loadStyles: function() {
+    loadStyles: function () {
         var cssLink = document.createElement("link");
         cssLink.setAttribute("rel", "stylesheet");
         cssLink.setAttribute("type", "text/css");
