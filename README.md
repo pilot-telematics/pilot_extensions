@@ -221,7 +221,7 @@ We welcome your examples and improvements!
 
 ## 📄 License
 
-This project is licensed under the MIT License. See `LICENSE` file for details.
+This project is licensed under the Apache License. See `LICENSE` file for details.
 
 ## 💬 Support
 
