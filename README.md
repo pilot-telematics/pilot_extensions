@@ -148,17 +148,10 @@ map.addMarker({id: "marker1", lat: 55.75, lon: 37.65});
 map.setPolygon(points, options);
 ```
 
-### Working with Data
-```javascript
-// Getting objects tree
-Ext.Ajax.request({
-    url: '/ax/tree.php',
-    params: {vehs: 1, state: 1},
-    success: function(response) {
-        // Process data
-    }
-});
-```
+### Working with PILOT Data
+API PILOT V3  in SWAGGER: https://pilot-swagger.pilot-gps.com
+API PILOT V3 in  Yaml: https://dev.pilot-gps.com/doc/api/v3.yaml
+
 
 ## 🚀 Deployment
 
@@ -227,7 +220,8 @@ This project is licensed under the Apache License. See `LICENSE` file for detail
 
 - **Development Questions**: Create an Issue in this repository
 - **PILOT Technical Support**: support@pilot-gps.com
-- **Documentation**: [PILOT Developer Portal](https://developer.pilot-gps.com)
+- **Additional development docs**:  `docs/` in repository
+- **Examples using  ChatGPT for extensions development**:  `docs/ChatGPT_Prompts` in repository
 
 ## 🏆 Acknowledgments
 
