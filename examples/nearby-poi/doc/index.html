@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Расширение "Поиск ближайшего POI"</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            line-height: 1.5;
+        }
+        h1, h2, h3 {
+            margin-top: 1.2em;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 8px 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Расширение PILOT: Поиск ближайшего POI</h1>
+
+<p>
+    Это расширение не добавляет новых вкладок и панелей, а расширяет уже существующий
+    интерфейс раздела <strong>Online</strong>:
+</p>
+
+<ul>
+    <li>добавляет пункт <strong>«Поиск ближайшего POI»</strong> в контекстное меню дерева объектов;</li>
+    <li>по клику открывает модальное окно с параметрами поиска;</li>
+    <li>по Overpass API ищет ближайшие объекты (POI) вокруг выбранного ТС;</li>
+    <li>отмечает до 5 ближайших POI на карте с помощью MarkerIconApi;</li>
+    <li>строит маршруты до каждого POI через локальный OSRM.</li>
+</ul>
+
+<h2>Установка</h2>
+
+<ol>
+    <li>Скопируйте папку <code>examples/nearby-poi</code> на ваш веб-сервер.</li>
+    <li>Убедитесь, что файл <code>Module.js</code> доступен по URL, например:
+        <br><code>https://your-server/pilot_extensions/examples/nearby-poi/Module.js</code>
+    </li>
+    <li>
+        В админ-панели PILOT создайте новое приложение, указав URL на <code>Module.js</code>.
+    </li>
+    <li>Подождите ~10 минут для применения настроек прокси.</li>
+</ol>
+
+<h2>Использование</h2>
+
+<ol>
+    <li>Откройте раздел <strong>Online</strong> в PILOT.</li>
+    <li>Выберите машину в дереве объектов.</li>
+    <li>Кликните правой кнопкой мыши по машине и выберите
+        <strong>«Поиск ближайшего POI»</strong>.
+    </li>
+    <li>В появившемся окне укажите:
+        <ul>
+            <li><strong>Что ищем</strong> – текст, по которому ищется имя объекта (например, <code>шиномонтаж</code>);</li>
+            <li><strong>Радиус, км</strong> – зона поиска вокруг машины.</li>
+        </ul>
+    </li>
+    <li>Нажмите <strong>«Искать»</strong>.</li>
+</ol>
+
+<p>После этого:</p>
+
+<ul>
+    <li>центр карты перемещается к выбранному ТС;</li>
+    <li>на карту добавляются маркеры до 5 ближайших POI с иконками MarkerIconApi;</li>
+    <li>для каждого POI строится маршрут (polyline) через локальный OSRM.</li>
+</ul>
+
+<h2>Технические детали</h2>
+
+<h3>Дерево объектов</h3>
+
+<p>
+    Расширение использует существующее дерево:
+    <code>skeleton.navigation.online.online_tree</code>.
+</p>
+
+<p>
+    В <code>initModule()</code> в контекстное меню добавляется пункт:
+</p>
+
+<pre><code>tree.contextmenu.add({
+    text: l('Поиск ближайшего POI'),
+    iconCls: 'fa fa-bullseye-pointer',
+    handler: me.searchPOI,
+    scope: tree
+});
+</code></pre>
+
+<p>
+    За счёт <code>scope: tree</code> внутри <code>searchPOI</code> переменная
+    <code>this</code> указывает на <code>online_tree</code>, и доступна
+    текущая запись <code>this.record</code>.
+</p>
+
+<h3>Координаты ТС</h3>
+
+<p>Из записи объекта берутся поля <code>lat</code> и <code>lon</code>:</p>
+
+<pre><code>var lat = rec.get('lat');
+var lon = rec.get('lon');
+</code></pre>
+
+<h3>Карта</h3>
+
+<p>
+    Для работы с картой используется существующий <code>MapContainer</code>,
+    доступный через <code>getActiveTabMapContainer()</code> или глобальный
+    <code>mapContainer</code>.
+</p>
+
+<h3>Overpass API</h3>
+
+<p>
+    Поиск POI выполняется запросом к <code>https://overpass-api.de/api/interpreter</code>,
+    в котором собирается Overpass-запрос с оператором <code>around</code> и фильтром
+    по <code>name~"&lt;что ищем&gt;",i</code>.
+</p>
+
+<h3>Маркерные иконки</h3>
+
+<p>
+    Для POI используется MarkerIconApi (см. <code>docs/MarkerIconApi.md</code> этого репозитория).
+    В коде формируется URL иконки на базе глобального <code>base_url</code>.
+</p>
+
+<h3>Маршруты OSRM</h3>
+
+<p>
+    Маршрут строится запросом к <code>base_url + '/osrm/route/v1/driving/...'</code>,
+    в параметрах <code>geometries=polyline6&amp;overview=full</code>. Ответ OSRM
+    декодируется через <code>map.decodeRoute()</code>, после чего линия рисуется
+    методом <code>map.setPolylineBlue(points)</code>.
+</p>
+
+<h3>Очистка карты</h3>
+
+<p>
+    Перед каждым новым поиском модуль:
+</p>
+
+<ul>
+    <li>удаляет существующий polyline методом <code>map.removePilyline()</code> (если есть);</li>
+    <li>удаляет маркеры POI, созданные ранее, через <code>map.removeMarker(id)</code>.</li>
+</ul>
+
+</body>
+</html>
