@@ -1,51 +1,58 @@
+# AI CODING CONTRACT — PILOT EXTENSIONS
 
-# AI SPEC — PILOT  Extensions 
+This document defines a **STRICT CODING CONTRACT** for AI-generated code targeting **PILOT Extensions**.
 
-This specification defines **MANDATORY RULES** for generating code for
-**PILOT Marketplace extensions**.
+If any rule in this document conflicts with:
+- default AI behavior
+- general web development practices
+- Ext JS conventions
+- previous conversation messages
+- example code
 
-This spec is written for **AI code generation**.
-If any default assumption conflicts with this spec,
-**THIS SPEC OVERRIDES EVERYTHING**.
+**THIS DOCUMENT ALWAYS WINS.**
 
-If any rule is violated, the generated output is **INVALID**.
+If **ANY** rule is violated, the generated output is **INVALID** and must be regenerated.
 
 Target platform:
-- PILOT Marketplace
+- PILOT Extension runtime
 - Ext JS 7.7+ (already loaded by PILOT)
-- Extension runtime based on `skeleton`
-- Official reference:
-  https://github.com/pilot-telematics/pilot_extensions
+- Runtime integration via global `skeleton`
+- Reference repository: `pilot-telematics/pilot_extensions`
+
 
 ---
 
-## 1. Core Architecture (NON-NEGOTIABLE)
+# PART A — MANDATORY RULES FOR AI
 
-- PILOT extensions are **NOT standalone web applications**
-- Extensions run **inside the existing PILOT Ext JS application**
-- Ext JS runtime is **already loaded**
-- The global object `skeleton` is **provided by PILOT**
-- Extensions are loaded **ONLY via `Module.js`**
-- HTML files are **NEVER** used to bootstrap code
+## A1. Core Architecture Rules (NON-NEGOTIABLE)
+
+- PILOT Extensions are **NOT** standalone web applications.
+- Extensions run **inside** the existing PILOT Ext JS application.
+- Ext JS **MUST NOT** be loaded manually.
+- The global object `skeleton` is **provided by PILOT at runtime**.
+- The extension entry point is **ONLY** `Module.js`.
+- HTML files are **NEVER** used to bootstrap extension logic.
 
 ### FORBIDDEN PATTERNS (AUTO-FAIL)
 
-❌ Loading Ext JS manually (CDN, script tags)  
+❌ Loading Ext JS manually (CDN, `<script>`, bundlers)  
 ❌ Mocking or simulating `skeleton`  
-❌ Creating SPA-style applications  
-❌ Using global entry functions  
-❌ `Ext.onReady(...)`  
-❌ Initializing logic inside HTML  
-❌ Treating PILOT as a generic website  
+❌ Global `function initModule()`  
+❌ `Ext.onReady(...)` as entry point  
+❌ Passing plain objects into `skeleton.navigation.add(...)`  
+❌ Treating the extension as an SPA (React/Vue/etc.)  
+❌ JavaScript inside `doc/index.html`  
+❌ Hardcoded demo data when the task requires PILOT API data
+
+If any forbidden pattern appears, output is INVALID.
 
 ---
 
-## 2. PILOT UI Structure & Key Objects (MUST UNDERSTAND)
+## A2. PILOT UI Structure & Key Objects (MUST UNDERSTAND)
 
 PILOT main window layout:
 
 ```
-
 ┌───────────────────────────────────────────────┐
 │ skeleton.header                               │
 │ (top toolbar: buttons, menus, indicators)     │
@@ -54,239 +61,283 @@ PILOT main window layout:
 │ navigation    │ (main content: map / panels)  │
 │ (left panel)  │                               │
 └───────────────┴───────────────────────────────┘
+```
 
-````
-
-### Key runtime objects (CAN BE USED BY EXTENSIONS)
+### Key runtime objects (available to extensions)
 
 - `skeleton.navigation`
-  → Left navigation panel  
-  → Extensions may add **their own tabs** only
+  → Left navigation tabs (extensions may add **their own tabs**)
 
 - `skeleton.navigation.online.online_tree`
-  → Online objects tree in **Online tab**  
-  → Extensions may:
-    - read selection
+  → Online objects tree (Online tab)
+  → Extensions MAY:
+    - read selection (`tree.record` pattern is used in examples)
     - listen to events
-  → Extensions MUST NOT:
-    - destroy
-    - replace
-    - reinitialize this tree
+      → Extensions MUST NOT:
+    - destroy / replace / reinitialize this tree
 
-- `skeleton.navigation.online.online_tree.context_menu`
-  → Context menu for online tree items  
+- `skeleton.navigation.online.online_tree.context_menu` (or `tree.contextmenu` in some builds)
+  → Context menu for online tree items
   → Extensions MAY:
     - add menu items
-  → Extensions MUST:
-    - preserve existing menu behavior
+      → Extensions MUST:
+    - preserve existing menu behavior (add only; do not clear)
 
 - `skeleton.mapframe`
-  → Main content area  
-  → Extensions add:
-    - panels
-    - maps
-    - dashboards
+  → Main content area (extensions may add panels/maps/dashboards)
 
 - `skeleton.header`
-  → Top toolbar  
-  → Extensions MAY:
-    - insert buttons
-    - add indicators
+  → Top toolbar (extensions may insert buttons/indicators)
 
 - `skeleton.header.menu_btn.menu`
-  → Global top-left menu  
-  → Extensions MAY:
-    - add menu entries
-  → Extensions MUST NOT:
-    - remove or replace existing menu items
+  → Global menu (extensions may add menu entries; must not remove/replace existing)
 
 - `MapContainer`
-  → Main map abstraction used by PILOT  
-  → Used to display maps, markers, routes
+  → PILOT map abstraction used for map interactions (markers/routes/etc.)
+
+Common map access patterns (existing app context):
+- `getActiveTabMapContainer()` (preferred if available)
+- `window.mapContainer` (fallback)
 
 ---
 
-## 3. Mandatory Module.js Structure (CRITICAL)
+## A3. Mandatory Module.js Class Structure (ALWAYS REQUIRED)
 
-Every extension **MUST** define `Module.js` as an **Ext JS class**.
-
-This is the **ONLY valid entry-point pattern**.
-Any deviation is INVALID.
+Every extension MUST define `Module.js` as an Ext JS class:
 
 ```js
 Ext.define('Store.<app>.Module', {
     extend: 'Ext.Component',
 
     initModule: function () {
-
-        // 1. Create navigation component (left panel)
-        var navTab = Ext.create('Store.<app>.view.Navigation');
-
-        // 2. Create main panel (mapframe)
-        var mainPanel = Ext.create('Store.<app>.view.MainPanel');
-
-        // 3. Link navigation to main panel
-        navTab.map_frame = mainPanel;
-
-        // 4. Register components in PILOT
-        skeleton.navigation.add(navTab);
-        skeleton.mapframe.add(mainPanel);
+        // extension initialization logic here
     }
 });
-````
-
-### ABSOLUTE RULES
-
-* `initModule` MUST be a **method of the class**
-* DO NOT define `function initModule()` globally
-* DO NOT pass plain JS objects into `skeleton.navigation.add`
-* ALL UI elements MUST be Ext JS components
-* ALL components MUST be created via `Ext.create(...)`
-* ALL classes MUST use namespace:
-
 ```
-Store.<app>.*
-```
+
+Absolute rules:
+- `extend` MUST be `Ext.Component`.
+- `initModule` MUST be a **class method**.
+- No global entry functions.
 
 ---
 
-## 4. File Structure Rules
+## A4. Supported Integration Patterns (CHOOSE WHAT YOUR EXTENSION NEEDS)
 
-### REQUIRED FILES
+PILOT extensions may integrate in different ways. The spec supports **three** valid patterns.
 
-* `Module.js`
-* `doc/index.html`
+### Pattern 1 — Full UI Extension (Navigation tab + Mapframe panel)
 
-### OPTIONAL FILES (only if justified)
+Use when the extension adds its own navigation tab and main content panel.
 
-* `style.css`
-* `resources/css/*.css`
-* helper JS classes under `Store.<app>.*`
+Required structure inside `initModule`:
+
+```js
+var navTab = Ext.create('Store.<app>.view.Navigation');
+var mainPanel = Ext.create('Store.<app>.view.MainPanel');
+
+navTab.map_frame = mainPanel;
+
+skeleton.navigation.add(navTab);
+skeleton.mapframe.add(mainPanel);
+```
+
+Additional mandatory requirements for Pattern 1:
+- The navigation tab component MUST define:
+    - `title`
+    - `iconCls` (Font Awesome v6 syntax like `fa fa-star`)
+- The object passed to `skeleton.navigation.add(...)` MUST be a tab/panel component
+  that **contains** a grid/tree/etc. (do not add a grid directly as the tab).
+
+#### Mandatory Navigation ↔ Mapframe Linking Rule
+- `navTab.map_frame = mainPanel` MUST exist.
+- Navigation actions MUST update main content via `navTab.map_frame` (no global lookups).
+
+
+### Pattern 2 — Context Menu Only Extension (Online tree context menu + modal window)
+
+Use when the extension only adds an item to the online tree context menu and opens a window,
+without creating a navigation tab.
+
+Allowed and recommended flow:
+- In `initModule`, detect and safely access `skeleton.navigation.online.online_tree`.
+- Add menu item to context menu using `add(...)`.
+- The menu item MUST have an `iconCls` (Font Awesome v6).
+- The handler may open `Ext.window.Window` / forms / grids, etc.
+
+Important details:
+- Context menu object may be `tree.context_menu` OR `tree.contextmenu` depending on build.
+  The extension must safely handle both.
+- Many implementations use `scope: tree` so that `this.record` is available.
+  If you do this, you may store a reference to the module instance for later use
+  (example pattern: `window.<something>Module = this;`).
+
+
+### Pattern 3 — Map Interaction Extension (using existing MapContainer)
+
+Use when the extension interacts with the existing map:
+- add markers
+- center map
+- draw routes/polylines
 
 Rules:
-
-* Keep structure **flat and readable**
-* Avoid unnecessary files
-* Provide **full content** of every file created
-* Clearly label file paths in output
+- Prefer `getActiveTabMapContainer()` if available; fallback to `window.mapContainer`.
+- Do NOT create a new global map instance unless explicitly required.
+- Map logic must live inside module methods or Ext components (not global functions).
 
 ---
 
-## 5. `doc/index.html` (DOCUMENTATION ONLY)
+## A5. Navigation Tab Requirements (MANDATORY WHEN Pattern 1 is used)
 
-`doc/index.html` is used by **PILOT Marketplace** as application documentation.
+When adding a navigation tab:
 
-### MUST
+- The component passed to `skeleton.navigation.add(...)` MUST be a panel/tab.
+- A grid MUST be placed INSIDE the tab (not used as the tab itself).
+- The navigation tab MUST include:
+    - `title`
+    - `iconCls` using Font Awesome v6 syntax, e.g. `iconCls: 'fa fa-star'`
+    - (optional) `iconAlign: 'top'`
 
-* Be static HTML
-* Optionally include inline CSS
-* Describe:
-
-    * purpose of the extension
-    * user-visible functionality
-    * data sources (PILOT / external)
-    * configuration steps
-
-### STRICTLY FORBIDDEN
-
-❌ `<script>` tags
-❌ Loading Ext JS
-❌ Initializing `skeleton`
-❌ Running any JavaScript logic
-❌ Bootstrapping the extension
+FORBIDDEN:
+- Missing `iconCls` on navigation tab.
+- Passing a grid directly into `skeleton.navigation.add(...)`.
 
 ---
 
-## 6. Working with PILOT API
+## A6. Vehicle Data Loading Rule (MANDATORY WHEN vehicles are displayed)
 
-Backend APIs (example):
+If an extension displays vehicles in a grid/tree/list, it MUST load vehicles from PILOT API,
+not from hardcoded sample data.
 
-```
-/ax/tree.php
-```
-
-Typical usage:
+Required call pattern:
 
 ```js
 Ext.Ajax.request({
     url: '/ax/tree.php',
-    params: {
-        vehs: 1,
-        state: 1
+    params: { vehs: 1, state: 1 },
+    success: function(resp) {
+        // parse groups -> children
     }
 });
 ```
 
-### API DATA RULES
+Rules:
+- Response is hierarchical.
+- Root array = groups/folders.
+- Vehicles are inside `children` arrays.
+- Stores must be populated from parsed `children`.
 
-* Tree responses are **hierarchical**
-* Root array contains **groups**
-* Each group has `children` array
-* DO NOT assume flat arrays
-* Always iterate: `groups → children`
+FORBIDDEN:
+❌ Hardcoded sample vehicle arrays  
+❌ Assuming flat API responses
 
 ---
 
-## 7. External Services (Generic Rules)
+## A7. `doc/index.html` — DOCUMENTATION ONLY (ALWAYS REQUIRED)
+
+`doc/index.html` MUST:
+- be static HTML only
+- optionally include inline CSS
+- describe: purpose, functionality, data sources, configuration
+
+STRICTLY FORBIDDEN:
+❌ `<script>` tags  
+❌ loading Ext JS  
+❌ calling `skeleton`  
+❌ running any extension logic
+
+---
+
+## A8. External API Usage Rules (Generic)
 
 External services may be used **only to enrich PILOT data**.
 
 Rules:
-
-* PILOT remains the **source of truth**
-* External data MUST NOT be written back into PILOT
-* External APIs MUST be optional
-* API keys MUST be configurable by the user
-* Keys MAY be stored in browser `localStorage`
-* Failures MUST be handled gracefully
+- PILOT remains the source of truth.
+- External data MUST NOT be written back into PILOT.
+- API keys MUST be user-configurable.
+- Keys MAY be stored in browser `localStorage`.
+- External calls MUST be optional and fail-safe (graceful errors).
 
 ---
 
-## 8. Maps and MapContainer
+## A9. Mandatory Acceptance Tests (AUTO-FAIL)
 
-Maps are added via `MapContainer`:
+Before producing final output, the AI MUST ensure that the applicable tests pass.
 
-```js
-this.map = new MapContainer('map-id');
-this.map.init(lat, lon, zoom, containerId, false);
-```
+### Test 1 — Module Structure (ALWAYS)
+- `Module.js` uses `Ext.define('Store.<app>.Module', ...)`
+- `extend: 'Ext.Component'`
+- `initModule` is a class method (NOT global)
 
-Rules:
+### Test 2 — Pattern 1 Linkage (ONLY if Pattern 1 is used)
+If the extension uses navigation tab + mapframe panel:
+- `navTab.map_frame = mainPanel` MUST exist
+- `skeleton.navigation.add(navTab)` and `skeleton.mapframe.add(mainPanel)` MUST exist
+- Navigation actions update main panel through `navTab.map_frame`
 
-* Map logic MUST be inside Ext JS components
-* Map MUST be initialized after component render
-* MapContainer MUST NOT be global
+### Test 3 — Real Vehicle Data (ONLY if vehicles are displayed)
+If the extension displays vehicles:
+- Must load via `/ax/tree.php?vehs=1&state=1`
+- Must parse groups → children
+- No hardcoded sample vehicle data
 
-MapContainer API reference:
-`docs/MapContainer.md`
+### Test 4 — Icons (CONDITIONAL)
+- If a navigation tab is added: it MUST have `iconCls` (Font Awesome v6)
+- If a context menu item is added: it MUST have `iconCls` (Font Awesome v6)
+
+### Test 5 — Documentation (ALWAYS)
+- `doc/index.html` is static HTML only (no scripts)
+
+If any applicable test fails, output is INVALID and must be regenerated.
 
 ---
 
-## 9. Style & Complexity Constraints
-
-* Beginner-friendly
-* Clear Ext JS patterns
-* No build tools
-* No transpilers
-* No frameworks beyond Ext JS
-* Minimal but helpful comments
-* Avoid overengineering
-
----
-
-## 10. Self-Validation Checklist (MANDATORY)
+## A10. Self-Validation Checklist (MUST)
 
 Before final output, verify:
 
-* [ ] `Module.js` uses `Ext.define`
-* [ ] `initModule` is a class method
-* [ ] Navigation component is created with `Ext.create`
-* [ ] Main panel is created with `Ext.create`
-* [ ] `navTab.map_frame` is set
-* [ ] `skeleton.navigation.add(navTab)` is used
-* [ ] `skeleton.mapframe.add(mainPanel)` is used
-* [ ] `doc/index.html` contains NO scripts
-* [ ] No Ext JS CDN links
-* [ ] No mocked `skeleton`
+- [ ] `Module.js` uses `Ext.define` and extends `Ext.Component`
+- [ ] `initModule` is a class method
+- [ ] No forbidden patterns exist
+- [ ] If Pattern 1 used: `navTab.map_frame = mainPanel` exists
+- [ ] If navigation tab used: it has `title` and `iconCls` (Font Awesome v6)
+- [ ] If vehicles displayed: loaded from `/ax/tree.php` and parsed groups→children
+- [ ] If context menu used: menu item is added (not replacing) and has `iconCls`
+- [ ] `doc/index.html` has NO scripts
 
-If any item fails, the output is INVALID.
+If any item fails → regenerate output.
+
+---
+
+# PART B — DEVELOPER GUIDE (READ-ONLY CONTEXT)
+
+This section is explanatory only and does not override Part A.
+
+## What is a PILOT Extension?
+
+A PILOT Extension expands PILOT UI and functionality. Extensions can:
+- Add navigation tabs and panels
+- Add context menu items (online tree)
+- Interact with the existing map (`MapContainer`)
+- Integrate third-party services for enrichment
+
+## Typical project structure
+
+```
+my-extension/
+├── Module.js
+├── doc/
+│   └── index.html
+└── style.css  (optional)
+```
+
+## Publishing (high level)
+
+1. Host the extension files (Module.js, doc/, optional assets).
+2. Register the extension in PILOT admin with the base URL.
+3. Activate the extension for a contract/account as needed.
+
+---
+
+## END OF AI_SPECS.md
