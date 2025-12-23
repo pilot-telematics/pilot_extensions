@@ -1,11 +1,14 @@
 
-# AI SPEC — PILOT Marketplace Extensions (v2.0)
+# AI SPEC — PILOT  Extensions 
 
 This specification defines **MANDATORY RULES** for generating code for
 **PILOT Marketplace extensions**.
 
 This spec is written for **AI code generation**.
-If any default assumption conflicts with this spec, **THIS SPEC OVERRIDES EVERYTHING**.
+If any default assumption conflicts with this spec,
+**THIS SPEC OVERRIDES EVERYTHING**.
+
+If any rule is violated, the generated output is **INVALID**.
 
 Target platform:
 - PILOT Marketplace
@@ -22,20 +25,22 @@ Target platform:
 - Extensions run **inside the existing PILOT Ext JS application**
 - Ext JS runtime is **already loaded**
 - The global object `skeleton` is **provided by PILOT**
-- Extensions are loaded **ONLY via Module.js**
+- Extensions are loaded **ONLY via `Module.js`**
 - HTML files are **NEVER** used to bootstrap code
 
-### STRICTLY FORBIDDEN
+### FORBIDDEN PATTERNS (AUTO-FAIL)
+
 ❌ Loading Ext JS manually (CDN, script tags)  
 ❌ Mocking or simulating `skeleton`  
 ❌ Creating SPA-style applications  
 ❌ Using global entry functions  
+❌ `Ext.onReady(...)`  
 ❌ Initializing logic inside HTML  
 ❌ Treating PILOT as a generic website  
 
 ---
 
-## 2. PILOT UI Structure (MUST UNDERSTAND)
+## 2. PILOT UI Structure & Key Objects (MUST UNDERSTAND)
 
 PILOT main window layout:
 
@@ -43,7 +48,7 @@ PILOT main window layout:
 
 ┌───────────────────────────────────────────────┐
 │ skeleton.header                               │
-│ (top panel: buttons, indicators)              │
+│ (top toolbar: buttons, menus, indicators)     │
 ├───────────────┬───────────────────────────────┤
 │ skeleton.     │ skeleton.mapframe             │
 │ navigation    │ (main content: map / panels)  │
@@ -52,22 +57,61 @@ PILOT main window layout:
 
 ````
 
-Key objects:
-- `skeleton.navigation` → left navigation tabs
-- `skeleton.navigation.online.online_tree` → online tree in main section → online tab
-- `skeleton.navigation.online.online_tree.context_menu` → online tree context menu
-- `skeleton.mapframe` → main content area
-- `skeleton.header` → top toolbar
-- `skeleton.header.menu_btn.menu` → global menu in top toolbar
-- `mapContainer` → main map component
+### Key runtime objects (CAN BE USED BY EXTENSIONS)
 
+- `skeleton.navigation`
+  → Left navigation panel  
+  → Extensions may add **their own tabs** only
 
+- `skeleton.navigation.online.online_tree`
+  → Online objects tree in **Online tab**  
+  → Extensions may:
+    - read selection
+    - listen to events
+  → Extensions MUST NOT:
+    - destroy
+    - replace
+    - reinitialize this tree
+
+- `skeleton.navigation.online.online_tree.context_menu`
+  → Context menu for online tree items  
+  → Extensions MAY:
+    - add menu items
+  → Extensions MUST:
+    - preserve existing menu behavior
+
+- `skeleton.mapframe`
+  → Main content area  
+  → Extensions add:
+    - panels
+    - maps
+    - dashboards
+
+- `skeleton.header`
+  → Top toolbar  
+  → Extensions MAY:
+    - insert buttons
+    - add indicators
+
+- `skeleton.header.menu_btn.menu`
+  → Global top-left menu  
+  → Extensions MAY:
+    - add menu entries
+  → Extensions MUST NOT:
+    - remove or replace existing menu items
+
+- `MapContainer`
+  → Main map abstraction used by PILOT  
+  → Used to display maps, markers, routes
 
 ---
 
 ## 3. Mandatory Module.js Structure (CRITICAL)
 
-Every extension **MUST** define `Module.js` exactly as an **Ext JS class**:
+Every extension **MUST** define `Module.js` as an **Ext JS class**.
+
+This is the **ONLY valid entry-point pattern**.
+Any deviation is INVALID.
 
 ```js
 Ext.define('Store.<app>.Module', {
@@ -103,8 +147,6 @@ Ext.define('Store.<app>.Module', {
 ```
 Store.<app>.*
 ```
-
-Any violation makes the output INVALID.
 
 ---
 
@@ -157,7 +199,7 @@ Rules:
 
 ## 6. Working with PILOT API
 
-When accessing PILOT data, use backend APIs such as:
+Backend APIs (example):
 
 ```
 /ax/tree.php
@@ -181,8 +223,7 @@ Ext.Ajax.request({
 * Root array contains **groups**
 * Each group has `children` array
 * DO NOT assume flat arrays
-* Always iterate:
-  `groups → children`
+* Always iterate: `groups → children`
 
 ---
 
@@ -210,14 +251,14 @@ this.map = new MapContainer('map-id');
 this.map.init(lat, lon, zoom, containerId, false);
 ```
 
-Map logic MUST:
+Rules:
 
-* be initialized after component render
-* live inside Ext JS components
+* Map logic MUST be inside Ext JS components
+* Map MUST be initialized after component render
+* MapContainer MUST NOT be global
 
-Map Container API described in
-
-docs/MapContainer.md
+MapContainer API reference:
+`docs/MapContainer.md`
 
 ---
 
@@ -228,7 +269,7 @@ docs/MapContainer.md
 * No build tools
 * No transpilers
 * No frameworks beyond Ext JS
-* Minimal comments, but helpful
+* Minimal but helpful comments
 * Avoid overengineering
 
 ---
