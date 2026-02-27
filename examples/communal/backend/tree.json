@@ -1,0 +1,23 @@
+[{
+  "id": 1,
+  "name": "Москва",
+  "iconCls": "fa fa-star",
+  "children_count": 355,
+  "issues": 2,
+  "expanded": true,
+  "children": [{
+    "id": 2,
+    "iconCls": "fa fa-apartment",
+    "name":"Кунцево",
+    "children_count": 354,
+    "issues": 2,
+    "expanded": false
+  },{
+    "id": 3,
+    "iconCls": "fa fa-apartment",
+    "name":"Академический",
+    "children_count": 354,
+    "issues": 2,
+    "expanded": false
+  }]
+}]

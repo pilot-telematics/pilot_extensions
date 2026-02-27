@@ -1,0 +1,4 @@
+reader: {
+                    type: 'json',
+                    rootProperty: 'children'
+                }
