@@ -1,5 +1,8 @@
 Ext.define('Store.communal.Module', {
     extend: 'Ext.Component', // функция инициализации модуля
+    requires: [
+        'Store.communal.Auth'
+    ],
     initModule: function () {
         //создаем панель - закладку для раздела навигации
         var nav = Ext.create('Store.communal.Tab', {});
@@ -14,6 +17,9 @@ Ext.define('Store.communal.Module', {
         css.setAttribute("rel", "stylesheet")
         css.setAttribute("type", "text/css")
         css.setAttribute("href", '/store/communal/communal.css');
+        //
+
+
 
     }
 });
