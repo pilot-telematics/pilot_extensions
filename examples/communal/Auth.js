@@ -19,6 +19,15 @@ Ext.define('Store.communal.Auth', {
     clearToken: function (accountId) {
         localStorage.removeItem(this.tokenKey(accountId));
     },
+    getAuthHeaders: function (accountId) {
+        accountId = accountId || (global_conf && global_conf.conf ? global_conf.conf.account_id : null);
+
+        var token = accountId ? localStorage.getItem('comm_token_' + accountId) : null;
+
+        return token ? {
+            Authorization: 'Bearer ' + token
+        } : {};
+    },
 
     /**
      * Ensures a valid session token exists.
