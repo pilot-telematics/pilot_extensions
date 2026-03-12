@@ -14,7 +14,8 @@ Ext.define('Store.communal.Center', {
             ],
             groupField: 'vehiclenumber'
         });
-        this.tools=[ {
+
+        this.tools = [{
             iconCls: 'fa fa-rotate',
             xtype: 'button',
             handler: function () {
@@ -33,9 +34,10 @@ Ext.define('Store.communal.Center', {
             features: [{
                 ftype: 'grouping',
                 startCollapsed: false,
+                hideGroupedHeader:true,
                 groupHeaderTpl: '{name}'
             }],
-            tbar: [ {
+            tbar: [{
                 xtype: 'textfield',
                 cls: 'tree-search-field',
                 emptyText: '',
@@ -44,14 +46,14 @@ Ext.define('Store.communal.Center', {
                     clean: {
                         cls: 'fa-times',
                         tooltip: l('Clean'),
-                        handler() {
+                        handler: function () {
                             this.reset();
                             this.focus();
                         }
                     }
                 },
                 listeners: {
-                    change(field, newVal) {
+                    change: function (field, newVal) {
                         var store = field.up('grid').getStore();
 
                         if (newVal) {
@@ -64,6 +66,9 @@ Ext.define('Store.communal.Center', {
                 }
             }],
             columns: [{
+                text:l('Object'),
+                dataIndex: 'vehiclenumber'
+            },{
                 text: 'Название',
                 dataIndex: 'name',
                 flex: 2
@@ -82,7 +87,12 @@ Ext.define('Store.communal.Center', {
             }, {
                 text: 'Неполадки',
                 dataIndex: 'issues',
-                flex: 1
+                flex: 1,
+                align:'center',
+                renderer: function (value) {
+                    return this.renderIssues(value);
+                },
+                scope: this
             }]
         });
 
@@ -103,7 +113,17 @@ Ext.define('Store.communal.Center', {
         return Ext.Date.format(new Date(Number(value) * 1000), 'Y-m-d H:i:s');
     },
 
+    renderIssues: function (value) {
+        if (Number(value) === 2) {
+            return '<div class="comm_status fa fa-circle-xmark red"></div>';
+        }
 
+        if (Number(value) === 1) {
+            return '<div class="comm_status fa fa-circle-exclamation amber"></div>';
+        }
+
+        return '<div class="comm_status fa fa-circle-check green"></div>';
+    },
 
     loadNodeAgents: function (agentIds) {
         if (agentIds) {
@@ -111,14 +131,13 @@ Ext.define('Store.communal.Center', {
         }
         this.store.removeAll();
 
-
         if (!this.ids.length) {
             return;
         }
 
         this.setLoading(true);
         Ext.Ajax.request({
-            url: base_url+'../api/v3/vehicles/status',
+            url: base_url + '../api/v3/vehicles/status',
             method: 'GET',
             params: {
                 agent_id: this.ids.join(',')
@@ -128,7 +147,6 @@ Ext.define('Store.communal.Center', {
                     rows = this.normalizeStatusRows(payload);
 
                 this.store.loadData(rows);
-
             },
             failure: function () {
                 this.store.removeAll();
@@ -155,7 +173,7 @@ Ext.define('Store.communal.Center', {
                     name: sensor.name || sensor.sensor_name || '',
                     hum_value: Ext.isEmpty(sensor.hum_value) ? (Ext.isEmpty(sensor.value) ? '' : sensor.value) : sensor.hum_value,
                     change_ts: sensor.change_ts || sensor.ts || null,
-                    issues: ''
+                    issues: 0
                 });
             });
         });

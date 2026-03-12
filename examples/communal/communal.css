@@ -1,0 +1,15 @@
+.comm_status{
+    font-size: 16px;
+}
+.comm_info{
+    font-weight:bold;
+}
+.comm_info .x-form-display-field{
+    font-size: 32px;
+    font-weight:bold;
+    text-align: center;
+}
+.comm_info  .x-form-item-label-inner{
+    padding-left: 0px !important;
+    text-align: center;
+}
