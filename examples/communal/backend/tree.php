@@ -43,13 +43,83 @@ function node_children_count(PDO $pdo, int $acc, int $id): int {
     return (int)($r['c'] ?? 0);
 }
 
+function node_recursive_children_count(PDO $pdo, int $acc, int $id): int {
+    $row = db_one($pdo, "
+        WITH RECURSIVE subtree AS (
+            SELECT id
+            FROM tree_nodes
+            WHERE account_id = :acc AND parent_id = :id
+            UNION ALL
+            SELECT child.id
+            FROM tree_nodes child
+            JOIN subtree s ON s.id = child.parent_id
+            WHERE child.account_id = :acc
+        )
+        SELECT count(*) AS c
+        FROM subtree
+    ", [
+        ':acc' => $acc,
+        ':id' => $id,
+    ]);
+
+    return (int)($row['c'] ?? 0);
+}
+
+function node_child_agents(PDO $pdo, int $acc, int $id): array {
+    $rows = db_all($pdo, "
+        WITH RECURSIVE subtree AS (
+            SELECT id, agent_id
+            FROM tree_nodes
+            WHERE account_id = :acc AND parent_id = :id
+            UNION ALL
+            SELECT child.id, child.agent_id
+            FROM tree_nodes child
+            JOIN subtree s ON s.id = child.parent_id
+            WHERE child.account_id = :acc
+        )
+        SELECT DISTINCT agent_id
+        FROM subtree
+        WHERE agent_id IS NOT NULL
+        ORDER BY agent_id
+    ", [
+        ':acc' => $acc,
+        ':id' => $id,
+    ]);
+
+    return array_map(static function (array $row): int {
+        return (int)$row['agent_id'];
+    }, $rows);
+}
+
+function load_node_row(PDO $pdo, int $acc, int $id): ?array {
+    return db_one($pdo, "
+        SELECT
+            n.id,
+            n.parent_id,
+            n.type,
+            n.name,
+            n.descr,
+            n.is_leaf,
+            n.agent_id,
+            t.icon_cls
+        FROM tree_nodes n
+        LEFT JOIN node_types t ON t.code = n.type
+        WHERE n.id = :id
+          AND n.account_id = :acc
+    ", [
+        ':id' => $id,
+        ':acc' => $acc,
+    ]);
+}
+
 function node_to_ext(PDO $pdo, int $acc, array $row): array {
     $id = (int)$row['id'];
-    $isLeaf = (int)$row['is_leaf'];
-    $cnt = node_children_count($pdo, $acc, $id);
+    $isLeaf = (int)($row['is_leaf'] ?? 0);
+    $directChildrenCount = node_children_count($pdo, $acc, $id);
+
     return [
         'id' => $id,
-        'text' => $row['name'],                 // tree display
+        'text' => $row['name'],
         'name' => $row['name'],
         'type' => $row['type'],
         'descr' => $row['descr'] ?? null,
@@ -57,8 +127,11 @@ function node_to_ext(PDO $pdo, int $acc, array $row): array {
         'iconCls' => $row['icon_cls'] ?? null,
         'agent_id' => $row['agent_id'] === null ? null : (int)$row['agent_id'],
         'parent_id' => $row['parent_id'] === null ? null : (int)$row['parent_id'],
-        'children_count' => $cnt,
-        'leaf' => ($cnt === 0),
+        // children_count now contains the full recursive descendant count.
+        'children_count' => node_recursive_children_count($pdo, $acc, $id),
+        // child_agents contains agent ids collected from all descendant nodes.
+        'child_agents' => node_child_agents($pdo, $acc, $id),
+        'leaf' => ($directChildrenCount === 0),
         'expanded' => false
     ];
 }
@@ -74,16 +147,16 @@ if ($op === 'read') {
 
     $sql = "
         SELECT
-    n.id,
-    n.parent_id,
-    n.type,
-    n.name,
-    n.descr,
-    n.is_leaf,
-    n.agent_id,
-    t.icon_cls
-FROM tree_nodes n
-LEFT JOIN node_types t ON t.code = n.type
+            n.id,
+            n.parent_id,
+            n.type,
+            n.name,
+            n.descr,
+            n.is_leaf,
+            n.agent_id,
+            t.icon_cls
+        FROM tree_nodes n
+        LEFT JOIN node_types t ON t.code = n.type
         WHERE n.account_id = :acc
           AND " . ($parent_id === null ? "n.parent_id IS NULL" : "n.parent_id = :pid") . "
         ORDER BY n.sort_order ASC, n.name ASC
@@ -110,12 +183,13 @@ if ($op === 'create') {
     $rec = get_record_from_body();
 
     $parent_id_raw = $rec['parent_id'] ?? ($rec['parentId'] ?? null);
-    $is_leaf = ($rec['is_leaf'] ? 1 : 0);
+    $is_leaf = !empty($rec['is_leaf']) ? 1 : 0;
     $agent_id_raw = $rec['agent_id'] ?? null;
     $agent_id = ($agent_id_raw === null || $agent_id_raw === '' ? null : (int)$agent_id_raw);
     if ($is_leaf && !$agent_id) json_err('agent_id is required for leaf node', 400);
     if (!$is_leaf) $agent_id = null;
-    // treat ExtJS root specially
+
+    // Treat the Ext JS root node as a null parent id.
     if ($parent_id_raw === 'root' || $parent_id_raw === '' || $parent_id_raw === null) {
         $parent_id = null;
     } else {
@@ -133,9 +207,9 @@ if ($op === 'create') {
     ensure_parent($pdo, $acc, $parent_id);
 
     $st = $pdo->prepare("
-        INSERT INTO tree_nodes(account_id, parent_id, type, name, descr,is_leaf,agent_id)
-        VALUES (:acc, :pid, :type, :name, :descr,:isl,:aid)
-        RETURNING id, parent_id, type, name, descr,is_leaf,agent_id
+        INSERT INTO tree_nodes(account_id, parent_id, type, name, descr, is_leaf, agent_id)
+        VALUES (:acc, :pid, :type, :name, :descr, :isl, :aid)
+        RETURNING id
     ");
     $st->execute([
         ':acc' => $acc,
@@ -143,14 +217,16 @@ if ($op === 'create') {
         ':type' => $type,
         ':name' => $name,
         ':descr' => $descr,
-        ':isl' =>$is_leaf,
-        ':aid'=>$agent_id
-
+        ':isl' => $is_leaf,
+        ':aid' => $agent_id
     ]);
     $row = $st->fetch(PDO::FETCH_ASSOC);
-    if (!$row) json_err('Insert failed', 500);
+    if (!$row || !isset($row['id'])) json_err('Insert failed', 500);
 
-    json_ok(['children' => [ node_to_ext($pdo, $acc, $row)]]);
+    $created = load_node_row($pdo, $acc, (int)$row['id']);
+    if (!$created) json_err('Insert failed', 500);
+
+    json_ok(['children' => [node_to_ext($pdo, $acc, $created)]]);
 }
 
 /* ---------------- UPDATE ---------------- */
@@ -162,12 +238,14 @@ if ($op === 'update') {
     $id = (int)($rec['id'] ?? 0);
     if ($id <= 0) json_err('id is required');
 
-    // verify ownership
-    $existing = db_one($pdo, "SELECT id FROM tree_nodes WHERE id=:id AND account_id=:acc", [':id'=>$id, ':acc'=>$acc]);
+    // Load the current row so partial updates keep existing values intact.
+    $existing = load_node_row($pdo, $acc, $id);
     if (!$existing) json_err('Not found', 404);
 
     $sets = [];
     $params = [':id' => $id, ':acc' => $acc];
+    $is_leaf = (int)$existing['is_leaf'];
+    $agent_id = $existing['agent_id'] === null ? null : (int)$existing['agent_id'];
 
     if (array_key_exists('name', $rec) || array_key_exists('text', $rec)) {
         $name = trim((string)($rec['name'] ?? $rec['text'] ?? ''));
@@ -187,33 +265,33 @@ if ($op === 'update') {
         $sets[] = "type = :type";
         $params[':type'] = $type;
     }
+
     if (array_key_exists('is_leaf', $rec)) {
-        $is_leaf = (int)$rec['is_leaf']?1:0;
+        $is_leaf = !empty($rec['is_leaf']) ? 1 : 0;
         $sets[] = "is_leaf = :is_leaf";
         $params[':is_leaf'] = $is_leaf;
     }
+
     if (array_key_exists('agent_id', $rec)) {
-        $agent_id = (int)$rec['agent_id'];
-    }
-        $sets[] = "agent_id = :agent_id";
-        if ($is_leaf){
-          $params[':agent_id'] = $agent_id;
-        }else {
-            $params[':agent_id'] = null;
+        $agent_id = ($rec['agent_id'] === null || $rec['agent_id'] === '')
+            ? null
+            : (int)$rec['agent_id'];
     }
 
     if ($is_leaf && !$agent_id) {
-        json_err('No agent_id specified',400);
-     }
+        json_err('No agent_id specified', 400);
+    }
 
     $children = node_children_count($pdo, $acc, $id);
     if ($is_leaf && $children > 0) json_err('Cannot make leaf: node has children', 400);
 
-    // optional: allow moving node (parent change)
+    $sets[] = "agent_id = :agent_id";
+    $params[':agent_id'] = $is_leaf ? $agent_id : null;
+
+    // Allow moving a node to another parent when requested by the UI.
     if (array_key_exists('parent_id', $rec) || array_key_exists('parentId', $rec)) {
         $parent_id_raw = $rec['parent_id'] ?? ($rec['parentId'] ?? null);
 
-       // treat ExtJS root specially
         if ($parent_id_raw === 'root' || $parent_id_raw === '' || $parent_id_raw === null) {
             $parent_id = null;
         } else {
@@ -231,10 +309,9 @@ if ($op === 'update') {
     $sql = "UPDATE tree_nodes SET " . implode(', ', $sets) . " WHERE id=:id AND account_id=:acc";
     db_exec($pdo, $sql, $params);
 
-    // return updated record for store
-    $row = db_one($pdo, "SELECT id, parent_id, type, name, descr FROM tree_nodes WHERE id=:id AND account_id=:acc", [
-        ':id'=>$id, ':acc'=>$acc
-    ]);
+    $row = load_node_row($pdo, $acc, $id);
+    if (!$row) json_err('Not found', 404);
+
     json_ok(['children' => [node_to_ext($pdo, $acc, $row)]]);
 }
 
@@ -246,16 +323,17 @@ if ($op === 'destroy') {
     $id = (int)($rec['id'] ?? 0);
     if ($id <= 0) json_err('id is required');
 
-    $row = db_one($pdo, "SELECT id FROM tree_nodes WHERE id=:id AND account_id=:acc", [':id'=>$id, ':acc'=>$acc]);
+    $row = db_one($pdo, "SELECT id FROM tree_nodes WHERE id=:id AND account_id=:acc", [':id' => $id, ':acc' => $acc]);
     if (!$row) json_err('Not found', 404);
 
-    // subtree delete via ON DELETE CASCADE
-    db_exec($pdo, "DELETE FROM tree_nodes WHERE id=:id AND account_id=:acc", [':id'=>$id, ':acc'=>$acc]);
+    // Subtree delete relies on the foreign key cascade in the schema.
+    db_exec($pdo, "DELETE FROM tree_nodes WHERE id=:id AND account_id=:acc", [':id' => $id, ':acc' => $acc]);
 
     json_ok(['data' => ['id' => $id]]);
 }
 
 json_err('Unknown op', 400);
+
 function ensure_type_exists(PDO $pdo, string $type): void
 {
     $row = db_one($pdo, "

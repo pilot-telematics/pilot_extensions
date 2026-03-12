@@ -48,12 +48,27 @@ Ext.define('Store.communal.Tree', {
             return cars;
         },
 
+        collectAgentIds: function (record) {
+            var agentIds = [],
+                childAgents = record ? record.get('child_agents') : null,
+                ownAgentId = record ? record.get('agent_id') : null;
+
+            if (Ext.isArray(childAgents)) {
+                agentIds = agentIds.concat(childAgents);
+            }
+
+            if (!Ext.isEmpty(ownAgentId)) {
+                agentIds.push(ownAgentId);
+            }
+
+            return Ext.Array.unique(Ext.Array.clean(agentIds));
+        },
         /**
-         * Decide node type for a child. Adjust to your logic.
+         * Decide the default type for a newly created child node.
          */
         guessChildType: function (parentNode) {
             var t = parentNode.get('type');
-            // root has no type
+            // Root has no type, so start from the top-level entity.
             if (!t) return 'city';
             if (t === 'city') return 'suburb';
             if (t === 'suburb') return 'street';
@@ -101,11 +116,11 @@ Ext.define('Store.communal.Tree', {
                 root: {
                     id: 'root',
                     text: l('Все объекты'),
-                    expanded: true,     // ← IMPORTANT
+                    expanded: true,
                     leaf: false
                 },
 
-                fields: ['name', 'type', 'country', 'children_count', 'issues'],
+                fields: ['name', 'type', 'country', 'children_count', 'child_agents', 'issues'],
                 proxy: {
                     type: 'ajax',
                     api: {
@@ -121,7 +136,7 @@ Ext.define('Store.communal.Tree', {
                         allowSingle: true
                     }
                 },
-                autoSync: false, // recommended (manual control),
+                autoSync: false,
                 filterer: 'bottomup'
 
             });
@@ -162,7 +177,7 @@ Ext.define('Store.communal.Tree', {
                         tooltip: l('Edit'),
                         handler: function (view, rowIndex, colIndex, item, e, record) {
                             view.up('treepanel').editNode(record);
-                            }
+                        }
 
                     },
                         {
@@ -178,7 +193,7 @@ Ext.define('Store.communal.Tree', {
                                     function () {
                                         record.erase({
                                             success: function () {
-                                                // Ext automatically removes from store
+                                                // Ext automatically removes the node from the store.
                                             },
                                             failure: function () {
                                                 tree.getStore().rejectChanges();
@@ -212,7 +227,14 @@ Ext.define('Store.communal.Tree', {
             selType: 'checkboxmodel'
         },
         selectRow: function (me, record) {
+            var tab = this.up('store-communal-tab'),
+                center = tab && tab.map_frame ? tab.map_frame.center : null,
+                agentIds = this.collectAgentIds(record);
 
+            if (center && Ext.isFunction(center.loadNodeAgents)) {
+                center.setTitle(record.get('name'));
+                center.loadNodeAgents(agentIds);
+            }
         },
 
     }
