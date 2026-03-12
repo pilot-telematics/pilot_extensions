@@ -34,7 +34,7 @@ Ext.define('Store.communal.Center', {
             features: [{
                 ftype: 'grouping',
                 startCollapsed: false,
-                hideGroupedHeader:true,
+                hideGroupedHeader: true,
                 groupHeaderTpl: '{name}'
             }],
             tbar: [{
@@ -66,9 +66,9 @@ Ext.define('Store.communal.Center', {
                 }
             }],
             columns: [{
-                text:l('Object'),
+                text: l('Object'),
                 dataIndex: 'vehiclenumber'
-            },{
+            }, {
                 text: 'Название',
                 dataIndex: 'name',
                 flex: 2
@@ -88,7 +88,7 @@ Ext.define('Store.communal.Center', {
                 text: 'Неполадки',
                 dataIndex: 'issues',
                 flex: 1,
-                align:'center',
+                align: 'center',
                 renderer: function (value) {
                     return this.renderIssues(value);
                 },
@@ -125,13 +125,54 @@ Ext.define('Store.communal.Center', {
         return '<div class="comm_status fa fa-circle-check green"></div>';
     },
 
+    getInfoPanel: function () {
+        var mapPanel = this.up('store-communal-map');
+
+        return mapPanel ? mapPanel.info : null;
+    },
+
+    updateInfoSummary: function (stats) {
+        var infoPanel = this.getInfoPanel();
+
+        if (infoPanel && Ext.isFunction(infoPanel.updateSummary)) {
+            infoPanel.updateSummary(stats);
+        }
+    },
+
+    buildSummary: function (rows) {
+        var nowTs = Math.floor(Date.now() / 1000),
+            active = 0,
+            issues = 0;
+
+        Ext.Array.each(rows, function (row) {
+            var changeTs = Number(row.change_ts || 0),
+                issueValue = Number(row.issues || 0);
+
+            if (changeTs > 0 && (nowTs - changeTs) < 3600) {
+                active += 1;
+            }
+
+            if (issueValue > 0) {
+                issues += 1;
+            }
+        });
+
+        return {
+            total: rows.length,
+            active: active,
+            notActive: rows.length - active,
+            issues: issues
+        };
+    },
+
     loadNodeAgents: function (agentIds) {
         if (agentIds) {
             this.ids = Ext.Array.unique(Ext.Array.clean(agentIds || []));
         }
         this.store.removeAll();
 
-        if (!this.ids.length) {
+        if (!this.ids || !this.ids.length) {
+            this.updateInfoSummary({total: 0, active: 0, notActive: 0, issues: 0});
             return;
         }
 
@@ -144,12 +185,15 @@ Ext.define('Store.communal.Center', {
             },
             success: function (response) {
                 var payload = Ext.decode(response.responseText, true),
-                    rows = this.normalizeStatusRows(payload);
+                    rows = this.normalizeStatusRows(payload),
+                    summary = this.buildSummary(rows);
 
                 this.store.loadData(rows);
+                this.updateInfoSummary(summary);
             },
             failure: function () {
                 this.store.removeAll();
+                this.updateInfoSummary({total: 0, active: 0, notActive: 0, issues: 0});
                 Ext.Msg.alert('Error', 'Failed to load vehicle status data.');
             },
             callback: function () {
