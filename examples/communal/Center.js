@@ -8,9 +8,11 @@ Ext.define('Store.communal.Center', {
             fields: [
                 'vehiclenumber',
                 'name',
+                'group',
                 'hum_value',
                 'change_ts',
-                'issues'
+                'issues',
+                'tags'
             ],
             groupField: 'vehiclenumber'
         });
@@ -64,6 +66,78 @@ Ext.define('Store.communal.Center', {
                     },
                     buffer: 500
                 }
+            }, {
+                emptyText: l('Select tags'),
+                name: 'tags[]',
+                xtype: 'tagfield',
+                flex: 1,
+                filterPickList: true,
+                itemId: 'sensor_tags_combo',
+                valueField: 'id',
+                displayField: 'tag_name',
+                store: window.tags_store,
+                multiSelect: true,
+                tpl: Ext.create('Ext.XTemplate',
+                    '{[this.currentKey = null]}' +
+                    '<tpl for=".">',
+                    '<tpl if="this.shouldShowHeader(org_name)">',
+                    '<div class="combo_hdr">{[this.showHeader(values.org_name)]}</div>',
+                    '</tpl>',
+                    '<div class="x-boundlist-item x-form-text-default"><li class="x-tagfield-item {color}" style="background-color:{color}99;"><div class="x-tagfield-item-text">{tag_name}</div></li></div>',
+                    '</tpl>',
+                    {
+                        shouldShowHeader: function (key) {
+                            return this.currentKey != key;
+                        },
+                        showHeader: function (key) {
+                            this.currentKey = key;
+                            return key;
+                        }
+                    }
+                ),
+                listeners: {
+                    change: function (field, newVal) {
+                        var store = field.up('grid').getStore(),
+                            selectedTags = Ext.Array.from(newVal || []);
+
+                        store.removeFilter('tags');
+
+                        if (!selectedTags.length) {
+                            return;
+                        }
+
+                        store.addFilter({
+                            id: 'tags',
+                            filterFn: function (record) {
+                                console.log(record.get('tags'))
+                                var recordTags = Ext.Array.from(record.get('tags') || []);
+                                 console.log(recordTags,selectedTags);
+                                return Ext.Array.intersect(recordTags, selectedTags).length > 0;
+                            }
+                        });
+                    }
+                }
+            }, {
+                xtype: 'checkbox',
+                itemId: 'sensor_issues_only',
+                boxLabel: l('Issues Only'),
+                margin: '0 0 0 8',
+                listeners: {
+                    change: function (cb, checked) {
+                        var store = cb.up('grid').getStore();
+
+                        store.removeFilter('issues');
+
+                        if (checked) {
+                            store.addFilter({
+                                id: 'issues',
+                                filterFn: function (record) {
+                                    return Number(record.get('issues')) !== 0;
+                                }
+                            });
+                        }
+                    }
+                }
             }],
             columns: [{
                 text: l('Object'),
@@ -73,11 +147,15 @@ Ext.define('Store.communal.Center', {
                 dataIndex: 'name',
                 flex: 2
             }, {
-                text: 'Показатель',
+                text: l('Group'),
+                dataIndex: 'group',
+                flex: 1.2
+            }, {
+                text: l('Value'),
                 dataIndex: 'hum_value',
                 flex: 1.5
             }, {
-                text: 'Обновление',
+                text: l('Updated'),
                 dataIndex: 'change_ts',
                 flex: 1.5,
                 renderer: function (value) {
@@ -85,7 +163,7 @@ Ext.define('Store.communal.Center', {
                 },
                 scope: this
             }, {
-                text: 'Неполадки',
+                text: l('Issues'),
                 dataIndex: 'issues',
                 flex: 1,
                 align: 'center',
@@ -215,9 +293,14 @@ Ext.define('Store.communal.Center', {
                 rows.push({
                     vehiclenumber: vehicleNumber,
                     name: sensor.name || sensor.sensor_name || '',
+                    group: sensor.group || '',
                     hum_value: Ext.isEmpty(sensor.hum_value) ? (Ext.isEmpty(sensor.value) ? '' : sensor.value) : sensor.hum_value,
                     change_ts: sensor.change_ts || sensor.ts || null,
-                    issues: 0
+                    issues: 0,
+                    tags: sensor.tags ? sensor.tags.split(',').map(function (tag) { return parseInt(tag);
+                        }).filter(function (tag) {
+                            return Number.isInteger(tag) && tag > 0;
+                        }): []
                 });
             });
         });

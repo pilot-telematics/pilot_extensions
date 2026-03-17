@@ -149,20 +149,20 @@ Ext.define('Store.communal.Tree', {
                     xtype: 'treecolumn'
                 },
                 {
-                    text: l('Object type'),
+                    text: l('Object Type'),
                     dataIndex: 'type',
                     flex: 1,
                     filter: {type: 'string'}
                 },
                 {
-                    text: l('Children count'),
+                    text: l('Children Сount'),
                     dataIndex: 'children_count',
                     flex: 1,
                     filter: {type: 'number'}
 
                 },
                 {
-                    text: l('Issues count'),
+                    text: l('Issues Сount'),
                     dataIndex: 'issues',
                     flex: 1,
                     filter: {type: 'string'}

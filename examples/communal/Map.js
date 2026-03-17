@@ -13,6 +13,12 @@ Ext.define('Store.communal.Map', {
                 split: {
                     size: 6
                 },
+                collapsible: true,
+
+              //  hideCollapseTool: true,
+              //  preventHeader: true,
+                collapseMode:'mini',
+              //  placeholder:{width:5},
                 flex: 1
             });
             this.items = [
