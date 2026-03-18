@@ -5,7 +5,7 @@ Ext.define('Store.communal.MnemoRenderer', {
         width: 1200,
         height: 800
     },
-
+    selectionPadding: 8,
     buildSensorKey: function (sensor) {
         return [
             sensor.vehiclenumber || '',
@@ -103,61 +103,65 @@ Ext.define('Store.communal.MnemoRenderer', {
     drawElement: function (draw, cfg, sensorIndex, options) {
         var me = this,
             group = draw.group(),
-            contentGroup = group.group(),
-            labelText;
+            transformGroup = group.group(),
+            visualGroup = transformGroup.group(),
+            hitGroup = transformGroup.group(),
+            labelText,
+            pipeColor;
 
         cfg.x = Number(cfg.x || 0);
         cfg.y = Number(cfg.y || 0);
         cfg.width = Number(cfg.width || 0);
         cfg.height = Number(cfg.height || 0);
+        pipeColor = cfg.stroke || cfg.color || '#94a3b8';
 
         switch (cfg.type) {
             case 'symbol':
-                me.drawSymbol(contentGroup, cfg);
-                me.addHitArea(contentGroup, cfg.width || 72, cfg.height || 72);
+                me.drawSymbol(visualGroup, cfg);
+                me.addHitArea(hitGroup, cfg.width || 72, cfg.height || 72);
                 break;
 
             case 'hpipe':
-                contentGroup.rect(cfg.width || 160, cfg.height || 14).radius(7).fill(stroke);
+                visualGroup.rect(cfg.width || 160, cfg.height || 14).radius(7).fill(pipeColor);
                 break;
 
             case 'vpipe':
-                contentGroup.rect(cfg.width || 14, cfg.height || 160).radius(7).fill(stroke);
+                visualGroup.rect(cfg.width || 14, cfg.height || 160).radius(7).fill(pipeColor);
                 break;
 
             case 'valve':
-                contentGroup.line(0, cfg.height / 2, cfg.width, cfg.height / 2).stroke({color: '#9ca3af', width: 4});
-                contentGroup.polygon('0,' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
+                visualGroup.line(0, cfg.height / 2, cfg.width, cfg.height / 2).stroke({color: '#9ca3af', width: 4});
+                visualGroup.polygon('0,' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
                     .fill('#ffffff')
                     .stroke({color: '#9ca3af', width: 3});
-                contentGroup.polygon(cfg.width + ',' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
+                visualGroup.polygon(cfg.width + ',' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
                     .fill('#ffffff')
                     .stroke({color: '#9ca3af', width: 3});
                 break;
 
             case 'pump':
-                contentGroup.circle(Math.min(cfg.width, cfg.height)).fill('#ffffff').stroke({color: '#9ca3af', width: 3});
-                contentGroup.polygon('20,18 20,42 42,30').fill('#dbeafe').stroke({color: '#6b7280', width: 2});
+                visualGroup.circle(Math.min(cfg.width, cfg.height)).fill('#ffffff').stroke({color: '#9ca3af', width: 3});
+                visualGroup.polygon('20,18 20,42 42,30').fill('#dbeafe').stroke({color: '#6b7280', width: 2});
                 break;
 
             case 'sensor':
-                contentGroup.circle(Math.min(cfg.width, cfg.height)).fill(cfg.fill || '#ffffff').stroke({color: '#9ca3af', width: 3});
-                labelText = contentGroup.text(cfg.text || 'S').font({size: cfg.fontSize || 14, family: 'Arial, sans-serif', weight: 700});
+                visualGroup.circle(Math.min(cfg.width, cfg.height)).fill(cfg.fill || '#ffffff').stroke({color: '#9ca3af', width: 3});
+                labelText = visualGroup.text(cfg.text || 'S').font({size: cfg.fontSize || 14, family: 'Arial, sans-serif', weight: 700});
                 labelText.fill(cfg.color || '#374151');
                 labelText.center((cfg.width || 34) / 2, (cfg.height || 34) / 2);
                 break;
 
             case 'label':
-                me.drawTextElement(contentGroup, cfg, cfg.text || 'Label');
+                me.drawTextElement(visualGroup, cfg, cfg.text || 'Label');
                 break;
 
             case 'value':
-                me.drawTextElement(contentGroup, cfg, me.resolveValueText(cfg, sensorIndex));
+                me.drawTextElement(visualGroup, cfg, me.resolveValueText(cfg, sensorIndex));
                 break;
         }
 
-        group._selectionTarget = contentGroup;
-        me.applyElementTransform(contentGroup, cfg);
+        group._selectionTarget = visualGroup;
+        me.applyElementTransform(transformGroup, cfg);
         group.move(cfg.x, cfg.y);
         group.addClass('communal-mnemo-element');
         group.attr({'data-mnemo-id': cfg.id});
@@ -215,15 +219,15 @@ Ext.define('Store.communal.MnemoRenderer', {
 
     applyElementTransform: function (group, cfg) {
         var rotation = Number(cfg.rotation || 0),
-            bounds;
+            width = Number(cfg.width || 0),
+            height = Number(cfg.height || 0);
 
         if (!Ext.isEmpty(cfg.opacity)) {
             group.opacity(Number(cfg.opacity));
         }
 
         if (rotation !== 0) {
-            bounds = group.bbox();
-            group.rotate(rotation, bounds.cx, bounds.cy);
+            group.rotate(rotation, width / 2, height / 2);
         }
     },
 
@@ -440,7 +444,8 @@ Ext.define('Store.communal.MnemoRenderer', {
             existing,
             targetGroup,
             bbox,
-            padding = 4;
+            padding = Number(this.selectionPadding || 0),
+            selection;
 
         if (!svgNode) {
             return;
@@ -454,29 +459,43 @@ Ext.define('Store.communal.MnemoRenderer', {
         });
 
         targetGroup = group._selectionTarget || group;
-        bbox = targetGroup.bbox();
-        group.rect(bbox.width + (padding * 2), bbox.height + (padding * 2))
+
+        if (targetGroup.rbox) {
+            bbox = targetGroup.rbox(group);
+        } else {
+            bbox = targetGroup.bbox();
+        }
+
+        selection = group.rect(
+            bbox.width + (padding * 2),
+            bbox.height + (padding * 2)
+        )
             .move(bbox.x - padding, bbox.y - padding)
             .fill('none')
-            .stroke({color: '#2563eb', width: 1, dasharray: '5 3'})
-            .addClass('communal-mnemo-selection')
-            .back();
+            .stroke({
+                color: '#2563eb',
+                width: 1,
+                dasharray: '5 3'
+            })
+            .addClass('communal-mnemo-selection');
+
+        selection.back();
     },
 
     drawTextElement: function (group, cfg, value) {
         var text = group.text(value).font({
-            size: cfg.fontSize || 18,
-            family: 'Arial, sans-serif',
-            weight: cfg.fontWeight || 600
-        }).fill(cfg.color || '#111827'),
+                size: cfg.fontSize || 18,
+                family: 'Arial, sans-serif',
+                weight: cfg.fontWeight || 600
+            }).fill(cfg.color || '#111827'),
             box = text.bbox(),
             rect = group.rect(box.width + 10, box.height + 8)
-            .radius(4)
-            .fill(cfg.fillColor || cfg.background || '#ffffff')
-            .stroke({
-                color: cfg.stroke || cfg.borderColor || '#e2e8f0',
-                width: Ext.isEmpty(cfg.strokeWidth) ? 1 : Number(cfg.strokeWidth)
-            });
+                .radius(4)
+                .fill(cfg.fillColor || cfg.background || '#ffffff')
+                .stroke({
+                    color: cfg.stroke || cfg.borderColor || '#e2e8f0',
+                    width: Ext.isEmpty(cfg.strokeWidth) ? 1 : Number(cfg.strokeWidth)
+                });
 
         rect.back();
         text.move(5, 4);
