@@ -5,24 +5,7 @@ Ext.define('Store.communal.Info', {
 
     initComponent: function () {
         this.title = l('Information');
-        this.tools = [{
-            iconCls: 'fa fa-broom',
-            xtype: 'button',
-            handler: function () {
-                var map = this.up('store-communal-info').mapgetMap();
-                if (map) {
-                    map.removeAllHistoryTracks();
-                    map.removeAllMarkers();
-                    if (!map.circlemarkers) {
-                        map.circlemarkers = [];
-                    }
-                    map.circlemarkers.forEach(function (marker) {
-                        map.removeLayer(marker);
-                        marker = null;
-                    });
-                }
-            }
-        }];
+
 
         this.totalField = Ext.create('Ext.form.field.Display', {
             fieldLabel: l('Total'),

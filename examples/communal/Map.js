@@ -8,25 +8,25 @@ Ext.define('Store.communal.Map', {
                 region: 'center',
                 flex: 1
             });
-            this.info = Ext.create('Store.communal.Info', {
-                region: 'east',
-                split: {
-                    size: 6
-                },
-                collapsible: true,
-
-              //  hideCollapseTool: true,
-              //  preventHeader: true,
-                collapseMode:'mini',
-              //  placeholder:{width:5},
-                flex: 1
-            });
+            this.info = Ext.create('Store.communal.Info');
+            this.mnemo=Ext.create("Store.communal.Mnemo");
             this.items = [
                 this.center,
-                this.info
+                {
+                    xtype: 'tabpanel',
+                    region: 'east',
+                    split: {
+                        size: 6
+                    },
+                    collapsible: true,
+                    //  hideCollapseTool: true,
+                    preventHeader: true,
+                    collapseMode: 'mini',
+                    //  placeholder:{width:5},
+                    flex: 1,
+                    items: [this.info, this.mnemo]
+                }
             ];
-
-
             this.callParent();
 
         }
