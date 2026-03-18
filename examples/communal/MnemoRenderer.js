@@ -103,6 +103,7 @@ Ext.define('Store.communal.MnemoRenderer', {
     drawElement: function (draw, cfg, sensorIndex, options) {
         var me = this,
             group = draw.group(),
+            contentGroup = group.group(),
             labelText;
 
         cfg.x = Number(cfg.x || 0);
@@ -112,50 +113,51 @@ Ext.define('Store.communal.MnemoRenderer', {
 
         switch (cfg.type) {
             case 'symbol':
-                me.drawSymbol(group, cfg);
-                me.addHitArea(group, cfg.width || 72, cfg.height || 72);
+                me.drawSymbol(contentGroup, cfg);
+                me.addHitArea(contentGroup, cfg.width || 72, cfg.height || 72);
                 break;
 
             case 'hpipe':
-                group.rect(cfg.width || 160, cfg.height || 14).radius(7).fill(stroke);
+                contentGroup.rect(cfg.width || 160, cfg.height || 14).radius(7).fill(stroke);
                 break;
 
             case 'vpipe':
-                group.rect(cfg.width || 14, cfg.height || 160).radius(7).fill(stroke);
+                contentGroup.rect(cfg.width || 14, cfg.height || 160).radius(7).fill(stroke);
                 break;
 
             case 'valve':
-                group.line(0, cfg.height / 2, cfg.width, cfg.height / 2).stroke({color: '#9ca3af', width: 4});
-                group.polygon('0,' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
+                contentGroup.line(0, cfg.height / 2, cfg.width, cfg.height / 2).stroke({color: '#9ca3af', width: 4});
+                contentGroup.polygon('0,' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
                     .fill('#ffffff')
                     .stroke({color: '#9ca3af', width: 3});
-                group.polygon(cfg.width + ',' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
+                contentGroup.polygon(cfg.width + ',' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
                     .fill('#ffffff')
                     .stroke({color: '#9ca3af', width: 3});
                 break;
 
             case 'pump':
-                group.circle(Math.min(cfg.width, cfg.height)).fill('#ffffff').stroke({color: '#9ca3af', width: 3});
-                group.polygon('20,18 20,42 42,30').fill('#dbeafe').stroke({color: '#6b7280', width: 2});
+                contentGroup.circle(Math.min(cfg.width, cfg.height)).fill('#ffffff').stroke({color: '#9ca3af', width: 3});
+                contentGroup.polygon('20,18 20,42 42,30').fill('#dbeafe').stroke({color: '#6b7280', width: 2});
                 break;
 
             case 'sensor':
-                group.circle(Math.min(cfg.width, cfg.height)).fill(cfg.fill || '#ffffff').stroke({color: '#9ca3af', width: 3});
-                labelText = group.text(cfg.text || 'S').font({size: cfg.fontSize || 14, family: 'Arial, sans-serif', weight: 700});
+                contentGroup.circle(Math.min(cfg.width, cfg.height)).fill(cfg.fill || '#ffffff').stroke({color: '#9ca3af', width: 3});
+                labelText = contentGroup.text(cfg.text || 'S').font({size: cfg.fontSize || 14, family: 'Arial, sans-serif', weight: 700});
                 labelText.fill(cfg.color || '#374151');
                 labelText.center((cfg.width || 34) / 2, (cfg.height || 34) / 2);
                 break;
 
             case 'label':
-                me.drawTextElement(group, cfg, cfg.text || 'Label');
+                me.drawTextElement(contentGroup, cfg, cfg.text || 'Label');
                 break;
 
             case 'value':
-                me.drawTextElement(group, cfg, me.resolveValueText(cfg, sensorIndex));
+                me.drawTextElement(contentGroup, cfg, me.resolveValueText(cfg, sensorIndex));
                 break;
         }
 
-        me.applyElementTransform(group, cfg);
+        group._selectionTarget = contentGroup;
+        me.applyElementTransform(contentGroup, cfg);
         group.move(cfg.x, cfg.y);
         group.addClass('communal-mnemo-element');
         group.attr({'data-mnemo-id': cfg.id});
@@ -194,8 +196,7 @@ Ext.define('Store.communal.MnemoRenderer', {
             height = Number(cfg.height || 72),
             baseWidth = Number(cfg.baseWidth || 64),
             baseHeight = Number(cfg.baseHeight || 64),
-            primitives = Ext.isArray(cfg.primitives) ? cfg.primitives : [],
-            symbolGroup = group.group();
+            primitives = Ext.isArray(cfg.primitives) ? cfg.primitives : [];
 
         if (!primitives.length) {
             group.rect(width, height).radius(6).fill('#ffffff').stroke({color: '#cbd5e1', width: 1});
@@ -204,19 +205,11 @@ Ext.define('Store.communal.MnemoRenderer', {
         }
 
         Ext.Array.each(primitives, function (primitive) {
-            this.drawPrimitive(symbolGroup, primitive, cfg);
+            this.drawPrimitive(group, primitive, cfg);
         }, this);
 
         if (baseWidth !== width || baseHeight !== height) {
-            symbolGroup.scale(width / baseWidth, height / baseHeight, 0, 0);
-        }
-
-        if (Number(cfg.rotation || 0) !== 0) {
-            symbolGroup.rotate(Number(cfg.rotation || 0), width / 2, height / 2);
-        }
-
-        if (!Ext.isEmpty(cfg.opacity)) {
-            symbolGroup.opacity(Number(cfg.opacity));
+            group.scale(width / baseWidth, height / baseHeight, 0, 0);
         }
     },
 
@@ -445,7 +438,9 @@ Ext.define('Store.communal.MnemoRenderer', {
     setLiveSelection: function (group) {
         var svgNode = group && group.node ? group.node.ownerSVGElement : null,
             existing,
-            bbox;
+            targetGroup,
+            bbox,
+            padding = 4;
 
         if (!svgNode) {
             return;
@@ -458,9 +453,10 @@ Ext.define('Store.communal.MnemoRenderer', {
             }
         });
 
-        bbox = group.bbox();
-        group.rect(bbox.width + 10, bbox.height + 10)
-            .move(-5, -5)
+        targetGroup = group._selectionTarget || group;
+        bbox = targetGroup.bbox();
+        group.rect(bbox.width + (padding * 2), bbox.height + (padding * 2))
+            .move(bbox.x - padding, bbox.y - padding)
             .fill('none')
             .stroke({color: '#2563eb', width: 1, dasharray: '5 3'})
             .addClass('communal-mnemo-selection')
