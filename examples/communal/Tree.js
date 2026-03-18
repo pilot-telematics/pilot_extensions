@@ -229,7 +229,12 @@ Ext.define('Store.communal.Tree', {
         selectRow: function (me, record) {
             var tab = this.up('store-communal-tab'),
                 center = tab && tab.map_frame ? tab.map_frame.center : null,
+                mnemo = tab && tab.map_frame ? tab.map_frame.mnemo : null,
                 agentIds = this.collectAgentIds(record);
+
+            if (mnemo && Ext.isFunction(mnemo.setCurrentNode)) {
+                mnemo.setCurrentNode(record);
+            }
 
             if (center && Ext.isFunction(center.loadNodeAgents)) {
                 center.setTitle(record.get('name'));

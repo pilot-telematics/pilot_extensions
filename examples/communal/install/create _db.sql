@@ -84,3 +84,21 @@ ON CONFLICT (code) DO UPDATE
 ALTER TABLE tree_nodes
     ADD CONSTRAINT tree_nodes_type_fk
         FOREIGN KEY (type) REFERENCES node_types(code);
+
+CREATE TABLE IF NOT EXISTS mnemo_schemes (
+    id          bigserial PRIMARY KEY,
+    account_id  bigint NOT NULL,
+    node_id     bigint NOT NULL REFERENCES tree_nodes(id) ON DELETE CASCADE,
+    schema_json jsonb NOT NULL DEFAULT '{}'::jsonb,
+    created_at  timestamptz NOT NULL DEFAULT now(),
+    updated_at  timestamptz NOT NULL DEFAULT now(),
+    UNIQUE(account_id, node_id)
+);
+
+CREATE INDEX IF NOT EXISTS mnemo_schemes_acc_node_idx
+    ON mnemo_schemes(account_id, node_id);
+
+DROP TRIGGER IF EXISTS trg_mnemo_schemes_updated_at ON mnemo_schemes;
+CREATE TRIGGER trg_mnemo_schemes_updated_at
+    BEFORE UPDATE ON mnemo_schemes
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();

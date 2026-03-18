@@ -4,8 +4,21 @@ Ext.define('Store.communal.Module', {
         'Store.communal.Auth'
     ],
 
-    initModule: function () {
-        //loadLanguage
+    loadExternalScript: function (url, callback, scope) {
+        Ext.Loader.loadScript({
+            url: url,
+            onLoad: function () {
+                Ext.callback(callback, scope || this);
+            },
+            onError: function () {
+                console.log('Cannot load script for communal module:', url);
+                Ext.callback(callback, scope || this);
+            },
+            scope: scope || this
+        });
+    },
+
+    startModuleUi: function () {
         Ext.Ajax.request({
             url:base_url+'../store/communal/lang/lang.json',
             success:function(response){
@@ -38,6 +51,13 @@ Ext.define('Store.communal.Module', {
             }
 
         });
+    },
 
+    initModule: function () {
+        this.loadExternalScript('/resources/js/svg.min.js', function () {
+            this.loadExternalScript('/resources/js/svg.draggable.js', function () {
+                this.startModuleUi();
+            }, this);
+        });
     }
 });

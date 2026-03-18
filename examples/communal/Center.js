@@ -12,7 +12,8 @@ Ext.define('Store.communal.Center', {
                 'hum_value',
                 'change_ts',
                 'issues',
-                'tags'
+                'tags',
+                'sensor_key'
             ],
             groupField: 'vehiclenumber'
         });
@@ -209,6 +210,12 @@ Ext.define('Store.communal.Center', {
         return mapPanel ? mapPanel.info : null;
     },
 
+    getMnemoPanel: function () {
+        var mapPanel = this.up('store-communal-map');
+
+        return mapPanel ? mapPanel.mnemo : null;
+    },
+
     updateInfoSummary: function (stats) {
         var infoPanel = this.getInfoPanel();
 
@@ -251,6 +258,9 @@ Ext.define('Store.communal.Center', {
 
         if (!this.ids || !this.ids.length) {
             this.updateInfoSummary({total: 0, active: 0, notActive: 0, issues: 0});
+            if (this.getMnemoPanel()) {
+                this.getMnemoPanel().setSensorRows([]);
+            }
             return;
         }
 
@@ -264,14 +274,21 @@ Ext.define('Store.communal.Center', {
             success: function (response) {
                 var payload = Ext.decode(response.responseText, true),
                     rows = this.normalizeStatusRows(payload),
-                    summary = this.buildSummary(rows);
+                    summary = this.buildSummary(rows),
+                    mnemo = this.getMnemoPanel();
 
                 this.store.loadData(rows);
                 this.updateInfoSummary(summary);
+                if (mnemo && Ext.isFunction(mnemo.setSensorRows)) {
+                    mnemo.setSensorRows(rows);
+                }
             },
             failure: function () {
                 this.store.removeAll();
                 this.updateInfoSummary({total: 0, active: 0, notActive: 0, issues: 0});
+                if (this.getMnemoPanel()) {
+                    this.getMnemoPanel().setSensorRows([]);
+                }
                 Ext.Msg.alert('Error', 'Failed to load vehicle status data.');
             },
             callback: function () {
@@ -290,14 +307,19 @@ Ext.define('Store.communal.Center', {
                 sensors = Ext.isArray(vehicle.sensors) ? vehicle.sensors : (Ext.isArray(vehicle.sensors_status) ? vehicle.sensors_status : []);
 
             Ext.Array.each(sensors, function (sensor) {
+                var sensorName = sensor.name || sensor.sensor_name || '',
+                    sensorGroup = sensor.group || '',
+                    sensorKey = [vehicleNumber, sensorGroup, sensorName].join('::');
+
                 rows.push({
                     vehiclenumber: vehicleNumber,
-                    name: sensor.name || sensor.sensor_name || '',
-                    group: sensor.group || '',
+                    name: sensorName,
+                    group: sensorGroup,
                     hum_value: Ext.isEmpty(sensor.hum_value) ? (Ext.isEmpty(sensor.value) ? '' : sensor.value) : sensor.hum_value,
                     change_ts: sensor.change_ts || sensor.ts || null,
                     issues: 0,
-                    tags: sensor.tags ? sensor.tags.split(',').map(function (tag) { return parseInt(tag);
+                    sensor_key: sensorKey,
+                    tags: sensor.tags ? sensor.tags.split(',').map(function (tag) { return parseInt(tag, 10);
                         }).filter(function (tag) {
                             return Number.isInteger(tag) && tag > 0;
                         }): []
