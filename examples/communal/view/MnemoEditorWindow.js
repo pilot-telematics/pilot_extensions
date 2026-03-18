@@ -329,12 +329,79 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
         }
     },
 
+    mergeLibraryDefinitions: function (definitions) {
+        var groups = [];
+
+        Ext.Array.each(definitions || [], function (definition) {
+            if (definition && Ext.isArray(definition.groups)) {
+                groups = groups.concat(definition.groups);
+            }
+        });
+
+        return {groups: groups};
+    },
+
+    buildLibrarySourceUrl: function (source) {
+        if (!source) {
+            return null;
+        }
+
+        if (/^https?:/i.test(source) || source.indexOf(base_url) === 0) {
+            return source;
+        }
+
+        return base_url + '../store/communal/store/' + String(source).replace(/^\/+/, '');
+    },
+
+    loadLibrarySources: function (sources) {
+        var remaining = sources.length,
+            loaded = [],
+            hasFailure = false;
+
+        if (!remaining) {
+            this.applyLibraryDefinition({groups: []});
+            return;
+        }
+
+        Ext.Array.each(sources, function (source) {
+            Ext.Ajax.request({
+                url: this.buildLibrarySourceUrl(source),
+                method: 'GET',
+                success: function (response) {
+                    loaded.push(Ext.decode(response.responseText, true) || {groups: []});
+                    remaining -= 1;
+
+                    if (remaining === 0) {
+                        this.applyLibraryDefinition(this.mergeLibraryDefinitions(loaded));
+                    }
+                },
+                failure: function () {
+                    hasFailure = true;
+                    remaining -= 1;
+
+                    if (remaining === 0) {
+                        this.applyLibraryDefinition(this.mergeLibraryDefinitions(loaded));
+                        if (hasFailure) {
+                            Ext.Msg.alert(l('Error'), l('Part of the mnemo library failed to load.'));
+                        }
+                    }
+                },
+                scope: this
+            });
+        }, this);
+    },
+
     loadLibraryDefinition: function () {
         Ext.Ajax.request({
             url: this.libraryUrl,
             method: 'GET',
             success: function (response) {
                 var data = Ext.decode(response.responseText, true);
+
+                if (data && Ext.isArray(data.sources)) {
+                    this.loadLibrarySources(data.sources);
+                    return;
+                }
 
                 this.applyLibraryDefinition(data || {groups: []});
             },

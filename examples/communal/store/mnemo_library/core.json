@@ -1,0 +1,281 @@
+{
+  "groups": [
+    {
+      "id": "pipelines",
+      "title": "Pipelines",
+      "items": [
+        {
+          "key": "pipe_horizontal",
+          "title": "Pipe horizontal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 56, "y2": 32, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_vertical",
+          "title": "Pipe vertical",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 8, "x2": 32, "y2": 56, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_diagonal_forward",
+          "title": "Pipe diagonal /",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "line", "x1": 10, "y1": 54, "x2": 54, "y2": 10, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_diagonal_back",
+          "title": "Pipe diagonal \\",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "line", "x1": 10, "y1": 10, "x2": 54, "y2": 54, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_horizontal_dashed",
+          "title": "Pipe dashed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 56, "y2": 32, "linecap": "round", "dasharray": "6 5" }
+          ]
+        },
+        {
+          "key": "pipe_elbow_top_right",
+          "title": "Elbow top-right",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "path", "d": "M32 56 L32 24 Q32 12 44 12 L56 12", "fill": "none", "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_elbow_top_left",
+          "title": "Elbow top-left",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "path", "d": "M40 56 L40 24 Q40 12 28 12 L16 12", "fill": "none", "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_elbow_bottom_right",
+          "title": "Elbow bottom-right",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "path", "d": "M32 16 L32 48 Q32 60 44 60 L56 60", "fill": "none", "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_elbow_bottom_left",
+          "title": "Elbow bottom-left",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "path", "d": "M40 16 L40 48 Q40 60 28 60 L16 60", "fill": "none", "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_tee_horizontal",
+          "title": "Tee horizontal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 56, "y2": 32, "linecap": "round" },
+            { "type": "line", "x1": 32, "y1": 32, "x2": 32, "y2": 12, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_cross",
+          "title": "Cross",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 56, "y2": 32, "linecap": "round" },
+            { "type": "line", "x1": 32, "y1": 8, "x2": 32, "y2": 56, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "arrow_left",
+          "title": "Arrow left",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "line", "x1": 54, "y1": 32, "x2": 18, "y2": 32, "linecap": "round" },
+            { "type": "polygon", "points": "16,32 32,20 32,44" }
+          ]
+        },
+        {
+          "key": "arrow_right",
+          "title": "Arrow right",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "line", "x1": 10, "y1": 32, "x2": 46, "y2": 32, "linecap": "round" },
+            { "type": "polygon", "points": "48,32 32,20 32,44" }
+          ]
+        },
+        {
+          "key": "arrow_up",
+          "title": "Arrow up",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 54, "x2": 32, "y2": 18, "linecap": "round" },
+            { "type": "polygon", "points": "32,16 20,32 44,32" }
+          ]
+        },
+        {
+          "key": "arrow_down",
+          "title": "Arrow down",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 10, "x2": 32, "y2": 46, "linecap": "round" },
+            { "type": "polygon", "points": "32,48 20,32 44,32" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "graphics",
+      "title": "Graphics",
+      "items": [
+        {
+          "key": "corners",
+          "title": "Corners",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "line", "x1": 14, "y1": 26, "x2": 14, "y2": 14 },
+            { "type": "line", "x1": 14, "y1": 14, "x2": 26, "y2": 14 },
+            { "type": "line", "x1": 50, "y1": 26, "x2": 50, "y2": 14 },
+            { "type": "line", "x1": 50, "y1": 14, "x2": 38, "y2": 14 },
+            { "type": "line", "x1": 14, "y1": 38, "x2": 14, "y2": 50 },
+            { "type": "line", "x1": 14, "y1": 50, "x2": 26, "y2": 50 },
+            { "type": "line", "x1": 50, "y1": 38, "x2": 50, "y2": 50 },
+            { "type": "line", "x1": 50, "y1": 50, "x2": 38, "y2": 50 }
+          ]
+        },
+        {
+          "key": "square",
+          "title": "Square",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "fillColor": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 16, "y": 16, "width": 32, "height": 32, "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "circle_fill",
+          "title": "Circle",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "fillColor": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "ring",
+          "title": "Ring",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "text",
+      "title": "Text",
+      "items": [
+        {
+          "key": "label",
+          "title": "Text label",
+          "insertType": "label",
+          "previewText": "ABC"
+        },
+        {
+          "key": "value",
+          "title": "Value field",
+          "insertType": "value",
+          "previewText": "42.1"
+        }
+      ]
+    }
+  ]
+}

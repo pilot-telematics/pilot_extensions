@@ -1,0 +1,1309 @@
+{
+  "groups": [
+    {
+      "id": "ventilation",
+      "title": "Ventilation",
+      "items": [
+        {
+          "key": "fan_left",
+          "title": "Radial fan left",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "path", "d": "M14 12 L34 12 L34 24 C34 38 24 48 12 48 C6 48 2 44 2 38 C2 24 14 12 14 12 Z", "fill": "none" },
+            { "type": "circle", "cx": 23, "cy": 29, "r": 9, "fill": "none" }
+          ]
+        },
+        {
+          "key": "fan_right",
+          "title": "Radial fan right",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "path", "d": "M50 12 L30 12 L30 24 C30 38 40 48 52 48 C58 48 62 44 62 38 C62 24 50 12 50 12 Z", "fill": "none" },
+            { "type": "circle", "cx": 41, "cy": 29, "r": 9, "fill": "none" }
+          ]
+        },
+        {
+          "key": "vent_rect_diag",
+          "title": "Damper diagonal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 16, "width": 44, "height": 32, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 44, "x2": 50, "y2": 20, "strokeWidth": 3 }
+          ]
+        },
+        {
+          "key": "vent_rect_diag_dashed",
+          "title": "Damper diagonal dashed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 16, "width": 44, "height": 32, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 44, "x2": 50, "y2": 20, "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "vent_rect_v",
+          "title": "Damper V",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 16, "width": 44, "height": 32, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 20, "x2": 32, "y2": 32 },
+            { "type": "line", "x1": 14, "y1": 44, "x2": 32, "y2": 32 }
+          ]
+        },
+        {
+          "key": "vent_rect_v_dashed",
+          "title": "Damper V dashed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 16, "width": 44, "height": 32, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 20, "x2": 32, "y2": 32, "dasharray": "4 3" },
+            { "type": "line", "x1": 14, "y1": 44, "x2": 32, "y2": 32, "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "vent_rect_x",
+          "title": "Damper X",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 16, "width": 44, "height": 32, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 20, "x2": 50, "y2": 44 },
+            { "type": "line", "x1": 14, "y1": 44, "x2": 50, "y2": 20 }
+          ]
+        },
+        {
+          "key": "vent_rect_x_dashed",
+          "title": "Damper X dashed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 16, "width": 44, "height": 32, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 20, "x2": 50, "y2": 44, "dasharray": "4 3" },
+            { "type": "line", "x1": 14, "y1": 44, "x2": 50, "y2": 20, "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "wheel_fan",
+          "title": "Wheel fan",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 22, "fill": "none" },
+            { "type": "circle", "cx": 32, "cy": 32, "r": 6, "fill": "none" },
+            { "type": "line", "x1": 32, "y1": 12, "x2": 32, "y2": 52 },
+            { "type": "line", "x1": 12, "y1": 32, "x2": 52, "y2": 32 },
+            { "type": "line", "x1": 18, "y1": 18, "x2": 46, "y2": 46 },
+            { "type": "line", "x1": 46, "y1": 18, "x2": 18, "y2": 46 }
+          ]
+        },
+        {
+          "key": "wheel_fan_blades",
+          "title": "Wheel fan blades",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 22, "fill": "#ffffff" },
+            { "type": "circle", "cx": 32, "cy": 32, "r": 5, "fill": "#111111", "stroke": "#111111" },
+            { "type": "polygon", "points": "32,12 37,28 27,28", "fill": "#ffffff" },
+            { "type": "polygon", "points": "52,32 36,37 36,27", "fill": "#ffffff" },
+            { "type": "polygon", "points": "32,52 27,36 37,36", "fill": "#ffffff" },
+            { "type": "polygon", "points": "12,32 28,27 28,37", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "round_cross",
+          "title": "Round cross",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 20, "y1": 20, "x2": 44, "y2": 44 },
+            { "type": "line", "x1": 44, "y1": 20, "x2": 20, "y2": 44 }
+          ]
+        },
+        {
+          "key": "round_cross_dashed",
+          "title": "Round cross dashed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 20, "y1": 20, "x2": 44, "y2": 44, "dasharray": "4 3" },
+            { "type": "line", "x1": 44, "y1": 20, "x2": 20, "y2": 44, "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "round_diag",
+          "title": "Round diagonal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 22, "y1": 42, "x2": 42, "y2": 22 }
+          ]
+        },
+        {
+          "key": "round_diag_dashed",
+          "title": "Round diagonal dashed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 22, "y1": 42, "x2": 42, "y2": 22, "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "round_branch",
+          "title": "Round branch",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 22, "y1": 22, "x2": 40, "y2": 40 },
+            { "type": "line", "x1": 32, "y1": 32, "x2": 44, "y2": 20 }
+          ]
+        },
+        {
+          "key": "round_branch_dashed",
+          "title": "Round branch dashed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 22, "y1": 22, "x2": 40, "y2": 40, "dasharray": "4 3" },
+            { "type": "line", "x1": 32, "y1": 32, "x2": 44, "y2": 20, "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "triangle_up",
+          "title": "Triangle up",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "32,16 12,40 52,40", "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 18, "x2": 32, "y2": 40 }
+          ]
+        },
+        {
+          "key": "triangle_down",
+          "title": "Triangle down",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "12,24 52,24 32,48", "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 24, "x2": 32, "y2": 46 }
+          ]
+        },
+        {
+          "key": "vent_rect_black_diag",
+          "title": "Rect black diagonal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 18, "y": 12, "width": 24, "height": 44, "fill": "#ffffff" },
+            { "type": "polygon", "points": "20,52 40,16 40,52", "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "vent_rect_black_diag_rev",
+          "title": "Rect black diagonal reverse",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 18, "y": 12, "width": 24, "height": 44, "fill": "#ffffff" },
+            { "type": "polygon", "points": "20,16 40,16 40,52", "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "vent_rect_black",
+          "title": "Rect black",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "rect", "x": 20, "y": 12, "width": 20, "height": 44, "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "vent_diamond_dashed",
+          "title": "Diamond dashed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "32,12 52,32 32,52 12,32", "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 16, "x2": 32, "y2": 48, "dasharray": "4 3" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "armature",
+      "title": "Armature",
+      "items": [
+        {
+          "key": "arm_triangle_left",
+          "title": "Triangle left",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "22,20 38,12 38,28", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_triangle_right",
+          "title": "Triangle right",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "42,20 26,12 26,28", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_double_horizontal",
+          "title": "Double horizontal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 22, "y1": 24, "x2": 42, "y2": 24 },
+            { "type": "line", "x1": 22, "y1": 32, "x2": 42, "y2": 32 }
+          ]
+        },
+        {
+          "key": "arm_double_vertical",
+          "title": "Double vertical",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 28, "y1": 16, "x2": 28, "y2": 40 },
+            { "type": "line", "x1": 36, "y1": 16, "x2": 36, "y2": 40 }
+          ]
+        },
+        {
+          "key": "arm_gate_black_right",
+          "title": "Gate black right",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "16,32 36,20 36,44", "fill": "#ffffff" },
+            { "type": "polygon", "points": "60,32 36,20 36,44", "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "arm_gate_black_left",
+          "title": "Gate black left",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "16,32 40,20 40,44", "fill": "#111111", "stroke": "#111111" },
+            { "type": "polygon", "points": "60,32 40,20 40,44", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_hourglass_black_top",
+          "title": "Hourglass black top",
+          "type": "symbol",
+          "width": 72,
+          "height": 88,
+          "baseWidth": 64,
+          "baseHeight": 88,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "20,18 44,18 32,40", "fill": "#111111", "stroke": "#111111" },
+            { "type": "polygon", "points": "20,62 44,62 32,40", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_hourglass_black_bottom",
+          "title": "Hourglass black bottom",
+          "type": "symbol",
+          "width": 72,
+          "height": 88,
+          "baseWidth": 64,
+          "baseHeight": 88,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "20,18 44,18 32,40", "fill": "#ffffff" },
+            { "type": "polygon", "points": "20,62 44,62 32,40", "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "arm_circle_stem_left",
+          "title": "Circle stem left",
+          "type": "symbol",
+          "width": 72,
+          "height": 88,
+          "baseWidth": 64,
+          "baseHeight": 88,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 12, "x2": 32, "y2": 24 },
+            { "type": "circle", "cx": 32, "cy": 38, "r": 14, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 24, "x2": 20, "y2": 24 },
+            { "type": "line", "x1": 32, "y1": 24, "x2": 32, "y2": 52 }
+          ]
+        },
+        {
+          "key": "arm_circle_stem_right",
+          "title": "Circle stem right",
+          "type": "symbol",
+          "width": 72,
+          "height": 88,
+          "baseWidth": 64,
+          "baseHeight": 88,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 12, "x2": 32, "y2": 24 },
+            { "type": "circle", "cx": 32, "cy": 38, "r": 14, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 24, "x2": 44, "y2": 24 }
+          ]
+        },
+        {
+          "key": "arm_motor_simple",
+          "title": "Motor simple",
+          "type": "symbol",
+          "width": 72,
+          "height": 96,
+          "baseWidth": 64,
+          "baseHeight": 96,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 18, "r": 11, "fill": "#ffffff" },
+            { "type": "text", "text": "M", "x": 32, "y": 22, "fontSize": 13, "fontWeight": 700, "textAnchor": "middle" },
+            { "type": "line", "x1": 32, "y1": 30, "x2": 32, "y2": 56 }
+          ]
+        },
+        {
+          "key": "arm_motor_gate_up",
+          "title": "Motor gate up",
+          "type": "symbol",
+          "width": 88,
+          "height": 104,
+          "baseWidth": 88,
+          "baseHeight": 104,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 44, "cy": 16, "r": 11, "fill": "#ffffff" },
+            { "type": "text", "text": "M", "x": 44, "y": 20, "fontSize": 13, "fontWeight": 700, "textAnchor": "middle" },
+            { "type": "line", "x1": 44, "y1": 28, "x2": 44, "y2": 40 },
+            { "type": "polygon", "points": "18,52 40,38 40,66", "fill": "#ffffff" },
+            { "type": "polygon", "points": "70,52 48,38 48,66", "fill": "#ffffff" },
+            { "type": "polygon", "points": "44,74 32,52 56,52", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_motor_gate_lr",
+          "title": "Motor gate left-right",
+          "type": "symbol",
+          "width": 88,
+          "height": 96,
+          "baseWidth": 88,
+          "baseHeight": 96,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 44, "cy": 16, "r": 11, "fill": "#ffffff" },
+            { "type": "text", "text": "M", "x": 44, "y": 20, "fontSize": 13, "fontWeight": 700, "textAnchor": "middle" },
+            { "type": "line", "x1": 44, "y1": 28, "x2": 44, "y2": 42 },
+            { "type": "polygon", "points": "18,54 40,42 40,66", "fill": "#ffffff" },
+            { "type": "polygon", "points": "70,54 48,42 48,66", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_handwheel_gate",
+          "title": "Handwheel gate",
+          "type": "symbol",
+          "width": 88,
+          "height": 104,
+          "baseWidth": 88,
+          "baseHeight": 104,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "path", "d": "M30 10 C30 2 58 2 58 10 C58 18 30 18 30 10 Z", "fill": "#ffffff" },
+            { "type": "line", "x1": 44, "y1": 18, "x2": 44, "y2": 42 },
+            { "type": "polygon", "points": "18,54 40,42 40,66", "fill": "#ffffff" },
+            { "type": "polygon", "points": "70,54 48,42 48,66", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_square_gate",
+          "title": "Square actuator gate",
+          "type": "symbol",
+          "width": 88,
+          "height": 104,
+          "baseWidth": 88,
+          "baseHeight": 104,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 36, "y": 8, "width": 16, "height": 16, "fill": "#ffffff" },
+            { "type": "line", "x1": 44, "y1": 24, "x2": 44, "y2": 42 },
+            { "type": "polygon", "points": "18,54 40,42 40,66", "fill": "#ffffff" },
+            { "type": "polygon", "points": "70,54 48,42 48,66", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_t_gate",
+          "title": "T handle gate",
+          "type": "symbol",
+          "width": 88,
+          "height": 104,
+          "baseWidth": 88,
+          "baseHeight": 104,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 44, "y1": 8, "x2": 44, "y2": 42 },
+            { "type": "line", "x1": 30, "y1": 8, "x2": 58, "y2": 8 },
+            { "type": "polygon", "points": "18,54 40,42 40,66", "fill": "#ffffff" },
+            { "type": "polygon", "points": "70,54 48,42 48,66", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_rect_cross_dashed",
+          "title": "Rect cross dashed",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 14, "y": 18, "width": 60, "height": 28, "fill": "#ffffff" },
+            { "type": "line", "x1": 18, "y1": 22, "x2": 70, "y2": 42, "dasharray": "4 3" },
+            { "type": "line", "x1": 18, "y1": 42, "x2": 70, "y2": 22, "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "arm_rect_black_diag",
+          "title": "Rect black diagonal",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 14, "y": 18, "width": 60, "height": 28, "fill": "#ffffff" },
+            { "type": "polygon", "points": "18,42 70,22 70,42", "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "arm_rect_arrow",
+          "title": "Rect arrow",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 14, "y": 18, "width": 60, "height": 28, "fill": "#ffffff" },
+            { "type": "polygon", "points": "20,32 54,22 54,42", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_drop_valve",
+          "title": "Drop valve",
+          "type": "symbol",
+          "width": 96,
+          "height": 96,
+          "baseWidth": 96,
+          "baseHeight": 96,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 44, "y1": 8, "x2": 44, "y2": 34 },
+            { "type": "line", "x1": 30, "y1": 8, "x2": 58, "y2": 8 },
+            { "type": "polygon", "points": "18,46 40,34 40,58", "fill": "#ffffff" },
+            { "type": "polygon", "points": "70,46 48,34 48,58", "fill": "#ffffff" },
+            { "type": "path", "d": "M48 46 C66 46 70 54 70 66", "fill": "none" },
+            { "type": "path", "d": "M70 66 C64 72 64 78 70 84 C76 78 76 72 70 66", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_ball_valve_drop",
+          "title": "Ball valve drop",
+          "type": "symbol",
+          "width": 96,
+          "height": 96,
+          "baseWidth": 96,
+          "baseHeight": 96,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "line", "x1": 44, "y1": 8, "x2": 44, "y2": 26 },
+            { "type": "line", "x1": 30, "y1": 8, "x2": 58, "y2": 8 },
+            { "type": "circle", "cx": 32, "cy": 40, "r": 8, "fill": "#111111", "stroke": "#111111" },
+            { "type": "path", "d": "M40 40 C58 40 62 48 62 60", "fill": "none" },
+            { "type": "path", "d": "M62 60 C56 66 56 72 62 78 C68 72 68 66 62 60", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "arm_oval_handle",
+          "title": "Oval handle",
+          "type": "symbol",
+          "width": 104,
+          "height": 72,
+          "baseWidth": 104,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "ellipse", "cx": 28, "cy": 32, "rx": 16, "ry": 9, "fill": "#ffffff" },
+            { "type": "line", "x1": 44, "y1": 32, "x2": 68, "y2": 32 },
+            { "type": "line", "x1": 68, "y1": 32, "x2": 80, "y2": 22 },
+            { "type": "line", "x1": 80, "y1": 22, "x2": 92, "y2": 22 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "valves",
+      "title": "Valves",
+      "items": [
+        {
+          "key": "valve_gate_horizontal",
+          "title": "Gate valve",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 18, "y2": 32, "strokeWidth": 4 },
+            { "type": "line", "x1": 46, "y1": 32, "x2": 56, "y2": 32, "strokeWidth": 4 },
+            { "type": "polygon", "points": "18,32 32,18 32,46", "fill": "#ffffff" },
+            { "type": "polygon", "points": "46,32 32,18 32,46", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "valve_gate_vertical",
+          "title": "Gate valve vertical",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 8, "x2": 32, "y2": 18, "strokeWidth": 4 },
+            { "type": "line", "x1": 32, "y1": 46, "x2": 32, "y2": 56, "strokeWidth": 4 },
+            { "type": "polygon", "points": "32,18 18,32 46,32", "fill": "#ffffff" },
+            { "type": "polygon", "points": "32,46 18,32 46,32", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "valve_check_horizontal",
+          "title": "Check valve",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 18, "y2": 32, "strokeWidth": 4 },
+            { "type": "line", "x1": 46, "y1": 32, "x2": 56, "y2": 32, "strokeWidth": 4 },
+            { "type": "polygon", "points": "20,20 44,32 20,44", "fill": "#ffffff" },
+            { "type": "line", "x1": 44, "y1": 18, "x2": 44, "y2": 46 }
+          ]
+        },
+        {
+          "key": "valve_butterfly",
+          "title": "Butterfly valve",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 56, "y2": 32, "strokeWidth": 4 },
+            { "type": "circle", "cx": 32, "cy": 32, "r": 14, "fill": "#ffffff" },
+            { "type": "line", "x1": 24, "y1": 24, "x2": 40, "y2": 40 },
+            { "type": "line", "x1": 24, "y1": 40, "x2": 40, "y2": 24 }
+          ]
+        },
+        {
+          "key": "valve_control",
+          "title": "Control valve",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 18, "y2": 32, "strokeWidth": 4 },
+            { "type": "line", "x1": 46, "y1": 32, "x2": 56, "y2": 32, "strokeWidth": 4 },
+            { "type": "polygon", "points": "18,32 32,18 32,46", "fill": "#ffffff" },
+            { "type": "polygon", "points": "46,32 32,18 32,46", "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 10, "x2": 32, "y2": 18 },
+            { "type": "rect", "x": 24, "y": 4, "width": 16, "height": 8, "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "valve_balancing",
+          "title": "Balancing valve",
+          "type": "symbol",
+          "width": 80,
+          "height": 72,
+          "baseWidth": 80,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 18, "y2": 32, "strokeWidth": 4 },
+            { "type": "line", "x1": 50, "y1": 32, "x2": 62, "y2": 32, "strokeWidth": 4 },
+            { "type": "polygon", "points": "18,32 34,18 34,46", "fill": "#ffffff" },
+            { "type": "polygon", "points": "50,32 34,18 34,46", "fill": "#ffffff" },
+            { "type": "line", "x1": 34, "y1": 12, "x2": 46, "y2": 4 },
+            { "type": "circle", "cx": 50, "cy": 4, "r": 4, "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "valve_relief",
+          "title": "Relief valve",
+          "type": "symbol",
+          "width": 80,
+          "height": 80,
+          "baseWidth": 80,
+          "baseHeight": 80,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 12, "y1": 44, "x2": 28, "y2": 44, "strokeWidth": 4 },
+            { "type": "line", "x1": 52, "y1": 44, "x2": 68, "y2": 44, "strokeWidth": 4 },
+            { "type": "polygon", "points": "28,44 40,28 52,44", "fill": "#ffffff" },
+            { "type": "line", "x1": 40, "y1": 28, "x2": 40, "y2": 10 },
+            { "type": "path", "d": "M32 10 C34 4 46 4 48 10", "fill": "none" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pumps",
+      "title": "Pumps",
+      "items": [
+        {
+          "key": "pump_inline",
+          "title": "Pump inline",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 18, "y2": 32, "strokeWidth": 4 },
+            { "type": "line", "x1": 46, "y1": 32, "x2": 56, "y2": 32, "strokeWidth": 4 },
+            { "type": "circle", "cx": 32, "cy": 32, "r": 14, "fill": "#ffffff" },
+            { "type": "polygon", "points": "28,22 28,42 42,32", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "pump_dual_horizontal",
+          "title": "Pump dual",
+          "type": "symbol",
+          "width": 96,
+          "height": 72,
+          "baseWidth": 96,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 18, "y": 8, "width": 60, "height": 48, "rx": 10, "ry": 10, "fill": "#ffffff" },
+            { "type": "circle", "cx": 48, "cy": 22, "r": 12, "fill": "#ffffff" },
+            { "type": "circle", "cx": 48, "cy": 42, "r": 12, "fill": "#ffffff" },
+            { "type": "polygon", "points": "45,14 45,30 57,22", "fill": "#ffffff" },
+            { "type": "polygon", "points": "45,34 45,50 57,42", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "pump_centrifugal",
+          "title": "Pump centrifugal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 30, "cy": 32, "r": 16, "fill": "#ffffff" },
+            { "type": "path", "d": "M24 24 C34 20 42 28 36 38 C32 44 22 42 20 34", "fill": "none" },
+            { "type": "line", "x1": 46, "y1": 32, "x2": 58, "y2": 32, "strokeWidth": 4 }
+          ]
+        },
+        {
+          "key": "pump_vertical",
+          "title": "Pump vertical",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 8, "x2": 32, "y2": 18, "strokeWidth": 4 },
+            { "type": "line", "x1": 32, "y1": 46, "x2": 32, "y2": 56, "strokeWidth": 4 },
+            { "type": "circle", "cx": 32, "cy": 32, "r": 14, "fill": "#ffffff" },
+            { "type": "polygon", "points": "22,36 42,36 32,22", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "pump_twin_vertical",
+          "title": "Pump twin vertical",
+          "type": "symbol",
+          "width": 88,
+          "height": 88,
+          "baseWidth": 88,
+          "baseHeight": 88,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 18, "y": 18, "width": 52, "height": 52, "rx": 10, "ry": 10, "fill": "#ffffff" },
+            { "type": "circle", "cx": 32, "cy": 44, "r": 10, "fill": "#ffffff" },
+            { "type": "circle", "cx": 56, "cy": 44, "r": 10, "fill": "#ffffff" },
+            { "type": "polygon", "points": "28,36 28,52 38,44", "fill": "#ffffff" },
+            { "type": "polygon", "points": "52,36 52,52 62,44", "fill": "#ffffff" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tanks",
+      "title": "Tanks",
+      "items": [
+        {
+          "key": "tank_vertical",
+          "title": "Tank vertical",
+          "type": "symbol",
+          "width": 72,
+          "height": 96,
+          "baseWidth": 64,
+          "baseHeight": 96,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 16, "y": 10, "width": 32, "height": 76, "rx": 16, "ry": 16, "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "tank_horizontal",
+          "title": "Tank horizontal",
+          "type": "symbol",
+          "width": 96,
+          "height": 72,
+          "baseWidth": 96,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 16, "width": 76, "height": 32, "rx": 16, "ry": 16, "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "tank_open",
+          "title": "Open tank",
+          "type": "symbol",
+          "width": 72,
+          "height": 96,
+          "baseWidth": 64,
+          "baseHeight": 96,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 16, "y1": 16, "x2": 16, "y2": 82 },
+            { "type": "line", "x1": 48, "y1": 16, "x2": 48, "y2": 82 },
+            { "type": "line", "x1": 16, "y1": 82, "x2": 48, "y2": 82 },
+            { "type": "line", "x1": 16, "y1": 16, "x2": 48, "y2": 16, "dasharray": "6 4" }
+          ]
+        },
+        {
+          "key": "accumulator",
+          "title": "Accumulator",
+          "type": "symbol",
+          "width": 72,
+          "height": 96,
+          "baseWidth": 64,
+          "baseHeight": 96,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 16, "y": 10, "width": 32, "height": 76, "rx": 16, "ry": 16, "fill": "#ffffff" },
+            { "type": "line", "x1": 16, "y1": 42, "x2": 48, "y2": 42 }
+          ]
+        },
+        {
+          "key": "separator_vertical",
+          "title": "Separator",
+          "type": "symbol",
+          "width": 72,
+          "height": 104,
+          "baseWidth": 64,
+          "baseHeight": 104,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 14, "y": 10, "width": 36, "height": 84, "rx": 18, "ry": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 52, "x2": 50, "y2": 52 },
+            { "type": "line", "x1": 18, "y1": 32, "x2": 46, "y2": 32, "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "collector",
+          "title": "Collector",
+          "type": "symbol",
+          "width": 104,
+          "height": 72,
+          "baseWidth": 104,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 22, "width": 84, "height": 20, "rx": 10, "ry": 10, "fill": "#ffffff" },
+            { "type": "line", "x1": 24, "y1": 10, "x2": 24, "y2": 22 },
+            { "type": "line", "x1": 40, "y1": 10, "x2": 40, "y2": 22 },
+            { "type": "line", "x1": 56, "y1": 42, "x2": 56, "y2": 54 },
+            { "type": "line", "x1": 72, "y1": 42, "x2": 72, "y2": 54 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat_exchange",
+      "title": "Heat exchange",
+      "items": [
+        {
+          "key": "heat_rect_diag",
+          "title": "Exchanger diagonal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 12, "width": 44, "height": 40, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 48, "x2": 50, "y2": 16 }
+          ]
+        },
+        {
+          "key": "heat_coil",
+          "title": "Coil",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 6, "y": 10, "width": 52, "height": 44, "fill": "#ffffff" },
+            { "type": "path", "d": "M10 48 C10 16 18 16 18 48 M20 48 C20 16 28 16 28 48 M30 48 C30 16 38 16 38 48 M40 48 C40 16 48 16 48 48", "fill": "none" }
+          ]
+        },
+        {
+          "key": "heat_rect_cross",
+          "title": "Exchanger cross",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 12, "width": 44, "height": 40, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 16, "x2": 50, "y2": 48 },
+            { "type": "line", "x1": 14, "y1": 48, "x2": 50, "y2": 16 }
+          ]
+        },
+        {
+          "key": "heat_diamond_vertical",
+          "title": "Diamond vertical",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "32,8 56,32 32,56 8,32", "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 16, "x2": 32, "y2": 48 }
+          ]
+        },
+        {
+          "key": "heat_capsule",
+          "title": "Capsule exchanger",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 12, "y": 6, "width": 40, "height": 52, "rx": 12, "ry": 12, "fill": "#ffffff" },
+            { "type": "line", "x1": 18, "y1": 50, "x2": 46, "y2": 14 }
+          ]
+        },
+        {
+          "key": "heat_plate_pack",
+          "title": "Plate exchanger",
+          "type": "symbol",
+          "width": 88,
+          "height": 88,
+          "baseWidth": 88,
+          "baseHeight": 88,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 14, "y": 14, "width": 60, "height": 60, "fill": "#ffffff" },
+            { "type": "line", "x1": 24, "y1": 18, "x2": 24, "y2": 70 },
+            { "type": "line", "x1": 34, "y1": 18, "x2": 34, "y2": 70 },
+            { "type": "line", "x1": 44, "y1": 18, "x2": 44, "y2": 70 },
+            { "type": "line", "x1": 54, "y1": 18, "x2": 54, "y2": 70 },
+            { "type": "line", "x1": 64, "y1": 18, "x2": 64, "y2": 70 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sensors",
+      "title": "Sensors",
+      "items": [
+        {
+          "key": "sensor_gauge",
+          "title": "Gauge",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 20, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 32, "x2": 46, "y2": 18 }
+          ]
+        },
+        {
+          "key": "sensor_tag_p",
+          "title": "Tag P",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 18, "r": 9, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 27, "x2": 32, "y2": 56 },
+            { "type": "text", "text": "P", "x": 32, "y": 21, "fontSize": 14, "fontWeight": 700, "fill": "#111111", "textAnchor": "middle" }
+          ]
+        },
+        {
+          "key": "sensor_tag_t",
+          "title": "Tag T",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 18, "r": 9, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 27, "x2": 32, "y2": 56 },
+            { "type": "text", "text": "T", "x": 32, "y": 21, "fontSize": 14, "fontWeight": 700, "fill": "#111111", "textAnchor": "middle" }
+          ]
+        },
+        {
+          "key": "sensor_tag_f",
+          "title": "Tag F",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 18, "r": 9, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 27, "x2": 32, "y2": 56 },
+            { "type": "text", "text": "F", "x": 32, "y": 21, "fontSize": 14, "fontWeight": 700, "fill": "#111111", "textAnchor": "middle" }
+          ]
+        },
+        {
+          "key": "sensor_tag_l",
+          "title": "Tag L",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 18, "r": 9, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 27, "x2": 32, "y2": 56 },
+            { "type": "text", "text": "L", "x": 32, "y": 21, "fontSize": 14, "fontWeight": 700, "fill": "#111111", "textAnchor": "middle" }
+          ]
+        },
+        {
+          "key": "sensor_thermo",
+          "title": "Thermometer",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 28, "y1": 18, "x2": 28, "y2": 42, "strokeWidth": 4, "linecap": "round" },
+            { "type": "circle", "cx": 28, "cy": 48, "r": 6, "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "sensor_local_indicator",
+          "title": "Local indicator",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 19, "y1": 19, "x2": 45, "y2": 45 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "boilers",
+      "title": "Boilers",
+      "items": [
+        {
+          "key": "boiler_vertical",
+          "title": "Boiler vertical",
+          "type": "symbol",
+          "width": 88,
+          "height": 112,
+          "baseWidth": 80,
+          "baseHeight": 112,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 18, "y": 10, "width": 44, "height": 92, "rx": 18, "ry": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 18, "y1": 30, "x2": 62, "y2": 30 },
+            { "type": "line", "x1": 18, "y1": 82, "x2": 62, "y2": 82 }
+          ]
+        },
+        {
+          "key": "boiler_horizontal",
+          "title": "Boiler horizontal",
+          "type": "symbol",
+          "width": 112,
+          "height": 80,
+          "baseWidth": 112,
+          "baseHeight": 80,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 18, "width": 92, "height": 44, "rx": 18, "ry": 18, "fill": "#ffffff" },
+            { "type": "line", "x1": 30, "y1": 18, "x2": 30, "y2": 62 },
+            { "type": "line", "x1": 82, "y1": 18, "x2": 82, "y2": 62 }
+          ]
+        },
+        {
+          "key": "burner",
+          "title": "Burner",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "fillColor": "#ffffff",
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 20, "width": 24, "height": 24, "fill": "#ffffff" },
+            { "type": "path", "d": "M36 32 C44 20 54 16 60 22 C66 28 64 40 54 48 C50 38 42 40 36 32 Z", "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "chimney",
+          "title": "Chimney",
+          "type": "symbol",
+          "width": 72,
+          "height": 112,
+          "baseWidth": 64,
+          "baseHeight": 112,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 22, "y": 16, "width": 20, "height": 76, "fill": "#ffffff" },
+            { "type": "line", "x1": 18, "y1": 16, "x2": 46, "y2": 16, "strokeWidth": 4 },
+            { "type": "path", "d": "M18 102 C24 94 28 94 34 102 C40 94 44 94 50 102", "fill": "none" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "filters_meters",
+      "title": "Filters & meters",
+      "items": [
+        {
+          "key": "filter_y",
+          "title": "Y-filter",
+          "type": "symbol",
+          "width": 80,
+          "height": 72,
+          "baseWidth": 80,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 58, "y2": 32, "strokeWidth": 4 },
+            { "type": "line", "x1": 36, "y1": 32, "x2": 52, "y2": 48 },
+            { "type": "line", "x1": 52, "y1": 48, "x2": 62, "y2": 58 },
+            { "type": "line", "x1": 42, "y1": 38, "x2": 54, "y2": 50, "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "filter_mesh",
+          "title": "Mesh filter",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 12, "y": 14, "width": 40, "height": 36, "fill": "#ffffff" },
+            { "type": "line", "x1": 18, "y1": 14, "x2": 18, "y2": 50, "strokeWidth": 1 },
+            { "type": "line", "x1": 26, "y1": 14, "x2": 26, "y2": 50, "strokeWidth": 1 },
+            { "type": "line", "x1": 34, "y1": 14, "x2": 34, "y2": 50, "strokeWidth": 1 },
+            { "type": "line", "x1": 42, "y1": 14, "x2": 42, "y2": 50, "strokeWidth": 1 }
+          ]
+        },
+        {
+          "key": "flow_meter_inline",
+          "title": "Flow meter",
+          "type": "symbol",
+          "width": 80,
+          "height": 72,
+          "baseWidth": 80,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 20, "y2": 32, "strokeWidth": 4 },
+            { "type": "line", "x1": 44, "y1": 32, "x2": 58, "y2": 32, "strokeWidth": 4 },
+            { "type": "ellipse", "cx": 32, "cy": 32, "rx": 12, "ry": 8, "fill": "#ffffff" },
+            { "type": "line", "x1": 24, "y1": 32, "x2": 40, "y2": 32, "strokeWidth": 1 }
+          ]
+        },
+        {
+          "key": "heat_meter",
+          "title": "Heat meter",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 12, "y": 20, "width": 28, "height": 24, "fill": "#ffffff" },
+            { "type": "text", "text": "Q", "x": 26, "y": 36, "fontSize": 16, "fontWeight": 700, "textAnchor": "middle" },
+            { "type": "line", "x1": 40, "y1": 32, "x2": 58, "y2": 20 },
+            { "type": "line", "x1": 40, "y1": 32, "x2": 58, "y2": 44 },
+            { "type": "circle", "cx": 62, "cy": 20, "r": 4, "fill": "#ffffff" },
+            { "type": "circle", "cx": 62, "cy": 44, "r": 4, "fill": "#ffffff" }
+          ]
+        }
+      ]
+    }
+  ]
+}

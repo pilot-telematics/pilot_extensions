@@ -1,0 +1,171 @@
+{
+  "groups": [
+    {
+      "id": "electrical_power",
+      "title": "Electrical power",
+      "items": [
+        {
+          "key": "cable_horizontal",
+          "title": "Cable horizontal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 56, "y2": 32 }
+          ]
+        },
+        {
+          "key": "cable_vertical",
+          "title": "Cable vertical",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 8, "x2": 32, "y2": 56 }
+          ]
+        },
+        {
+          "key": "junction_box",
+          "title": "Junction box",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 14, "y": 14, "width": 36, "height": 36, "fill": "#ffffff" },
+            { "type": "circle", "cx": 32, "cy": 32, "r": 3, "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "ground",
+          "title": "Ground",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 12, "x2": 32, "y2": 30 },
+            { "type": "line", "x1": 20, "y1": 30, "x2": 44, "y2": 30 },
+            { "type": "line", "x1": 24, "y1": 36, "x2": 40, "y2": 36 },
+            { "type": "line", "x1": 28, "y1": 42, "x2": 36, "y2": 42 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "electrical_switchgear",
+      "title": "Electrical switchgear",
+      "items": [
+        {
+          "key": "breaker_open",
+          "title": "Breaker open",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 26, "y2": 32 },
+            { "type": "line", "x1": 46, "y1": 20, "x2": 64, "y2": 32 },
+            { "type": "circle", "cx": 26, "cy": 32, "r": 3, "fill": "#111111", "stroke": "#111111" },
+            { "type": "circle", "cx": 46, "cy": 20, "r": 3, "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "breaker_closed",
+          "title": "Breaker closed",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 26, "y2": 32 },
+            { "type": "line", "x1": 26, "y1": 32, "x2": 46, "y2": 32 },
+            { "type": "line", "x1": 46, "y1": 32, "x2": 64, "y2": 32 },
+            { "type": "circle", "cx": 26, "cy": 32, "r": 3, "fill": "#111111", "stroke": "#111111" },
+            { "type": "circle", "cx": 46, "cy": 32, "r": 3, "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "fuse",
+          "title": "Fuse",
+          "type": "symbol",
+          "width": 88,
+          "height": 72,
+          "baseWidth": 88,
+          "baseHeight": 64,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 20, "y2": 32 },
+            { "type": "rect", "x": 20, "y": 24, "width": 24, "height": 16, "fill": "#ffffff" },
+            { "type": "line", "x1": 44, "y1": 32, "x2": 58, "y2": 32 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "electrical_control",
+      "title": "Electrical control",
+      "items": [
+        {
+          "key": "lamp",
+          "title": "Indicator lamp",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 28, "r": 14, "fill": "#ffffff" },
+            { "type": "line", "x1": 22, "y1": 18, "x2": 42, "y2": 38 },
+            { "type": "line", "x1": 42, "y1": 18, "x2": 22, "y2": 38 },
+            { "type": "line", "x1": 32, "y1": 42, "x2": 32, "y2": 56 }
+          ]
+        },
+        {
+          "key": "push_button",
+          "title": "Push button",
+          "type": "symbol",
+          "width": 72,
+          "height": 88,
+          "baseWidth": 64,
+          "baseHeight": 88,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 20, "r": 10, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 30, "x2": 32, "y2": 54 },
+            { "type": "line", "x1": 22, "y1": 54, "x2": 42, "y2": 54 }
+          ]
+        },
+        {
+          "key": "selector_switch",
+          "title": "Selector switch",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 16, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 32, "x2": 44, "y2": 22 },
+            { "type": "line", "x1": 20, "y1": 32, "x2": 16, "y2": 32 },
+            { "type": "line", "x1": 48, "y1": 32, "x2": 52, "y2": 32 }
+          ]
+        }
+      ]
+    }
+  ]
+}
