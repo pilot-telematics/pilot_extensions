@@ -1,0 +1,436 @@
+{
+  "groups": [
+    {
+      "id": "pipelines",
+      "title": "Pipelines",
+      "items": [
+        {
+          "key": "pipe_horizontal",
+          "title": "Pipe horizontal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 56, "y2": 32, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_vertical",
+          "title": "Pipe vertical",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 8, "x2": 32, "y2": 56, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_diagonal_forward",
+          "title": "Pipe diagonal /",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "line", "x1": 10, "y1": 54, "x2": 54, "y2": 10, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_diagonal_back",
+          "title": "Pipe diagonal \\",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "line", "x1": 10, "y1": 10, "x2": 54, "y2": 54, "linecap": "round" }
+          ]
+        },
+        {
+          "key": "pipe_horizontal_dashed",
+          "title": "Pipe dashed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "line", "x1": 8, "y1": 32, "x2": 56, "y2": 32, "linecap": "round", "dasharray": "6 5" }
+          ]
+        },
+        {
+          "key": "arrow_left",
+          "title": "Arrow left",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "line", "x1": 54, "y1": 32, "x2": 18, "y2": 32, "linecap": "round" },
+            { "type": "polygon", "points": "16,32 32,20 32,44" }
+          ]
+        },
+        {
+          "key": "arrow_right",
+          "title": "Arrow right",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "line", "x1": 10, "y1": 32, "x2": 46, "y2": 32, "linecap": "round" },
+            { "type": "polygon", "points": "48,32 32,20 32,44" }
+          ]
+        },
+        {
+          "key": "arrow_up",
+          "title": "Arrow up",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 54, "x2": 32, "y2": 18, "linecap": "round" },
+            { "type": "polygon", "points": "32,16 20,32 44,32" }
+          ]
+        },
+        {
+          "key": "arrow_down",
+          "title": "Arrow down",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "fillColor": "#111111",
+          "primitives": [
+            { "type": "line", "x1": 32, "y1": 10, "x2": 32, "y2": 46, "linecap": "round" },
+            { "type": "polygon", "points": "32,48 20,32 44,32"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ventilation",
+      "title": "Ventilation",
+      "items": [
+        {
+          "key": "fan_left",
+          "title": "Fan left",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "path", "d": "M14 12 L34 12 L34 24 C34 38 24 48 12 48 C6 48 2 44 2 38 C2 24 14 12 14 12 Z", "fill": "none" },
+            { "type": "circle", "cx": 23, "cy": 29, "r": 9, "fill": "none" }
+          ]
+        },
+        {
+          "key": "fan_right",
+          "title": "Fan right",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 3,
+          "primitives": [
+            { "type": "path", "d": "M50 12 L30 12 L30 24 C30 38 40 48 52 48 C58 48 62 44 62 38 C62 24 50 12 50 12 Z", "fill": "none" },
+            { "type": "circle", "cx": 41, "cy": 29, "r": 9, "fill": "none" }
+          ]
+        },
+        {
+          "key": "damper",
+          "title": "Damper",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 16, "width": 44, "height": 32, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 44, "x2": 50, "y2": 20, "strokeWidth": 3 }
+          ]
+        },
+        {
+          "key": "damper_cross",
+          "title": "Damper crossed",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 16, "width": 44, "height": 32, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 20, "x2": 50, "y2": 44 },
+            { "type": "line", "x1": 14, "y1": 44, "x2": 50, "y2": 20 }
+          ]
+        },
+        {
+          "key": "wheel_fan",
+          "title": "Wheel fan",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 22, "fill": "none" },
+            { "type": "circle", "cx": 32, "cy": 32, "r": 6, "fill": "none" },
+            { "type": "line", "x1": 32, "y1": 12, "x2": 32, "y2": 52 },
+            { "type": "line", "x1": 12, "y1": 32, "x2": 52, "y2": 32 },
+            { "type": "line", "x1": 18, "y1": 18, "x2": 46, "y2": 46 },
+            { "type": "line", "x1": 46, "y1": 18, "x2": 18, "y2": 46 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat_exchange",
+      "title": "Heat exchange",
+      "items": [
+        {
+          "key": "heat_rect_diag",
+          "title": "Exchanger diagonal",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 12, "width": 44, "height": 40, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 48, "x2": 50, "y2": 16 }
+          ]
+        },
+        {
+          "key": "heat_rect_cross",
+          "title": "Exchanger cross",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 10, "y": 12, "width": 44, "height": 40, "fill": "#ffffff" },
+            { "type": "line", "x1": 14, "y1": 16, "x2": 50, "y2": 48 },
+            { "type": "line", "x1": 14, "y1": 48, "x2": 50, "y2": 16 }
+          ]
+        },
+        {
+          "key": "heat_diamond_vertical",
+          "title": "Diamond vertical",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "32,8 56,32 32,56 8,32", "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 16, "x2": 32, "y2": 48 }
+          ]
+        },
+        {
+          "key": "heat_coil",
+          "title": "Coil",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 6, "y": 10, "width": 52, "height": 44, "fill": "#ffffff" },
+            { "type": "path", "d": "M10 48 C10 16 18 16 18 48 M20 48 C20 16 28 16 28 48 M30 48 C30 16 38 16 38 48 M40 48 C40 16 48 16 48 48", "fill": "none" }
+          ]
+        },
+        {
+          "key": "heat_capsule",
+          "title": "Capsule exchanger",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 12, "y": 6, "width": 40, "height": 52, "rx": 12, "ry": 12, "fill": "#ffffff" },
+            { "type": "line", "x1": 18, "y1": 50, "x2": 46, "y2": 14 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sensors",
+      "title": "Sensors",
+      "items": [
+        {
+          "key": "sensor_gauge",
+          "title": "Gauge",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 20, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 32, "x2": 46, "y2": 18 }
+          ]
+        },
+        {
+          "key": "sensor_thermo",
+          "title": "Thermometer",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 28, "y1": 18, "x2": 28, "y2": 42, "strokeWidth": 4, "linecap": "round" },
+            { "type": "circle", "cx": 28, "cy": 48, "r": 6, "fill": "#ffffff" }
+          ]
+        },
+        {
+          "key": "sensor_alarm",
+          "title": "Alarm",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "fillColor": "#111111",
+          "strokeWidth": 1,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 8, "fill": "#111111", "stroke": "#111111" },
+            { "type": "line", "x1": 32, "y1": 10, "x2": 32, "y2": 20 },
+            { "type": "line", "x1": 32, "y1": 44, "x2": 32, "y2": 54 },
+            { "type": "line", "x1": 10, "y1": 32, "x2": 20, "y2": 32 },
+            { "type": "line", "x1": 44, "y1": 32, "x2": 54, "y2": 32 },
+            { "type": "line", "x1": 16, "y1": 16, "x2": 23, "y2": 23 },
+            { "type": "line", "x1": 41, "y1": 41, "x2": 48, "y2": 48 },
+            { "type": "line", "x1": 16, "y1": 48, "x2": 23, "y2": 41 },
+            { "type": "line", "x1": 41, "y1": 23, "x2": 48, "y2": 16 }
+          ]
+        },
+        {
+          "key": "sensor_speaker",
+          "title": "Speaker",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polygon", "points": "12,24 24,24 34,16 34,48 24,40 12,40", "fill": "#ffffff" },
+            { "type": "path", "d": "M38 24 Q50 32 38 40", "fill": "none" },
+            { "type": "path", "d": "M44 18 Q60 32 44 46", "fill": "none" }
+          ]
+        },
+        {
+          "key": "sensor_tag_p",
+          "title": "Tag P",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 18, "r": 9, "fill": "#ffffff" },
+            { "type": "line", "x1": 32, "y1": 27, "x2": 32, "y2": 56 },
+            { "type": "text", "text": "P", "x": 32, "y": 21, "fontSize": 14, "fontWeight": 700, "fill": "#111111", "textAnchor": "middle" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "graphics",
+      "title": "Graphics",
+      "items": [
+        {
+          "key": "corners",
+          "title": "Corners",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 4,
+          "primitives": [
+            { "type": "line", "x1": 14, "y1": 26, "x2": 14, "y2": 14 },
+            { "type": "line", "x1": 14, "y1": 14, "x2": 26, "y2": 14 },
+            { "type": "line", "x1": 50, "y1": 26, "x2": 50, "y2": 14 },
+            { "type": "line", "x1": 50, "y1": 14, "x2": 38, "y2": 14 },
+            { "type": "line", "x1": 14, "y1": 38, "x2": 14, "y2": 50 },
+            { "type": "line", "x1": 14, "y1": 50, "x2": 26, "y2": 50 },
+            { "type": "line", "x1": 50, "y1": 38, "x2": 50, "y2": 50 },
+            { "type": "line", "x1": 50, "y1": 50, "x2": 38, "y2": 50 }
+          ]
+        },
+        {
+          "key": "square",
+          "title": "Square",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "fillColor": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 16, "y": 16, "width": 32, "height": 32, "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "circle_fill",
+          "title": "Circle",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "fillColor": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#111111", "stroke": "#111111" }
+          ]
+        },
+        {
+          "key": "ring",
+          "title": "Ring",
+          "type": "symbol",
+          "width": 72,
+          "height": 72,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "text",
+      "title": "Text",
+      "items": [
+        {
+          "key": "label",
+          "title": "Text label",
+          "insertType": "label",
+          "previewText": "ABC"
+        },
+        {
+          "key": "value",
+          "title": "Value field",
+          "insertType": "value",
+          "previewText": "42.1"
+        }
+      ]
+    }
+  ]
+}
