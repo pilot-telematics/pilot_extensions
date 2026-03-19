@@ -89,14 +89,40 @@ CREATE TABLE IF NOT EXISTS mnemo_schemes (
     id          bigserial PRIMARY KEY,
     account_id  bigint NOT NULL,
     node_id     bigint NOT NULL REFERENCES tree_nodes(id) ON DELETE CASCADE,
+    name        text NOT NULL DEFAULT 'Schema 1',
     schema_json jsonb NOT NULL DEFAULT '{}'::jsonb,
     created_at  timestamptz NOT NULL DEFAULT now(),
-    updated_at  timestamptz NOT NULL DEFAULT now(),
-    UNIQUE(account_id, node_id)
+    updated_at  timestamptz NOT NULL DEFAULT now()
 );
+
+ALTER TABLE mnemo_schemes
+    ADD COLUMN IF NOT EXISTS name text;
+
+UPDATE mnemo_schemes
+SET name = 'Schema 1'
+WHERE COALESCE(NULLIF(trim(name), ''), '') = '';
+
+ALTER TABLE mnemo_schemes
+    ALTER COLUMN name SET DEFAULT 'Schema 1';
+
+ALTER TABLE mnemo_schemes
+    ALTER COLUMN name SET NOT NULL;
+
+ALTER TABLE mnemo_schemes
+    DROP CONSTRAINT IF EXISTS mnemo_schemes_account_id_node_id_key;
+
+ALTER TABLE mnemo_schemes
+    DROP CONSTRAINT IF EXISTS mnemo_schemes_account_id_node_id_name_key;
+
+ALTER TABLE mnemo_schemes
+    ADD CONSTRAINT mnemo_schemes_account_id_node_id_name_key
+        UNIQUE(account_id, node_id, name);
 
 CREATE INDEX IF NOT EXISTS mnemo_schemes_acc_node_idx
     ON mnemo_schemes(account_id, node_id);
+
+CREATE INDEX IF NOT EXISTS mnemo_schemes_acc_node_name_idx
+    ON mnemo_schemes(account_id, node_id, name);
 
 DROP TRIGGER IF EXISTS trg_mnemo_schemes_updated_at ON mnemo_schemes;
 CREATE TRIGGER trg_mnemo_schemes_updated_at

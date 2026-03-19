@@ -26,11 +26,21 @@ Ext.define('Store.communal.MnemoStorage', {
         return data;
     },
 
-    load: function (nodeId, callbacks) {
+    normalizeRecord: function (nodeId, record, index) {
+        record = record || {};
+
+        return {
+            id: Ext.isEmpty(record.id) ? null : Number(record.id),
+            name: record.name || ('Schema ' + Number(index || 1)),
+            schema: this.normalizeSchema(nodeId, record.schema)
+        };
+    },
+
+    loadList: function (nodeId, callbacks) {
         callbacks = callbacks || {};
 
         Ext.Ajax.request({
-            url: '/store/communal/backend/mnemo.php?op=read',
+            url: '/store/communal/backend/mnemo.php?op=list',
             method: 'GET',
             headers: this.getHeaders(),
             params: {
@@ -38,9 +48,13 @@ Ext.define('Store.communal.MnemoStorage', {
             },
             success: function (response) {
                 var payload = Ext.decode(response.responseText, true),
-                    schema = payload && payload.schema ? payload.schema : this.getEmptySchema(nodeId);
+                    records = [];
 
-                Ext.callback(callbacks.success, callbacks.scope || this, [this.normalizeSchema(nodeId, schema)]);
+                Ext.Array.each(payload && payload.schemas ? payload.schemas : [], function (record, index) {
+                    records.push(this.normalizeRecord(nodeId, record, index + 1));
+                }, this);
+
+                Ext.callback(callbacks.success, callbacks.scope || this, [records]);
             },
             failure: function (response) {
                 Ext.callback(callbacks.failure, callbacks.scope || this, [response]);
@@ -49,7 +63,7 @@ Ext.define('Store.communal.MnemoStorage', {
         });
     },
 
-    save: function (nodeId, schema, callbacks) {
+    save: function (nodeId, schemaId, name, schema, callbacks) {
         callbacks = callbacks || {};
 
         Ext.Ajax.request({
@@ -60,13 +74,15 @@ Ext.define('Store.communal.MnemoStorage', {
             }, this.getHeaders()),
             jsonData: {
                 node_id: nodeId,
+                schema_id: schemaId || null,
+                name: name || '',
                 schema: this.normalizeSchema(nodeId, schema)
             },
             success: function (response) {
                 var payload = Ext.decode(response.responseText, true),
-                    savedSchema = payload && payload.schema ? payload.schema : this.getEmptySchema(nodeId);
+                    record = payload && payload.record ? payload.record : null;
 
-                Ext.callback(callbacks.success, callbacks.scope || this, [this.normalizeSchema(nodeId, savedSchema)]);
+                Ext.callback(callbacks.success, callbacks.scope || this, [this.normalizeRecord(nodeId, record, 1)]);
             },
             failure: function (response) {
                 Ext.callback(callbacks.failure, callbacks.scope || this, [response]);
@@ -75,7 +91,7 @@ Ext.define('Store.communal.MnemoStorage', {
         });
     },
 
-    remove: function (nodeId, callbacks) {
+    remove: function (nodeId, schemaId, callbacks) {
         callbacks = callbacks || {};
 
         Ext.Ajax.request({
@@ -85,10 +101,11 @@ Ext.define('Store.communal.MnemoStorage', {
                 'Content-Type': 'application/json'
             }, this.getHeaders()),
             jsonData: {
-                node_id: nodeId
+                node_id: nodeId,
+                schema_id: schemaId
             },
             success: function () {
-                Ext.callback(callbacks.success, callbacks.scope || this, [this.getEmptySchema(nodeId)]);
+                Ext.callback(callbacks.success, callbacks.scope || this, [schemaId]);
             },
             failure: function (response) {
                 Ext.callback(callbacks.failure, callbacks.scope || this, [response]);

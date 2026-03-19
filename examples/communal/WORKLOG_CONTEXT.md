@@ -38,7 +38,10 @@ The module is used to:
 
 - `Mnemo.js`
   - viewer panel for node mnemonic schemes
-  - loads/saves/removes schema through backend storage
+  - supports multiple schemas per node
+  - shows schema selector combobox in toolbar
+  - add opens editor immediately with a generated default schema name
+  - edit/delete act on the currently selected schema
 
 - `MnemoRenderer.js`
   - single renderer for both viewer and editor
@@ -46,6 +49,7 @@ The module is used to:
 
 - `view/MnemoEditorWindow.js`
   - mnemonic editor window
+  - schema name is edited directly in the editor toolbar
   - property form
   - keyboard control
   - library loading from JSON manifests/sources
@@ -120,8 +124,9 @@ The current direction is fully data-driven rendering.
 
 ### Rotation
 
-- rotation should happen around the real visual center of the rendered element
-- current renderer uses `group.bbox()` center, not raw `width / height`
+- current stable renderer applies rotation on `transformGroup`
+- current pivot is based on element `width / height`
+- do not casually rework rotation together with selection logic; that area proved fragile
 
 ### Property Form
 
@@ -179,11 +184,25 @@ Current work assumes the PILOT version.
 ## Storage
 
 Mnemo schemes are stored in DB, not `localStorage`.
+One node can now have multiple named schemes.
 
 Relevant pieces:
 
 - backend: `backend/mnemo.php`
 - install SQL: `install/create _db.sql`
+
+Current model:
+
+- `mnemo_schemes.id` is the persistent schema key
+- `mnemo_schemes.name` is shown in the selector
+- selector defaults to the first schema in backend order
+- backend supports:
+  - `op=list`
+  - `op=read`
+  - `op=save`
+  - `op=delete`
+- `MnemoStorage.js` works with records shaped like:
+  - `{ id, name, schema }`
 
 There was a mistaken temporary `create_db.php`, but it was removed.
 

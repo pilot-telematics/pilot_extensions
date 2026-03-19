@@ -9,6 +9,13 @@ Ext.define('Store.communal.Mnemo', {
     layout: 'fit',
 
     initComponent: function () {
+        this.schemaStore = Ext.create('Ext.data.Store', {
+            fields: ['id', 'name'],
+            data: []
+        });
+        this.schemaRecords = [];
+        this.schemaRecord = null;
+        this.selectedSchemaId = null;
         this.schema = Store.communal.MnemoStorage.getEmptySchema();
         this.sensorRows = [];
         this.loadRequestNodeId = null;
@@ -16,24 +23,46 @@ Ext.define('Store.communal.Mnemo', {
         this.tbar = {
             cls: 'transparent_buttons',
             items: [
-                '->',
                 {
+                    xtype: 'combo',
+                    itemId: 'mnemoSchemaCombo',
+                    flex:1,
+                    store: this.schemaStore,
+                    queryMode: 'local',
+                    editable: false,
+                    forceSelection: true,
+                    valueField: 'id',
+                    displayField: 'name',
+                    emptyText: l('Select schema'),
+                    listeners: {
+                        change: function (field, value) {
+                            this.selectSchemaById(value);
+                        },
+                        scope: this
+                    }
+                },
+                {
+                    itemId: 'mnemoAddBtn',
                     tooltip: l('Add'),
                     iconCls: 'fa fa-plus',
                     handler: function () {
-                        this.up('store-communal-mnemo').openEditor();
+                        this.up('store-communal-mnemo').createSchema();
                     }
                 },
                 {
+                    itemId: 'mnemoEditBtn',
                     tooltip: l('Edit'),
                     iconCls: 'fa fa-pencil',
+                    disabled: true,
                     handler: function () {
                         this.up('store-communal-mnemo').openEditor();
                     }
                 },
                 {
+                    itemId: 'mnemoDeleteBtn',
                     tooltip: l('Delete'),
                     iconCls: 'fa fa-trash-alt',
+                    disabled: true,
                     handler: function () {
                         this.up('store-communal-mnemo').deleteSchema();
                     }
@@ -54,6 +83,7 @@ Ext.define('Store.communal.Mnemo', {
         this.listeners = {
             afterrender: function () {
                 this.canvasEl = this.down('#mnemoCanvas').getEl().down('.communal-mnemo-view-canvas');
+                this.syncSchemaSelector();
                 this.renderSchema();
             },
             scope: this
@@ -66,12 +96,12 @@ Ext.define('Store.communal.Mnemo', {
         this.currentNode = record || null;
 
         if (!this.currentNode) {
-            this.schema = Store.communal.MnemoStorage.getEmptySchema();
+            this.clearSchemas();
             this.renderSchema();
             return;
         }
 
-        this.loadSchema();
+        this.loadSchemas();
     },
 
     setSensorRows: function (rows) {
@@ -90,7 +120,7 @@ Ext.define('Store.communal.Mnemo', {
             return;
         }
 
-        if (!this.schema || !this.schema.elements || !this.schema.elements.length) {
+        if (!this.schemaRecord || !this.schema || !this.schema.elements || !this.schema.elements.length) {
             this.canvasEl.dom.innerHTML = '<div class="communal-mnemo-empty">' + l('No mnemonic scheme is configured for the selected node.') + '</div>';
             return;
         }
@@ -98,7 +128,117 @@ Ext.define('Store.communal.Mnemo', {
         Store.communal.MnemoRenderer.renderTo(this.canvasEl, this.schema, this.sensorRows);
     },
 
-    loadSchema: function () {
+    clearSchemas: function () {
+        this.schemaRecords = [];
+        this.schemaRecord = null;
+        this.selectedSchemaId = null;
+        this.schema = Store.communal.MnemoStorage.getEmptySchema(this.currentNode ? this.currentNode.getId() : null);
+        this.syncSchemaSelector();
+    },
+
+    getSchemaRecordById: function (schemaId) {
+        var selected = null;
+
+        Ext.Array.each(this.schemaRecords || [], function (record) {
+            if (Number(record.id) === Number(schemaId)) {
+                selected = record;
+                return false;
+            }
+        });
+
+        return selected;
+    },
+
+    getNextSchemaName: function () {
+        var used = {},
+            next = 1;
+
+        Ext.Array.each(this.schemaRecords || [], function (record) {
+            var match = String(record.name || '').match(/^Schema\s+(\d+)$/i);
+
+            if (match) {
+                used[Number(match[1])] = true;
+            }
+        });
+
+        while (used[next]) {
+            next += 1;
+        }
+
+        return 'Schema ' + next;
+    },
+
+    applySchemaSelection: function (preferredSchemaId) {
+        var selected = preferredSchemaId ? this.getSchemaRecordById(preferredSchemaId) : null;
+
+        if (!selected && this.schemaRecords.length) {
+            selected = this.schemaRecords[0];
+        }
+
+        this.schemaRecord = selected || null;
+        this.selectedSchemaId = selected ? selected.id : null;
+        this.schema = selected ? Ext.clone(selected.schema) : Store.communal.MnemoStorage.getEmptySchema(this.currentNode ? this.currentNode.getId() : null);
+
+        this.syncSchemaSelector();
+        this.renderSchema();
+    },
+
+    syncSchemaSelector: function () {
+        var combo = this.down('#mnemoSchemaCombo'),
+            editBtn = this.down('#mnemoEditBtn'),
+            deleteBtn = this.down('#mnemoDeleteBtn'),
+            addBtn = this.down('#mnemoAddBtn'),
+            hasNode = !!this.currentNode,
+            hasSelected = !!this.schemaRecord;
+
+        this.schemaStore.loadData(Ext.Array.map(this.schemaRecords || [], function (record) {
+            return {
+                id: record.id,
+                name: record.name
+            };
+        }), false);
+
+        if (combo) {
+            combo.suspendEvents(false);
+            combo.setDisabled(!hasNode || !this.schemaRecords.length);
+            combo.setValue(hasSelected ? this.schemaRecord.id : null);
+            combo.resumeEvents();
+        }
+
+        if (addBtn) {
+            addBtn.setDisabled(!hasNode);
+        }
+
+        if (editBtn) {
+            editBtn.setDisabled(!hasSelected);
+        }
+
+        if (deleteBtn) {
+            deleteBtn.setDisabled(!hasSelected);
+        }
+    },
+
+    selectSchemaById: function (schemaId) {
+        var record;
+
+        if (Ext.isEmpty(schemaId)) {
+            this.applySchemaSelection(null);
+            return;
+        }
+
+        record = this.getSchemaRecordById(schemaId);
+        if (!record) {
+            return;
+        }
+
+        this.schemaRecord = record;
+        this.selectedSchemaId = record.id;
+        this.schema = Ext.clone(record.schema);
+        this.syncSchemaSelector();
+        this.renderSchema();
+    },
+
+    loadSchemas: function (preferredSchemaId) {
         var nodeId;
 
         if (!this.currentNode) {
@@ -109,22 +249,22 @@ Ext.define('Store.communal.Mnemo', {
         this.loadRequestNodeId = nodeId;
         this.setLoading(true);
 
-        Store.communal.MnemoStorage.load(nodeId, {
-            success: function (schema) {
+        Store.communal.MnemoStorage.loadList(nodeId, {
+            success: function (records) {
                 if (!this.currentNode || this.currentNode.getId() !== nodeId || this.loadRequestNodeId !== nodeId) {
                     this.setLoading(false);
                     return;
                 }
 
-                this.schema = schema;
-                this.renderSchema();
+                this.schemaRecords = records || [];
+                this.applySchemaSelection(preferredSchemaId);
                 this.setLoading(false);
             },
             failure: function () {
                 if (this.currentNode && this.currentNode.getId() === nodeId) {
-                    this.schema = Store.communal.MnemoStorage.getEmptySchema(nodeId);
+                    this.clearSchemas();
                     this.renderSchema();
-                    Ext.Msg.alert(l('Error'), l('Failed to load mnemonic scheme.'));
+                    Ext.Msg.alert(l('Error'), l('Failed to load mnemonic schemes.'));
                 }
                 this.setLoading(false);
             },
@@ -132,23 +272,42 @@ Ext.define('Store.communal.Mnemo', {
         });
     },
 
-    openEditor: function () {
+    createSchema: function () {
+        if (!this.currentNode) {
+            Ext.Msg.alert(l('Mnemo editor'), l('Select a node before creating a mnemonic scheme.'));
+            return;
+        }
+
+        this.openEditor({
+            id: null,
+            name: this.getNextSchemaName(),
+            schema: Store.communal.MnemoStorage.getEmptySchema(this.currentNode.getId())
+        });
+    },
+
+    openEditor: function (schemaRecord) {
+        schemaRecord = schemaRecord || this.schemaRecord;
+
         if (!this.currentNode) {
             Ext.Msg.alert(l('Mnemo editor'), l('Select a node before editing its mnemonic scheme.'));
             return;
         }
 
+        if (!schemaRecord) {
+            return;
+        }
+
         Ext.create('Store.communal.view.MnemoEditorWindow', {
             nodeRecord: this.currentNode,
-            schema: this.schema,
+            schema: schemaRecord.schema,
+            schemaName: schemaRecord.name,
             sensorRows: this.sensorRows,
-            saveHandler: function (schema) {
+            saveHandler: function (schemaName, schema) {
                 this.setLoading(true);
-                Store.communal.MnemoStorage.save(this.currentNode.getId(), schema, {
-                    success: function (savedSchema) {
-                        this.schema = savedSchema;
-                        this.renderSchema();
+                Store.communal.MnemoStorage.save(this.currentNode.getId(), schemaRecord.id, schemaName, schema, {
+                    success: function (savedRecord) {
                         this.setLoading(false);
+                        this.loadSchemas(savedRecord.id);
                     },
                     failure: function () {
                         this.setLoading(false);
@@ -162,16 +321,18 @@ Ext.define('Store.communal.Mnemo', {
     },
 
     deleteSchema: function () {
-        if (!this.currentNode) {
+        var schemaId;
+
+        if (!this.currentNode || !this.schemaRecord) {
             return;
         }
 
+        schemaId = this.schemaRecord.id;
         this.setLoading(true);
-        Store.communal.MnemoStorage.remove(this.currentNode.getId(), {
-            success: function (emptySchema) {
-                this.schema = emptySchema;
-                this.renderSchema();
+        Store.communal.MnemoStorage.remove(this.currentNode.getId(), schemaId, {
+            success: function () {
                 this.setLoading(false);
+                this.loadSchemas();
             },
             failure: function () {
                 this.setLoading(false);

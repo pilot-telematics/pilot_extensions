@@ -14,6 +14,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
 
     initComponent: function () {
         this.schema = Store.communal.MnemoRenderer.ensureCanvas(Ext.clone(this.schema || {}));
+        this.schemaName = Ext.String.trim(this.schemaName || '') || 'Schema 1';
         this.elements = Ext.clone(this.schema.elements || []);
         this.selectedElementId = null;
         this.libraryItems = [];
@@ -87,6 +88,22 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
         this.canvasPanel = Ext.create('Ext.panel.Panel', {
             region: 'center',
             bodyCls: 'communal-mnemo-canvas-wrap',
+            tbar:{
+                cls: 'transparent_buttons',
+                items: [{
+                    xtype: 'textfield',
+                    itemId: 'schemaNameField',
+                    fieldLabel: l('Schema name'),
+                    flex:1,
+                    value: this.schemaName,
+                    listeners: {
+                        change: function (field, value) {
+                            this.schemaName = Ext.String.trim(value || '');
+                        },
+                        scope: this
+                    }
+                }]
+            },
             html: '<div class="communal-mnemo-editor-canvas"></div>',
             listeners: {
                 afterrender: function (panel) {
@@ -96,6 +113,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                 scope: this
             }
         });
+
 
         this.propertiesForm = Ext.create('Ext.form.Panel', {
             region: 'east',
@@ -773,13 +791,19 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
     },
 
     saveSchema: function () {
-        var schema = {
+        var schemaNameField = this.down('#schemaNameField'),
+            schemaName = Ext.String.trim(schemaNameField ? schemaNameField.getValue() : this.schemaName || ''),
+            schema = {
             canvas: this.schema.canvas,
             elements: this.elements
         };
 
+        if (!schemaName) {
+            schemaName = 'Schema 1';
+        }
+
         if (this.saveHandler) {
-            this.saveHandler.call(this.saveScope || this, schema);
+            this.saveHandler.call(this.saveScope || this, schemaName, schema);
         }
 
         this.close();
