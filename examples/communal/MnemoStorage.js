@@ -22,8 +22,42 @@ Ext.define('Store.communal.MnemoStorage', {
         data.node_id = nodeId || null;
         data.canvas = data.canvas || {width: 1200, height: 800};
         data.elements = Ext.isArray(data.elements) ? data.elements : [];
+        this.ensureUniqueElementIds(data.elements);
 
         return data;
+    },
+
+    ensureUniqueElementIds: function (elements) {
+        var seen = {},
+            invalidElements = [],
+            nextId = 1;
+
+        Ext.Array.each(elements || [], function (element) {
+            var rawId = element ? element.id : null,
+                trimmed = Ext.isEmpty(rawId) ? '' : String(rawId).trim(),
+                id = parseInt(trimmed, 10);
+
+            if (!isNaN(id) && id > 0 && String(id) === trimmed && !seen[id]) {
+                element.id = id;
+                seen[id] = true;
+                if (id >= nextId) {
+                    nextId = id + 1;
+                }
+                return;
+            }
+
+            invalidElements.push(element);
+        });
+
+        Ext.Array.each(invalidElements, function (element) {
+            while (seen[nextId]) {
+                nextId += 1;
+            }
+
+            element.id = nextId;
+            seen[nextId] = true;
+            nextId += 1;
+        });
     },
 
     normalizeRecord: function (nodeId, record, index) {

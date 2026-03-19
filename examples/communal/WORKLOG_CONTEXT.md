@@ -200,6 +200,9 @@ Current model:
 - `mnemo_schemes.id` is the persistent schema key
 - `mnemo_schemes.name` is shown in the selector
 - selector defaults to the first schema in backend order
+- element `id` inside `schema_json` is now just an integer unique within one schema
+- new element id is generated as `max(existing ids) + 1`
+- storage/renderer normalize old duplicate or non-numeric element ids on load
 - backend supports:
   - `op=list`
   - `op=read`

@@ -34,8 +34,42 @@ Ext.define('Store.communal.MnemoRenderer', {
         schema = schema || {};
         schema.canvas = schema.canvas || Ext.clone(this.defaultCanvas);
         schema.elements = Ext.isArray(schema.elements) ? schema.elements : [];
+        this.ensureUniqueElementIds(schema.elements);
 
         return schema;
+    },
+
+    ensureUniqueElementIds: function (elements) {
+        var seen = {},
+            invalidElements = [],
+            nextId = 1;
+
+        Ext.Array.each(elements || [], function (element) {
+            var rawId = element ? element.id : null,
+                trimmed = Ext.isEmpty(rawId) ? '' : String(rawId).trim(),
+                id = parseInt(trimmed, 10);
+
+            if (!isNaN(id) && id > 0 && String(id) === trimmed && !seen[id]) {
+                element.id = id;
+                seen[id] = true;
+                if (id >= nextId) {
+                    nextId = id + 1;
+                }
+                return;
+            }
+
+            invalidElements.push(element);
+        });
+
+        Ext.Array.each(invalidElements, function (element) {
+            while (seen[nextId]) {
+                nextId += 1;
+            }
+
+            element.id = nextId;
+            seen[nextId] = true;
+            nextId += 1;
+        });
     },
 
     renderTo: function (containerEl, schema, sensorRows, options) {
@@ -256,32 +290,32 @@ Ext.define('Store.communal.MnemoRenderer', {
                 if (primitive.rx || primitive.ry) {
                     element.radius(Number(primitive.rx || primitive.ry || 0), Number(primitive.ry || primitive.rx || 0));
                 }
-                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth);
+                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth, primitive);
                 break;
 
             case 'circle':
                 element = group.circle((primitive.r || 0) * 2).center(primitive.cx, primitive.cy);
-                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth);
+                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth, primitive);
                 break;
 
             case 'ellipse':
                 element = group.ellipse((primitive.rx || 0) * 2, (primitive.ry || 0) * 2).center(primitive.cx, primitive.cy);
-                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth);
+                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth, primitive);
                 break;
 
             case 'polygon':
                 element = group.polygon(primitive.points);
-                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth);
+                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth, primitive);
                 break;
 
             case 'polyline':
                 element = group.polyline(primitive.points);
-                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth);
+                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth, primitive);
                 break;
 
             case 'path':
                 element = group.path(primitive.d);
-                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth);
+                this.applyPrimitiveStyle(element, type, strokeColor, fillColor, strokeWidth, primitive);
                 break;
 
             case 'text':
@@ -316,7 +350,9 @@ Ext.define('Store.communal.MnemoRenderer', {
         return element;
     },
 
-    applyPrimitiveStyle: function (element, type, strokeColor, fillColor, strokeWidth) {
+    applyPrimitiveStyle: function (element, type, strokeColor, fillColor, strokeWidth, primitive) {
+        var strokeCfg;
+
         if (type === 'polyline' || type === 'line') {
             element.fill('none');
         } else {
@@ -326,7 +362,20 @@ Ext.define('Store.communal.MnemoRenderer', {
         if (strokeColor === 'none') {
             element.stroke({color: 'none', width: 0});
         } else {
-            element.stroke({color: strokeColor, width: strokeWidth});
+            strokeCfg = {
+                color: strokeColor,
+                width: strokeWidth
+            };
+
+            if (primitive && primitive.dasharray) {
+                strokeCfg.dasharray = primitive.dasharray;
+            }
+
+            if (primitive && primitive.linecap) {
+                strokeCfg.linecap = primitive.linecap;
+            }
+
+            element.stroke(strokeCfg);
         }
     },
 

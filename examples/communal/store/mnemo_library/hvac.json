@@ -323,8 +323,8 @@
           "stroke": "#111111",
           "strokeWidth": 2,
           "primitives": [
-            { "type": "polygon", "points": "18,30 40,18 40,42", "fill": "#ffffff" },
-            { "type": "polygon", "points": "70,30 48,18 48,42", "fill": "#ffffff" }
+            { "type": "polygon", "points": "48,30 70,18 70,42" },
+            { "type": "polygon", "points": "48,30 26,18 26,42" }
           ]
         },
         {
@@ -1028,7 +1028,7 @@
           "strokeWidth": 2,
           "primitives": [
             { "type": "rect", "x": 10, "y": 12, "width": 44, "height": 40, "fill": "#ffffff" },
-            { "type": "polyline", "points": "24,14 38,14 28,30 42,30 30,50", "fill": "none", "strokeWidth": 2 }
+            { "type": "polyline", "points": "35,14 18,30 47,30 30,50", "fill": "none", "strokeWidth": 2 }
           ]
         },
         {

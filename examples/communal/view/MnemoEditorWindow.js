@@ -108,6 +108,13 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
             listeners: {
                 afterrender: function (panel) {
                     this.canvasEl = panel.body.down('.communal-mnemo-editor-canvas');
+                    panel.body.on('click', function (event) {
+                        if (event.getTarget('.communal-mnemo-element')) {
+                            return;
+                        }
+
+                        this.setSelectedElement(null);
+                    }, this);
                     this.renderCanvas();
                 },
                 scope: this
@@ -443,7 +450,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
     },
 
     createElementConfig: function (type, extraCfg) {
-        var id = Ext.id(null, 'mnemo-');
+        var id = this.generateElementId();
 
         switch (type) {
             case 'hpipe':
@@ -525,6 +532,20 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                     rotation: 0
                 }, extraCfg);
         }
+    },
+
+    generateElementId: function () {
+        var maxId = 0;
+
+        Ext.Array.each(this.elements || [], function (element) {
+            var id = parseInt(element && element.id, 10);
+
+            if (!isNaN(id) && id > maxId) {
+                maxId = id;
+            }
+        });
+
+        return maxId + 1;
     },
 
     addElement: function (type) {
