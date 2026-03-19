@@ -256,6 +256,48 @@
           "primitives": [
             { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" }
           ]
+        },
+        {
+          "key": "zigzag_small",
+          "title": "Zigzag",
+          "type": "symbol",
+          "width": 72,
+          "height": 48,
+          "baseWidth": 72,
+          "baseHeight": 48,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "polyline", "points": "10,28 18,12 26,28 34,12 42,28 50,12 58,28", "fill": "none", "strokeWidth": 2 }
+          ]
+        },
+        {
+          "key": "dashed_frame_rect",
+          "title": "Dashed frame",
+          "type": "symbol",
+          "width": 120,
+          "height": 80,
+          "baseWidth": 120,
+          "baseHeight": 80,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "rect", "x": 4, "y": 4, "width": 112, "height": 72, "fill": "none", "dasharray": "4 3" }
+          ]
+        },
+        {
+          "key": "dashed_vertical_axis",
+          "title": "Dashed vertical axis",
+          "type": "symbol",
+          "width": 24,
+          "height": 120,
+          "baseWidth": 24,
+          "baseHeight": 120,
+          "stroke": "#111111",
+          "strokeWidth": 2,
+          "primitives": [
+            { "type": "line", "x1": 12, "y1": 8, "x2": 12, "y2": 112, "dasharray": "6 4" }
+          ]
         }
       ]
     },

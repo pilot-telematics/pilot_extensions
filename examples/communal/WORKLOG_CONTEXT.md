@@ -73,6 +73,10 @@ The module is used to:
 - `store/mnemo_library/electrical.json`
   - electrical library
 
+- `store/sample_schemas/utz_heating_gvs.json`
+  - ready-to-insert example `schema_json`
+  - based on a heating/GVS mnemonic layout
+
 ## Mnemo Library Architecture
 
 The library is no longer hardcoded in JS.
@@ -241,6 +245,8 @@ When expanding the library:
 - prefer adding new declarative items to JSON files
 - keep mirrored and filled variants explicit if they are useful in operator UX
 - avoid unnecessary duplicate color variants, since color is edited in properties
+- there is now a generic `Instrument tag` library item with `insertType: 'sensor'`
+- use that generic circular tag for `P`, `T`, `ΔP`, `M` and similar short labels
 
 ## What To Check First Next Time
 

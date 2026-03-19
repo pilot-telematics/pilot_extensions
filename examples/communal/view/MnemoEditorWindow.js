@@ -545,6 +545,12 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
 
         if (item.insertType === 'value') {
             cfg = this.createElementConfig('value');
+        } else if (item.insertType === 'sensor') {
+            cfg = this.createElementConfig('sensor', {
+                width: Number(item.width || 34),
+                height: Number(item.height || 34),
+                text: item.text || 'P'
+            });
         } else if (item.insertType === 'label') {
             cfg = this.createElementConfig('label');
         } else {
