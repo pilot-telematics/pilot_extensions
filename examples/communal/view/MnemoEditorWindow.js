@@ -363,14 +363,15 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
 
         Ext.Array.each(groups, function (group) {
             Ext.Array.each(group.items || [], function (item) {
-                items.push(Ext.apply({
-                    group: l(group.title),
-                    groupId: group.id,
-                    insertType: item.insertType || item.type || 'symbol',
-                    preview: Store.communal.MnemoRenderer.previewMarkup(item)
-                }, item, {
-                    title: l(item.title)
-                }));
+                var libraryItem = Ext.apply({}, item);
+
+                libraryItem.group = l(group.title);
+                libraryItem.groupId = group.id;
+                libraryItem.insertType = item.insertType || item.type || 'symbol';
+                libraryItem.preview = Store.communal.MnemoRenderer.previewMarkup(item);
+                libraryItem.title = l(item.title);
+
+                items.push(libraryItem);
             });
         });
 
