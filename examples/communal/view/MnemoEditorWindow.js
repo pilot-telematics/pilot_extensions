@@ -88,13 +88,13 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
         this.canvasPanel = Ext.create('Ext.panel.Panel', {
             region: 'center',
             bodyCls: 'communal-mnemo-canvas-wrap',
-            tbar:{
+            tbar: {
                 cls: 'transparent_buttons',
                 items: [{
                     xtype: 'textfield',
                     itemId: 'schemaNameField',
                     fieldLabel: l('Schema name'),
-                    flex:1,
+                    flex: 1,
                     value: this.schemaName,
                     listeners: {
                         change: function (field, value) {
@@ -139,11 +139,11 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
             defaults: {
                 anchor: '100%',
                 labelWidth: 90,
-                defaults:{
+                defaults: {
                     flex: 1,
-                    margin:2,
+                    margin: 2,
                     xtype: 'numberfield',
-                    step:1,
+                    step: 1,
                     listeners: {
                         change: this.onPropertyChange,
                         scope: this
@@ -153,12 +153,12 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
             items: [
                 {
                     xtype: 'container', layout: 'hbox',
-                    items: [ {
+                    items: [{
                         xtype: 'textfield',
                         name: 'text',
                         fieldLabel: l('Text')
 
-                    },{
+                    }, {
                         name: 'fontSize',
                         fieldLabel: l('Font size'),
                         minValue: 8
@@ -170,10 +170,10 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                         xtype: 'textfield',
                         name: 'prefix',
                         fieldLabel: l('Prefix')
-                    },{
-                            xtype: 'textfield',
-                            name: 'suffix',
-                            fieldLabel: l('Suffix')
+                    }, {
+                        xtype: 'textfield',
+                        name: 'suffix',
+                        fieldLabel: l('Suffix')
                     }
                     ]
                 },
@@ -201,7 +201,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                         name: 'y',
                         fieldLabel: 'Y'
 
-                    },{
+                    }, {
                         name: 'rotation',
                         fieldLabel: l('Rotation')
                     }]
@@ -217,7 +217,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                         fieldLabel: l('Height'),
                         minValue: 1
                     }]
-                },   {
+                }, {
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
@@ -226,21 +226,21 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                         name: 'stroke',
                         allowBlank: true,
                         allowNone: true
-                    },{
+                    }, {
                         xtype: 'colorcombobox',
                         fieldLabel: l('Fill'),
                         name: 'fillColor',
                         allowBlank: true,
                         allowNone: true
-                    },{
+                    }, {
                         xtype: 'colorcombobox',
                         fieldLabel: l('Text color'),
                         name: 'textColor',
-                        labelAlign:'top',
+                        labelAlign: 'top',
                         allowBlank: true,
                         allowNone: true
                     }]
-                },  {
+                }, {
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
@@ -255,31 +255,33 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                         maxValue: 1,
                         step: 0.1
                     }]
-                },  {
+                }, {
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
-                    xtype: 'button',
-                    text: l('Send to back'),
-                    handler: function () {
-                        this.up('window').sendSelectedToBack();
+                        xtype: 'button',
+                        tooltip: l('Send to back'),
+                        iconCls: "fa fa-send-back",
+                        handler: function () {
+                            this.up('window').sendSelectedToBack();
+                        }
+                    }, {
+                        xtype: 'button',
+                        tooltip: l('Clone selected'),
+                        iconCls: "fa fa-clone",
+                        handler: function () {
+                            this.up('window').duplicateSelectedElement();
+                        }
+                    }, {
+                        xtype: 'button',
+                        tooltip: l('Delete selected'),
+                        iconCls: "fa fa-save",
+                        handler: function () {
+                            this.up('window').removeSelectedElement();
+                        }
                     }
-                },{
-                    xtype: 'button',
-                    text: l('Clone selected'),
-                    cls: 'save_btn',
-                    handler: function () {
-                        this.up('window').duplicateSelectedElement();
-                    }
-                }, {
-                    xtype: 'button',
-                    text: l('Delete selected'),
-                    cls: 'delete_btn',
-                    handler: function () {
-                        this.up('window').removeSelectedElement();
-                    }
+                    ]
                 }
-                ]}
             ]
         });
 
@@ -886,9 +888,9 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
         var schemaNameField = this.down('#schemaNameField'),
             schemaName = Ext.String.trim(schemaNameField ? schemaNameField.getValue() : this.schemaName || ''),
             schema = {
-            canvas: this.schema.canvas,
-            elements: this.elements
-        };
+                canvas: this.schema.canvas,
+                elements: this.elements
+            };
 
         if (!schemaName) {
             schemaName = 'Schema 1';
