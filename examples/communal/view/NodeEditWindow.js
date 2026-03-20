@@ -12,7 +12,7 @@ Ext.define('Store.communal.view.NodeEditWindow', {
     ],
 
     config: {
-        mode: 'add',          // add | edit
+        mode: 'add',
         record: null,
         parentNode: null,
         cars: []
@@ -21,7 +21,7 @@ Ext.define('Store.communal.view.NodeEditWindow', {
     initComponent: function () {
         var me = this;
 
-        me.title = me.getMode() === 'edit' ? l('Редактировать узел') : l('Добавить узел');
+        me.title = me.getMode() === 'edit' ? l('Edit node') : l('Add node');
 
         me.items = [{
             xtype: 'form',
@@ -33,12 +33,12 @@ Ext.define('Store.communal.view.NodeEditWindow', {
             items: [{
                 xtype: 'textfield',
                 name: 'name',
-                fieldLabel: l('Название'),
+                fieldLabel: l('Name'),
                 allowBlank: false
             }, {
                 xtype: 'combobox',
                 name: 'type',
-                fieldLabel: l('Тип'),
+                fieldLabel: l('Type'),
                 store: {
                     type: 'communal-node-types'
                 },
@@ -59,7 +59,7 @@ Ext.define('Store.communal.view.NodeEditWindow', {
             }, {
                 xtype: 'checkboxfield',
                 name: 'is_leaf',
-                fieldLabel: l('Конечный узел'),
+                fieldLabel: l('Leaf node'),
                 inputValue: true,
                 uncheckedValue: false,
                 listeners: {
@@ -83,7 +83,7 @@ Ext.define('Store.communal.view.NodeEditWindow', {
             }, {
                 xtype: 'combobox',
                 name: 'agent_id',
-                fieldLabel: l('Привязать объект'),
+                fieldLabel: l('Bind object'),
                 store: {
                     fields: ['agent_id', 'name'],
                     data: me.getCars() || []
@@ -96,11 +96,11 @@ Ext.define('Store.communal.view.NodeEditWindow', {
                 disabled: true,
                 hidden: true,
                 allowBlank: true,
-                emptyText: l('Выберите объект из PILOT')
+                emptyText: l('Select object from PILOT')
             }, {
                 xtype: 'textarea',
                 name: 'descr',
-                fieldLabel: l('Описание'),
+                fieldLabel: l('Description'),
                 grow: true
             }, {
                 xtype: 'displayfield',
@@ -110,18 +110,19 @@ Ext.define('Store.communal.view.NodeEditWindow', {
         }];
 
         me.buttons = [{
-            text: l('Отмена'),
+            text: l('Cancel'),
             handler: function () {
                 me.close();
             }
         }, {
-            text: me.getMode() === 'edit' ? l('Сохранить') : l('Создать'),
+            text: me.getMode() === 'edit' ? l('Save') : l('Create'),
             handler: function () {
                 me.submitNode();
             }
         }];
 
         me.callParent(arguments);
+
         var typeField = me.down('[name=type]');
         if (typeField && typeField.getStore()) {
             typeField.getStore().load({
@@ -201,7 +202,9 @@ Ext.define('Store.communal.view.NodeEditWindow', {
             tree,
             store;
 
-        if (!form.isValid()) return;
+        if (!form.isValid()) {
+            return;
+        }
 
         if (err) {
             err.setHidden(true);
@@ -213,7 +216,7 @@ Ext.define('Store.communal.view.NodeEditWindow', {
         if (values.is_leaf && !values.agent_id) {
             err.setHidden(false);
             err.setValue('<span style="color:#c00">' +
-                Ext.String.htmlEncode(l('Для конечного узла нужно выбрать agent')) +
+                Ext.String.htmlEncode(l('Leaf node requires agent selection')) +
                 '</span>');
             return;
         }
@@ -239,21 +242,22 @@ Ext.define('Store.communal.view.NodeEditWindow', {
                 me.close();
             },
             failure: function (batch) {
+                var msg = l('Failed to save');
+
                 store.rejectChanges();
 
-                var msg = l('Не удалось сохранить');
                 try {
                     var op = batch && batch.getOperations ? batch.getOperations()[0] : null,
                         resp = op && op.getError && op.getError().response;
                     if (resp && resp.responseText) {
                         var r = Ext.decode(resp.responseText, true);
                         if (r && r.message) {
-                            msg = r.message;
+                            msg = l(r.message);
                         }
                     }
                 } catch (e) {}
 
-                Ext.Msg.alert(l('Ошибка'), Ext.String.htmlEncode(msg));
+                Ext.Msg.alert(l('Error'), Ext.String.htmlEncode(msg));
             }
         });
     }

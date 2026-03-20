@@ -158,6 +158,18 @@ Ext.define('Store.communal.MnemoRenderer', {
             case 'sensor':
                 sensorStroke = Ext.isEmpty(cfg.stroke) ? 'none' : cfg.stroke;
                 sensorFill = Ext.isEmpty(cfg.fillColor) ? 'none' : cfg.fillColor;
+                if (Number(cfg.stemHeight || 0) > 0) {
+                    visualGroup.line(
+                        (cfg.width || 34) / 2,
+                        cfg.height || 34,
+                        (cfg.width || 34) / 2,
+                        Number(cfg.height || 34) + Number(cfg.stemHeight || 0)
+                    ).stroke({
+                        color: sensorStroke,
+                        width: Ext.isEmpty(cfg.strokeWidth) ? 2 : Number(cfg.strokeWidth),
+                        linecap: 'round'
+                    });
+                }
                 visualGroup.circle(Math.min(cfg.width, cfg.height))
                     .fill(sensorFill)
                     .stroke({
@@ -165,7 +177,7 @@ Ext.define('Store.communal.MnemoRenderer', {
                         width: Ext.isEmpty(cfg.strokeWidth) ? 2 : Number(cfg.strokeWidth)
                     });
                 labelText = visualGroup.text(cfg.text || 'S').font({size: cfg.fontSize || 14, family: 'Arial, sans-serif', weight: 700});
-                labelText.fill(cfg.textColor || (sensorStroke === 'none' ? '#374151' : sensorStroke));
+                labelText.fill(cfg.textColor || '#000000');
                 labelText.center((cfg.width || 34) / 2, (cfg.height || 34) / 2);
                 break;
 
@@ -218,7 +230,8 @@ Ext.define('Store.communal.MnemoRenderer', {
             height = Number(cfg.height || 72),
             baseWidth = Number(cfg.baseWidth || 64),
             baseHeight = Number(cfg.baseHeight || 64),
-            primitives = Ext.isArray(cfg.primitives) ? cfg.primitives : [];
+            primitives = Ext.isArray(cfg.primitives) ? cfg.primitives : [],
+            resizeMode = cfg.resizeMode || 'scale';
 
         if (!primitives.length) {
             group.rect(width, height).radius(6).fill('#ffffff').stroke({color: '#cbd5e1', width: 1});
@@ -230,7 +243,7 @@ Ext.define('Store.communal.MnemoRenderer', {
             this.drawPrimitive(group, primitive, cfg);
         }, this);
 
-        if (baseWidth !== width || baseHeight !== height) {
+        if (resizeMode !== 'direct' && (baseWidth !== width || baseHeight !== height)) {
             group.scale(width / baseWidth, height / baseHeight, 0, 0);
         }
     },
@@ -254,14 +267,20 @@ Ext.define('Store.communal.MnemoRenderer', {
             type = primitive.type || '',
             strokeColor = this.getPrimitiveStroke(primitive, cfg),
             fillColor = this.getPrimitiveFill(primitive, cfg),
-            textColor = primitive.fill !== undefined ? primitive.fill : (cfg.textColor || cfg.stroke || '#111111'),
+            textColor = primitive.fill !== undefined ? primitive.fill : (cfg.textColor || '#000000'),
             strokeWidth = primitive.strokeWidth !== undefined ? Number(primitive.strokeWidth) : Number(cfg.strokeWidth || 2),
             fontSize = primitive.fontSize !== undefined ? Number(primitive.fontSize) : Number(cfg.fontSize || 14),
             attrs = {};
 
         switch (type) {
             case 'line':
-                element = group.line(primitive.x1, primitive.y1, primitive.x2, primitive.y2);
+                attrs = primitive.fitToElement ? this.resolveLineGeometry(primitive, cfg) : {
+                    x1: primitive.x1,
+                    y1: primitive.y1,
+                    x2: primitive.x2,
+                    y2: primitive.y2
+                };
+                element = group.line(attrs.x1, attrs.y1, attrs.x2, attrs.y2);
                 element.stroke({
                     color: strokeColor,
                     width: strokeWidth,
@@ -271,7 +290,10 @@ Ext.define('Store.communal.MnemoRenderer', {
                 break;
 
             case 'rect':
-                element = group.rect(primitive.width, primitive.height).move(primitive.x || 0, primitive.y || 0);
+                element = group.rect(
+                    primitive.fitToElement ? Math.max(0, Number(cfg.width || 0) - (Number(primitive.x || 0) * 2)) : primitive.width,
+                    primitive.fitToElement ? Math.max(0, Number(cfg.height || 0) - (Number(primitive.y || 0) * 2)) : primitive.height
+                ).move(primitive.x || 0, primitive.y || 0);
                 if (primitive.rx || primitive.ry) {
                     element.radius(Number(primitive.rx || primitive.ry || 0), Number(primitive.ry || primitive.rx || 0));
                 }
@@ -333,6 +355,52 @@ Ext.define('Store.communal.MnemoRenderer', {
         }
 
         return element;
+    },
+
+    resolveLineGeometry: function (primitive, cfg) {
+        var baseWidth = Number(cfg.baseWidth || cfg.width || 0),
+            baseHeight = Number(cfg.baseHeight || cfg.height || 0),
+            width = Number(cfg.width || baseWidth || 0),
+            height = Number(cfg.height || baseHeight || 0),
+            fitMode = primitive.fitToElement;
+
+        switch (fitMode) {
+            case 'horizontalCenter':
+                return {
+                    x1: Number(primitive.x1 || 0),
+                    y1: height / 2,
+                    x2: width - (baseWidth - Number(primitive.x2 || 0)),
+                    y2: height / 2
+                };
+            case 'verticalCenter':
+                return {
+                    x1: width / 2,
+                    y1: Number(primitive.y1 || 0),
+                    x2: width / 2,
+                    y2: height - (baseHeight - Number(primitive.y2 || 0))
+                };
+            case 'diagonalForward':
+                return {
+                    x1: Number(primitive.x1 || 0),
+                    y1: height - (baseHeight - Number(primitive.y1 || 0)),
+                    x2: width - (baseWidth - Number(primitive.x2 || 0)),
+                    y2: Number(primitive.y2 || 0)
+                };
+            case 'diagonalBack':
+                return {
+                    x1: Number(primitive.x1 || 0),
+                    y1: Number(primitive.y1 || 0),
+                    x2: width - (baseWidth - Number(primitive.x2 || 0)),
+                    y2: height - (baseHeight - Number(primitive.y2 || 0))
+                };
+            default:
+                return {
+                    x1: Number(primitive.x1 || 0),
+                    y1: Number(primitive.y1 || 0),
+                    x2: Number(primitive.x2 || 0),
+                    y2: Number(primitive.y2 || 0)
+                };
+        }
     },
 
     applyPrimitiveStyle: function (element, type, strokeColor, fillColor, strokeWidth, primitive) {
@@ -517,17 +585,20 @@ Ext.define('Store.communal.MnemoRenderer', {
     },
 
     drawTextElement: function (group, cfg, value) {
-        var text = group.text(value).font({
+        var textFill = Ext.isEmpty(cfg.textColor) ? '#000000' : cfg.textColor,
+            rectFill = Ext.isEmpty(cfg.fillColor) ? 'none' : cfg.fillColor,
+            rectStroke = Ext.isEmpty(cfg.stroke) ? 'none' : cfg.stroke,
+            text = group.text(value).font({
                 size: cfg.fontSize || 18,
                 family: 'Arial, sans-serif',
                 weight: cfg.fontWeight || 600
-            }).fill(cfg.textColor || cfg.stroke || '#111827'),
+            }).fill(textFill),
             box = text.bbox(),
             rect = group.rect(box.width + 10, box.height + 8)
                 .radius(4)
-                .fill(cfg.fillColor || cfg.background || '#ffffff')
+                .fill(rectFill)
                 .stroke({
-                    color: cfg.stroke || cfg.borderColor || '#e2e8f0',
+                    color: rectStroke,
                     width: Ext.isEmpty(cfg.strokeWidth) ? 1 : Number(cfg.strokeWidth)
                 });
 
@@ -540,7 +611,7 @@ Ext.define('Store.communal.MnemoRenderer', {
             value = sensor ? sensor.hum_value : null;
 
         if (Ext.isEmpty(value)) {
-            value = cfg.placeholder || 'No data';
+            value = l(cfg.placeholder || 'No data');
         }
 
         return [cfg.prefix || '', value, cfg.suffix || ''].join('');
@@ -553,7 +624,11 @@ Ext.define('Store.communal.MnemoRenderer', {
             baseHeight = Number(item.baseHeight || 64);
 
         if (item.insertType === 'sensor') {
-            markup = '<circle cx="32" cy="32" r="18" fill="' + Ext.String.htmlEncode(item.fillColor || '#ffffff') + '" stroke="' + Ext.String.htmlEncode(item.stroke || '#111111') + '" stroke-width="' + Ext.String.htmlEncode(item.strokeWidth || 2) + '"/>' +
+            if (Number(item.stemHeight || 0) > 0) {
+                markup += '<line x1="32" y1="50" x2="32" y2="' + Ext.String.htmlEncode(50 + Number(item.stemHeight || 0)) + '" stroke="' + Ext.String.htmlEncode(item.stroke || '#111111') + '" stroke-width="' + Ext.String.htmlEncode(item.strokeWidth || 2) + '" stroke-linecap="round"/>';
+            }
+
+            markup += '<circle cx="32" cy="32" r="18" fill="' + Ext.String.htmlEncode(item.fillColor || '#ffffff') + '" stroke="' + Ext.String.htmlEncode(item.stroke || '#111111') + '" stroke-width="' + Ext.String.htmlEncode(item.strokeWidth || 2) + '"/>' +
                 '<text x="32" y="37" text-anchor="middle" font-size="14" font-family="Arial" font-weight="700" fill="' + Ext.String.htmlEncode(item.textColor || item.stroke || '#111111') + '">' + Ext.String.htmlEncode(item.previewText || item.text || 'P') + '</text>';
         } else if (item.previewText) {
             markup = '<rect x="8" y="18" width="48" height="28" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>' +

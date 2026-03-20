@@ -8,21 +8,21 @@ Ext.define('Store.communal.Tab', {
     iconCls: 'fa fa-faucet-drip',
     iconAlign: 'top',
     listeners: {
-        'show': function () {
+        show: function () {
             var cmp = this;
             if (!cmp.authorized) {
-                Store.communal.Auth.ensure(global_conf.conf.account_id, function (token) {
+                Store.communal.Auth.ensure(global_conf.conf.account_id, function () {
                     cmp.authorized = true;
                 });
             }
         }
     },
+
     initComponent: function () {
-        this.tooltip = l('ЖКХ');
-        this.title = l('ЖКХ');
+        this.tooltip = l('Communal');
+        this.title = l('Communal');
         this.tree = Ext.create('Store.communal.Tree');
         this.items = [this.tree];
-
 
         this.callParent(arguments);
     }

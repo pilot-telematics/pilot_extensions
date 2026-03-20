@@ -29,10 +29,10 @@ Ext.define('Store.communal.Center', {
         this.grid = Ext.create('Ext.grid.Panel', {
             border: false,
             store: this.store,
-            emptyText: 'No sensors to display',
+            emptyText: l('No sensors to display'),
             viewConfig: {
                 deferEmptyText: false,
-                emptyText: 'No sensors to display'
+                emptyText: l('No sensors to display')
             },
             features: [{
                 ftype: 'grouping',
@@ -110,9 +110,7 @@ Ext.define('Store.communal.Center', {
                         store.addFilter({
                             id: 'tags',
                             filterFn: function (record) {
-                                console.log(record.get('tags'))
                                 var recordTags = Ext.Array.from(record.get('tags') || []);
-                                 console.log(recordTags,selectedTags);
                                 return Ext.Array.intersect(recordTags, selectedTags).length > 0;
                             }
                         });
@@ -144,7 +142,7 @@ Ext.define('Store.communal.Center', {
                 text: l('Object'),
                 dataIndex: 'vehiclenumber'
             }, {
-                text: 'Название',
+                text: l('Name'),
                 dataIndex: 'name',
                 flex: 2
             }, {
@@ -289,7 +287,7 @@ Ext.define('Store.communal.Center', {
                 if (this.getMnemoPanel()) {
                     this.getMnemoPanel().setSensorRows([]);
                 }
-                Ext.Msg.alert('Error', 'Failed to load vehicle status data.');
+                Ext.Msg.alert(l('Error'), l('Failed to load vehicle status data.'));
             },
             callback: function () {
                 this.setLoading(false);
@@ -319,10 +317,11 @@ Ext.define('Store.communal.Center', {
                     change_ts: sensor.change_ts || sensor.ts || null,
                     issues: 0,
                     sensor_key: sensorKey,
-                    tags: sensor.tags ? sensor.tags.split(',').map(function (tag) { return parseInt(tag, 10);
-                        }).filter(function (tag) {
-                            return Number.isInteger(tag) && tag > 0;
-                        }): []
+                    tags: sensor.tags ? sensor.tags.split(',').map(function (tag) {
+                        return parseInt(tag, 10);
+                    }).filter(function (tag) {
+                        return Number.isInteger(tag) && tag > 0;
+                    }) : []
                 });
             });
         });

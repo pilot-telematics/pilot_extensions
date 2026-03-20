@@ -109,6 +109,11 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                 afterrender: function (panel) {
                     this.canvasEl = panel.body.down('.communal-mnemo-editor-canvas');
                     panel.body.on('click', function (event) {
+                        if (this.suppressSelectionClearUntil && Date.now() < this.suppressSelectionClearUntil) {
+                            this.suppressSelectionClearUntil = 0;
+                            return;
+                        }
+
                         if (event.getTarget('.communal-mnemo-element')) {
                             return;
                         }
@@ -227,18 +232,15 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                         name: 'fillColor',
                         allowBlank: true,
                         allowNone: true
+                    },{
+                        xtype: 'colorcombobox',
+                        fieldLabel: l('Text color'),
+                        name: 'textColor',
+                        labelAlign:'top',
+                        allowBlank: true,
+                        allowNone: true
                     }]
-                }, {
-                    xtype: 'colorcombobox',
-                    fieldLabel: l('Text color'),
-                    name: 'textColor',
-                    allowBlank: true,
-                    allowNone: true,
-                    listeners: {
-                        change: this.onPropertyChange,
-                        scope: this
-                    }
-                }, {
+                },  {
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
@@ -253,6 +255,22 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                         maxValue: 1,
                         step: 0.1
                     }]
+                },  {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                    xtype: 'button',
+                    text: l('Send to back'),
+                    handler: function () {
+                        this.up('window').sendSelectedToBack();
+                    }
+                },{
+                    xtype: 'button',
+                    text: l('Clone selected'),
+                    cls: 'save_btn',
+                    handler: function () {
+                        this.up('window').duplicateSelectedElement();
+                    }
                 }, {
                     xtype: 'button',
                     text: l('Delete selected'),
@@ -260,7 +278,9 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                     handler: function () {
                         this.up('window').removeSelectedElement();
                     }
-                }]
+                }
+                ]}
+            ]
         });
 
         this.items = [this.toolbox, this.canvasPanel, this.propertiesForm];
@@ -342,17 +362,19 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
         Ext.Array.each(groups, function (group) {
             Ext.Array.each(group.items || [], function (item) {
                 items.push(Ext.apply({
-                    group: group.title,
+                    group: l(group.title),
                     groupId: group.id,
                     insertType: item.insertType || item.type || 'symbol',
                     preview: Store.communal.MnemoRenderer.previewMarkup(item)
-                }, item));
+                }, item, {
+                    title: l(item.title)
+                }));
             });
         });
 
         this.libraryItems = items;
         this.libraryGroupStore.loadData(Ext.Array.map(groups, function (group) {
-            return {id: group.id, title: group.title};
+            return {id: group.id, title: l(group.title)};
         }), false);
 
         if (groups.length) {
@@ -575,7 +597,8 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
             cfg = this.createElementConfig('sensor', {
                 width: Number(item.width || 34),
                 height: Number(item.height || 34),
-                text: item.text || 'P'
+                text: item.text || 'P',
+                stemHeight: Number(item.stemHeight || 0)
             });
         } else if (item.insertType === 'label') {
             cfg = this.createElementConfig('label');
@@ -586,6 +609,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                 height: Number(item.height || 72),
                 baseWidth: Number(item.baseWidth || 64),
                 baseHeight: Number(item.baseHeight || 64),
+                resizeMode: item.resizeMode || 'scale',
                 stroke: item.stroke || '#111111',
                 strokeWidth: Number(item.strokeWidth || 2),
                 fillColor: item.fillColor !== undefined ? item.fillColor : '',
@@ -609,6 +633,38 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
 
         Ext.Array.remove(this.elements, this.getSelectedElement());
         this.selectedElementId = null;
+        this.renderCanvas();
+        this.refreshProperties();
+    },
+
+    duplicateSelectedElement: function () {
+        var source = this.getSelectedElement(),
+            copy;
+
+        if (!source) {
+            return;
+        }
+
+        copy = Ext.clone(source);
+        copy.id = this.generateElementId();
+        copy.x = Number(source.x || 0) + 10;
+        copy.y = Number(source.y || 0) + 10;
+
+        this.elements.push(copy);
+        this.selectedElementId = copy.id;
+        this.renderCanvas();
+        this.refreshProperties();
+    },
+
+    sendSelectedToBack: function () {
+        var element = this.getSelectedElement();
+
+        if (!element) {
+            return;
+        }
+
+        Ext.Array.remove(this.elements, element);
+        this.elements.unshift(element);
         this.renderCanvas();
         this.refreshProperties();
     },
@@ -737,6 +793,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                     return;
                 }
 
+                this.suppressSelectionClearUntil = Date.now() + 250;
                 element.x = position.x;
                 element.y = position.y;
                 this.updatePositionFields(position.x, position.y);

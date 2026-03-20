@@ -6,7 +6,7 @@ Ext.define('Store.communal.view.LoginWindow', {
     closable: true,
     resizable: false,
     width: 380,
-    title: l('ЖКХ Авторизация'),
+    title: l('Communal Authorization'),
     bodyPadding: 12,
     layout: 'fit',
 
@@ -44,7 +44,7 @@ Ext.define('Store.communal.view.LoginWindow', {
     }],
 
     buttons: [{
-        text: 'Login',
+        text: l('Login'),
         formBind: true,
         handler: function (btn) {
             btn.up('window').doLogin();
@@ -57,21 +57,26 @@ Ext.define('Store.communal.view.LoginWindow', {
             form.findField('account_id').setValue(this.getAccountId());
 
             var loginField = this.down('textfield[name=login]');
-            if (loginField) loginField.focus(true, 150);
+            if (loginField) {
+                loginField.focus(true, 150);
+            }
         }
     },
 
     doLogin: function () {
-        var formCmp = this.down('form');
-        var form = formCmp.getForm();
-        var err = this.down('#error');
+        var formCmp = this.down('form'),
+            form = formCmp.getForm(),
+            err = this.down('#error'),
+            v;
 
-        if (!form.isValid()) return;
+        if (!form.isValid()) {
+            return;
+        }
 
         err.setHidden(true);
         err.setValue('');
 
-        var v = form.getValues();
+        v = form.getValues();
 
         formCmp.setLoading(true);
 
@@ -84,25 +89,29 @@ Ext.define('Store.communal.view.LoginWindow', {
                 password: v.password
             },
             success: function (resp) {
+                var data = Ext.decode(resp.responseText, true) || {},
+                    msg = data.message || l('Login failed');
+
                 formCmp.setLoading(false);
 
-                var data = Ext.decode(resp.responseText, true) || {};
                 if (data.success && data.token) {
                     this.fireEvent('loginsuccess', this, data.token);
                     return;
                 }
 
-                var msg = data.message || 'Login failed';
                 err.setHidden(false);
-                err.setValue('<span style="color:#c00">' + Ext.String.htmlEncode(msg) + '</span>');
+                err.setValue('<span style="color:#c00">' + Ext.String.htmlEncode(l(msg)) + '</span>');
             },
             failure: function (resp) {
+                var msg = l('Login failed');
+
                 formCmp.setLoading(false);
 
-                var msg = 'Login failed';
                 try {
                     var d = Ext.decode(resp.responseText, true);
-                    if (d && d.message) msg = d.message;
+                    if (d && d.message) {
+                        msg = l(d.message);
+                    }
                 } catch (e) {}
 
                 err.setHidden(false);
