@@ -229,6 +229,16 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                         allowNone: true
                     }]
                 }, {
+                    xtype: 'colorcombobox',
+                    fieldLabel: l('Text color'),
+                    name: 'textColor',
+                    allowBlank: true,
+                    allowNone: true,
+                    listeners: {
+                        change: this.onPropertyChange,
+                        scope: this
+                    }
+                }, {
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
@@ -456,7 +466,21 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
 
         switch (type) {
             case 'sensor':
-                return Ext.apply({id: id, type: type, x: 250, y: 250, width: 34, height: 34, text: 'P'}, extraCfg);
+                return Ext.apply({
+                    id: id,
+                    type: type,
+                    x: 250,
+                    y: 250,
+                    width: 34,
+                    height: 34,
+                    text: 'P',
+                    stroke: '#111111',
+                    strokeWidth: 2,
+                    fillColor: '',
+                    textColor: '',
+                    opacity: 1,
+                    rotation: 0
+                }, extraCfg);
             case 'symbol':
                 return Ext.apply({
                     id: id,
@@ -470,6 +494,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                     stroke: '#111111',
                     strokeWidth: 2,
                     fillColor: '',
+                    textColor: '',
                     opacity: 1,
                     rotation: 0,
                     primitives: []
@@ -489,6 +514,8 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                     placeholder: 'No data',
                     stroke: '#e2e8f0',
                     strokeWidth: 1,
+                    fillColor: '#ffffff',
+                    textColor: '',
                     opacity: 1,
                     rotation: 0
                 }, extraCfg);
@@ -505,6 +532,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                     stroke: '#e2e8f0',
                     strokeWidth: 1,
                     fillColor: '#ffffff',
+                    textColor: '',
                     opacity: 1,
                     rotation: 0
                 }, extraCfg);
@@ -561,6 +589,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                 stroke: item.stroke || '#111111',
                 strokeWidth: Number(item.strokeWidth || 2),
                 fillColor: item.fillColor !== undefined ? item.fillColor : '',
+                textColor: item.textColor !== undefined ? item.textColor : '',
                 opacity: item.opacity !== undefined ? Number(item.opacity) : 1,
                 rotation: item.rotation !== undefined ? Number(item.rotation) : 0,
                 primitives: Ext.clone(item.primitives || [])
@@ -761,6 +790,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
             stroke: this.normalizeColorForField(element.stroke),
             strokeWidth: element.strokeWidth,
             fillColor: this.normalizeColorForField(element.fillColor),
+            textColor: this.normalizeColorForField(element.textColor),
             opacity: element.opacity,
             rotation: element.rotation || 0
         });
@@ -788,6 +818,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
         element.stroke = this.normalizeColorForSave(formValues.stroke);
         element.strokeWidth = Ext.isEmpty(formValues.strokeWidth) ? element.strokeWidth : Number(formValues.strokeWidth);
         element.fillColor = this.normalizeColorForSave(formValues.fillColor);
+        element.textColor = this.normalizeColorForSave(formValues.textColor);
         element.opacity = Ext.isEmpty(formValues.opacity) ? element.opacity : Number(formValues.opacity);
         element.rotation = Ext.isEmpty(formValues.rotation) ? element.rotation : Number(formValues.rotation);
 

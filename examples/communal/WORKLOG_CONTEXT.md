@@ -51,9 +51,10 @@ The module is used to:
 - `view/MnemoEditorWindow.js`
   - mnemonic editor window
   - schema name is edited directly in the editor toolbar
-  - property form
-  - keyboard control
-  - library loading from JSON manifests/sources
+- property form
+- keyboard control
+- library loading from JSON manifests/sources
+- separate `textColor` property is supported for `label`, `value`, `sensor` and text primitives inside `symbol`
 
 - `MnemoStorage.js`
   - AJAX layer for mnemo backend

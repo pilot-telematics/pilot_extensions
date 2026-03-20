@@ -165,7 +165,7 @@ Ext.define('Store.communal.MnemoRenderer', {
                         width: Ext.isEmpty(cfg.strokeWidth) ? 2 : Number(cfg.strokeWidth)
                     });
                 labelText = visualGroup.text(cfg.text || 'S').font({size: cfg.fontSize || 14, family: 'Arial, sans-serif', weight: 700});
-                labelText.fill(sensorStroke === 'none' ? '#374151' : sensorStroke);
+                labelText.fill(cfg.textColor || (sensorStroke === 'none' ? '#374151' : sensorStroke));
                 labelText.center((cfg.width || 34) / 2, (cfg.height || 34) / 2);
                 break;
 
@@ -254,6 +254,7 @@ Ext.define('Store.communal.MnemoRenderer', {
             type = primitive.type || '',
             strokeColor = this.getPrimitiveStroke(primitive, cfg),
             fillColor = this.getPrimitiveFill(primitive, cfg),
+            textColor = primitive.fill !== undefined ? primitive.fill : (cfg.textColor || cfg.stroke || '#111111'),
             strokeWidth = primitive.strokeWidth !== undefined ? Number(primitive.strokeWidth) : Number(cfg.strokeWidth || 2),
             fontSize = primitive.fontSize !== undefined ? Number(primitive.fontSize) : Number(cfg.fontSize || 14),
             attrs = {};
@@ -309,7 +310,7 @@ Ext.define('Store.communal.MnemoRenderer', {
                     family: primitive.fontFamily || 'Arial, sans-serif',
                     weight: primitive.fontWeight || 700
                 });
-                element.fill(fillColor || strokeColor || '#111111');
+                element.fill(textColor);
                 if (primitive.textAnchor) {
                     attrs['text-anchor'] = primitive.textAnchor;
                 }
@@ -520,7 +521,7 @@ Ext.define('Store.communal.MnemoRenderer', {
                 size: cfg.fontSize || 18,
                 family: 'Arial, sans-serif',
                 weight: cfg.fontWeight || 600
-            }).fill(cfg.color || '#111827'),
+            }).fill(cfg.textColor || cfg.stroke || '#111827'),
             box = text.bbox(),
             rect = group.rect(box.width + 10, box.height + 8)
                 .radius(4)
@@ -551,7 +552,10 @@ Ext.define('Store.communal.MnemoRenderer', {
             baseWidth = Number(item.baseWidth || 64),
             baseHeight = Number(item.baseHeight || 64);
 
-        if (item.previewText) {
+        if (item.insertType === 'sensor') {
+            markup = '<circle cx="32" cy="32" r="18" fill="' + Ext.String.htmlEncode(item.fillColor || '#ffffff') + '" stroke="' + Ext.String.htmlEncode(item.stroke || '#111111') + '" stroke-width="' + Ext.String.htmlEncode(item.strokeWidth || 2) + '"/>' +
+                '<text x="32" y="37" text-anchor="middle" font-size="14" font-family="Arial" font-weight="700" fill="' + Ext.String.htmlEncode(item.textColor || item.stroke || '#111111') + '">' + Ext.String.htmlEncode(item.previewText || item.text || 'P') + '</text>';
+        } else if (item.previewText) {
             markup = '<rect x="8" y="18" width="48" height="28" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>' +
                 '<text x="32" y="36" text-anchor="middle" font-size="14" font-family="Arial" font-weight="700" fill="#111111">' + Ext.String.htmlEncode(item.previewText) + '</text>';
         } else {
@@ -607,7 +611,7 @@ Ext.define('Store.communal.MnemoRenderer', {
                     attr('font-weight', primitive.fontWeight || 700) +
                     attr('text-anchor', primitive.textAnchor) +
                     attr('dominant-baseline', primitive.dominantBaseline) +
-                    attr('fill', primitive.fill || cfg.fillColor || cfg.stroke || '#111111') +
+                    attr('fill', primitive.fill || cfg.textColor || cfg.stroke || '#111111') +
                     '>' + Ext.String.htmlEncode(primitive.text || '') + '</text>';
             default:
                 return '';
