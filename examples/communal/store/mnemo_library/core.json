@@ -5,8 +5,8 @@
       "title": "Pipelines",
       "items": [
         {
-          "key": "pipe_horizontal",
-          "title": "Pipe horizontal",
+          "key": "pipe",
+          "title": "Pipe",
           "type": "symbol",
           "width": 72,
           "height": 72,
@@ -20,52 +20,7 @@
           ]
         },
         {
-          "key": "pipe_vertical",
-          "title": "Pipe vertical",
-          "type": "symbol",
-          "width": 72,
-          "height": 72,
-          "baseWidth": 72,
-          "baseHeight": 72,
-          "resizeMode": "direct",
-          "stroke": "#111111",
-          "strokeWidth": 4,
-          "primitives": [
-            { "type": "line", "x1": 32, "y1": 8, "x2": 32, "y2": 56, "linecap": "round", "fitToElement": "verticalCenter" }
-          ]
-        },
-        {
-          "key": "pipe_diagonal_forward",
-          "title": "Pipe diagonal /",
-          "type": "symbol",
-          "width": 72,
-          "height": 72,
-          "baseWidth": 72,
-          "baseHeight": 72,
-          "resizeMode": "direct",
-          "stroke": "#111111",
-          "strokeWidth": 3,
-          "primitives": [
-            { "type": "line", "x1": 10, "y1": 54, "x2": 54, "y2": 10, "linecap": "round", "fitToElement": "diagonalForward" }
-          ]
-        },
-        {
-          "key": "pipe_diagonal_back",
-          "title": "Pipe diagonal \\",
-          "type": "symbol",
-          "width": 72,
-          "height": 72,
-          "baseWidth": 72,
-          "baseHeight": 72,
-          "resizeMode": "direct",
-          "stroke": "#111111",
-          "strokeWidth": 3,
-          "primitives": [
-            { "type": "line", "x1": 10, "y1": 10, "x2": 54, "y2": 54, "linecap": "round", "fitToElement": "diagonalBack" }
-          ]
-        },
-        {
-          "key": "pipe_horizontal_dashed",
+          "key": "pipe_dashed",
           "title": "Pipe dashed",
           "type": "symbol",
           "width": 72,
@@ -80,8 +35,8 @@
           ]
         },
         {
-          "key": "pipe_elbow_top_right",
-          "title": "Elbow top-right",
+          "key": "pipe_elbow_right",
+          "title": "Elbow right",
           "type": "symbol",
           "width": 72,
           "height": 72,
@@ -92,8 +47,8 @@
           ]
         },
         {
-          "key": "pipe_elbow_top_left",
-          "title": "Elbow top-left",
+          "key": "pipe_elbow_left",
+          "title": "Elbow left",
           "type": "symbol",
           "width": 72,
           "height": 72,
@@ -101,30 +56,6 @@
           "strokeWidth": 4,
           "primitives": [
             { "type": "path", "d": "M40 56 L40 24 Q40 12 28 12 L16 12", "fill": "none", "linecap": "round" }
-          ]
-        },
-        {
-          "key": "pipe_elbow_bottom_right",
-          "title": "Elbow bottom-right",
-          "type": "symbol",
-          "width": 72,
-          "height": 72,
-          "stroke": "#111111",
-          "strokeWidth": 4,
-          "primitives": [
-            { "type": "path", "d": "M32 16 L32 48 Q32 60 44 60 L56 60", "fill": "none", "linecap": "round" }
-          ]
-        },
-        {
-          "key": "pipe_elbow_bottom_left",
-          "title": "Elbow bottom-left",
-          "type": "symbol",
-          "width": 72,
-          "height": 72,
-          "stroke": "#111111",
-          "strokeWidth": 4,
-          "primitives": [
-            { "type": "path", "d": "M40 16 L40 48 Q40 60 28 60 L16 60", "fill": "none", "linecap": "round" }
           ]
         },
         {
@@ -154,7 +85,7 @@
           ]
         },
         {
-          "key": "arrow_left",
+          "key": "arrow",
           "title": "Arrow left",
           "type": "symbol",
           "width": 72,
@@ -165,48 +96,6 @@
           "primitives": [
             { "type": "line", "x1": 54, "y1": 32, "x2": 18, "y2": 32, "linecap": "round" },
             { "type": "polygon", "points": "16,32 32,20 32,44" }
-          ]
-        },
-        {
-          "key": "arrow_right",
-          "title": "Arrow right",
-          "type": "symbol",
-          "width": 72,
-          "height": 72,
-          "stroke": "#111111",
-          "strokeWidth": 4,
-          "fillColor": "#111111",
-          "primitives": [
-            { "type": "line", "x1": 10, "y1": 32, "x2": 46, "y2": 32, "linecap": "round" },
-            { "type": "polygon", "points": "48,32 32,20 32,44" }
-          ]
-        },
-        {
-          "key": "arrow_up",
-          "title": "Arrow up",
-          "type": "symbol",
-          "width": 72,
-          "height": 72,
-          "stroke": "#111111",
-          "strokeWidth": 4,
-          "fillColor": "#111111",
-          "primitives": [
-            { "type": "line", "x1": 32, "y1": 54, "x2": 32, "y2": 18, "linecap": "round" },
-            { "type": "polygon", "points": "32,16 20,32 44,32" }
-          ]
-        },
-        {
-          "key": "arrow_down",
-          "title": "Arrow down",
-          "type": "symbol",
-          "width": 72,
-          "height": 72,
-          "stroke": "#111111",
-          "strokeWidth": 4,
-          "fillColor": "#111111",
-          "primitives": [
-            { "type": "line", "x1": 32, "y1": 10, "x2": 32, "y2": 46, "linecap": "round" },
-            { "type": "polygon", "points": "32,48 20,32 44,32" }
           ]
         }
       ]
