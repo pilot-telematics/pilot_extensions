@@ -251,10 +251,9 @@
           "type": "symbol",
           "width": 72,
           "height": 72,
-          "stroke": "#111111",
           "strokeWidth": 2,
           "primitives": [
-            { "type": "circle", "cx": 32, "cy": 32, "r": 18, "fill": "#ffffff" }
+            { "type": "circle", "cx": 32, "cy": 32, "r": 18 }
           ]
         },
         {

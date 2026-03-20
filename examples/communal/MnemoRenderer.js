@@ -141,13 +141,13 @@ Ext.define('Store.communal.MnemoRenderer', {
             visualGroup = transformGroup.group(),
             hitGroup = transformGroup.group(),
             labelText,
-            pipeColor;
+            sensorStroke,
+            sensorFill;
 
         cfg.x = Number(cfg.x || 0);
         cfg.y = Number(cfg.y || 0);
         cfg.width = Number(cfg.width || 0);
         cfg.height = Number(cfg.height || 0);
-        pipeColor = cfg.stroke || cfg.color || '#94a3b8';
 
         switch (cfg.type) {
             case 'symbol':
@@ -155,33 +155,17 @@ Ext.define('Store.communal.MnemoRenderer', {
                 me.addHitArea(hitGroup, cfg.width || 72, cfg.height || 72);
                 break;
 
-            case 'hpipe':
-                visualGroup.rect(cfg.width || 160, cfg.height || 14).radius(7).fill(pipeColor);
-                break;
-
-            case 'vpipe':
-                visualGroup.rect(cfg.width || 14, cfg.height || 160).radius(7).fill(pipeColor);
-                break;
-
-            case 'valve':
-                visualGroup.line(0, cfg.height / 2, cfg.width, cfg.height / 2).stroke({color: '#9ca3af', width: 4});
-                visualGroup.polygon('0,' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
-                    .fill('#ffffff')
-                    .stroke({color: '#9ca3af', width: 3});
-                visualGroup.polygon(cfg.width + ',' + (cfg.height / 2) + ' ' + (cfg.width / 2) + ',0 ' + (cfg.width / 2) + ',' + cfg.height)
-                    .fill('#ffffff')
-                    .stroke({color: '#9ca3af', width: 3});
-                break;
-
-            case 'pump':
-                visualGroup.circle(Math.min(cfg.width, cfg.height)).fill('#ffffff').stroke({color: '#9ca3af', width: 3});
-                visualGroup.polygon('20,18 20,42 42,30').fill('#dbeafe').stroke({color: '#6b7280', width: 2});
-                break;
-
             case 'sensor':
-                visualGroup.circle(Math.min(cfg.width, cfg.height)).fill(cfg.fill || '#ffffff').stroke({color: '#9ca3af', width: 3});
+                sensorStroke = Ext.isEmpty(cfg.stroke) ? 'none' : cfg.stroke;
+                sensorFill = Ext.isEmpty(cfg.fillColor) ? 'none' : cfg.fillColor;
+                visualGroup.circle(Math.min(cfg.width, cfg.height))
+                    .fill(sensorFill)
+                    .stroke({
+                        color: sensorStroke,
+                        width: Ext.isEmpty(cfg.strokeWidth) ? 2 : Number(cfg.strokeWidth)
+                    });
                 labelText = visualGroup.text(cfg.text || 'S').font({size: cfg.fontSize || 14, family: 'Arial, sans-serif', weight: 700});
-                labelText.fill(cfg.color || '#374151');
+                labelText.fill(sensorStroke === 'none' ? '#374151' : sensorStroke);
                 labelText.center((cfg.width || 34) / 2, (cfg.height || 34) / 2);
                 break;
 

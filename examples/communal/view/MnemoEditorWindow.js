@@ -219,12 +219,14 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                         xtype: 'colorcombobox',
                         fieldLabel: l('Stroke'),
                         name: 'stroke',
-                        allowBlank: true
+                        allowBlank: true,
+                        allowNone: true
                     },{
                         xtype: 'colorcombobox',
                         fieldLabel: l('Fill'),
                         name: 'fillColor',
                         allowBlank: true,
+                        allowNone: true
                     }]
                 }, {
                     xtype: 'container',
@@ -314,7 +316,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
     normalizeColorForSave: function (value) {
         value = String(value || '').replace('#', '').trim();
 
-        if (!value || value.toLowerCase() === 'none') {
+        if (!value || value.toLowerCase() === '') {
             return value;
         }
 
@@ -453,30 +455,6 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
         var id = this.generateElementId();
 
         switch (type) {
-            case 'hpipe':
-                return Ext.apply({
-                    id: id,
-                    type: type,
-                    x: 80,
-                    y: 80,
-                    width: 180,
-                    height: 14,
-                    stroke: '#ef4444'
-                }, extraCfg);
-            case 'vpipe':
-                return Ext.apply({
-                    id: id,
-                    type: type,
-                    x: 120,
-                    y: 120,
-                    width: 14,
-                    height: 180,
-                    stroke: '#2563eb'
-                }, extraCfg);
-            case 'valve':
-                return Ext.apply({id: id, type: type, x: 150, y: 150, width: 56, height: 56}, extraCfg);
-            case 'pump':
-                return Ext.apply({id: id, type: type, x: 200, y: 200, width: 60, height: 60}, extraCfg);
             case 'sensor':
                 return Ext.apply({id: id, type: type, x: 250, y: 250, width: 34, height: 34, text: 'P'}, extraCfg);
             case 'symbol':
@@ -491,7 +469,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                     baseHeight: 64,
                     stroke: '#111111',
                     strokeWidth: 2,
-                    fillColor: 'none',
+                    fillColor: '',
                     opacity: 1,
                     rotation: 0,
                     primitives: []
@@ -511,7 +489,6 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                     placeholder: 'No data',
                     stroke: '#e2e8f0',
                     strokeWidth: 1,
-                    fillColor: '#ffffff',
                     opacity: 1,
                     rotation: 0
                 }, extraCfg);
@@ -583,7 +560,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                 baseHeight: Number(item.baseHeight || 64),
                 stroke: item.stroke || '#111111',
                 strokeWidth: Number(item.strokeWidth || 2),
-                fillColor: item.fillColor !== undefined ? item.fillColor : 'none',
+                fillColor: item.fillColor !== undefined ? item.fillColor : '',
                 opacity: item.opacity !== undefined ? Number(item.opacity) : 1,
                 rotation: item.rotation !== undefined ? Number(item.rotation) : 0,
                 primitives: Ext.clone(item.primitives || [])

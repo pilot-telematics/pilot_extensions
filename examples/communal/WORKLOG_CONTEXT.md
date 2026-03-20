@@ -46,6 +46,7 @@ The module is used to:
 - `MnemoRenderer.js`
   - single renderer for both viewer and editor
   - uses declarative primitives, not hardcoded icon families
+  - legacy runtime types `hpipe`, `vpipe`, `valve`, `pump` were removed; active element types are `symbol`, `label`, `value`, `sensor`
 
 - `view/MnemoEditorWindow.js`
   - mnemonic editor window
