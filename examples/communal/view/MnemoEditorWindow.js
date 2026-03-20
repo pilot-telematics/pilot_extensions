@@ -275,7 +275,7 @@ Ext.define('Store.communal.view.MnemoEditorWindow', {
                     }, {
                         xtype: 'button',
                         tooltip: l('Delete selected'),
-                        iconCls: "fa fa-thrash-alt",
+                        iconCls: "fa fa-trash-can",
                         handler: function () {
                             this.up('window').removeSelectedElement();
                         }
