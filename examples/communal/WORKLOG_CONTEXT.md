@@ -221,6 +221,13 @@ There was a mistaken temporary `create_db.php`, but it was removed.
 - sensor grouping evolved toward object/group/name readability
 - tags filtering and issues filtering were added
 - right panel summary is based on loaded sensor rows
+- `sensor.issues` from `/api/v3/vehicles/status` is now used instead of a hardcoded `0`
+- `Center.js` normalizes rows once and passes the same sensor rows to:
+  - the main sensor grid
+  - the mnemonic panel
+  - the `Information` tab
+- `Information` shows the sensor rows in a table and clicking a row places a marker on the map
+- sensor rows now also carry `addr`, `lat`, and `lon` when available from API payload
 
 ## Styling / UX Notes
 

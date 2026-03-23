@@ -38,7 +38,7 @@ Ext.define('Store.communal.Center', {
                 ftype: 'grouping',
                 startCollapsed: false,
                 hideGroupedHeader: true,
-                groupHeaderTpl: '{name}'
+                groupHeaderTpl: '<div class="communal-goup-header">{name}</div>'
             }],
             tbar: [{
                 xtype: 'textfield',
@@ -191,12 +191,14 @@ Ext.define('Store.communal.Center', {
     },
 
     renderIssues: function (value) {
-        if (Number(value) === 2) {
+        value = Number(value || 0);
+
+        if (value >= 2) {
             return '<div class="comm_status fa fa-circle-xmark red"></div>';
         }
 
-        if (Number(value) === 1) {
-            return '<div class="comm_status fa fa-circle-exclamation amber"></div>';
+        if (value === 1) {
+            return '<div class="comm_status fa fa-circle-exclamation orange"></div>';
         }
 
         return '<div class="comm_status fa fa-circle-check green"></div>';
@@ -219,6 +221,14 @@ Ext.define('Store.communal.Center', {
 
         if (infoPanel && Ext.isFunction(infoPanel.updateSummary)) {
             infoPanel.updateSummary(stats);
+        }
+    },
+
+    updateInfoRows: function (rows) {
+        var infoPanel = this.getInfoPanel();
+
+        if (infoPanel && Ext.isFunction(infoPanel.setSensorRows)) {
+            infoPanel.setSensorRows(rows || []);
         }
     },
 
@@ -256,6 +266,7 @@ Ext.define('Store.communal.Center', {
 
         if (!this.ids || !this.ids.length) {
             this.updateInfoSummary({total: 0, active: 0, notActive: 0, issues: 0});
+            this.updateInfoRows([]);
             if (this.getMnemoPanel()) {
                 this.getMnemoPanel().setSensorRows([]);
             }
@@ -277,6 +288,7 @@ Ext.define('Store.communal.Center', {
 
                 this.store.loadData(rows);
                 this.updateInfoSummary(summary);
+                this.updateInfoRows(rows);
                 if (mnemo && Ext.isFunction(mnemo.setSensorRows)) {
                     mnemo.setSensorRows(rows);
                 }
@@ -284,6 +296,7 @@ Ext.define('Store.communal.Center', {
             failure: function () {
                 this.store.removeAll();
                 this.updateInfoSummary({total: 0, active: 0, notActive: 0, issues: 0});
+                this.updateInfoRows([]);
                 if (this.getMnemoPanel()) {
                     this.getMnemoPanel().setSensorRows([]);
                 }
@@ -296,35 +309,69 @@ Ext.define('Store.communal.Center', {
         });
     },
 
+    normalizeIssuesValue: function (value) {
+        if (Ext.isEmpty(value)) {
+            return 0;
+        }
+
+        if (Ext.isArray(value)) {
+            return Math.min(value.length, 2);
+        }
+
+        if (Ext.isObject(value)) {
+            return Math.min(Ext.Object.getSize(value), 2);
+        }
+
+        value = Number(value);
+
+        if (!isFinite(value)) {
+            return String(value).trim() ? 1 : 0;
+        }
+
+        if (value < 0) {
+            return 0;
+        }
+
+        return Math.min(value, 2);
+    },
+
     normalizeStatusRows: function (payload) {
         var vehicles = payload && Ext.isArray(payload.data) ? payload.data : [],
             rows = [];
 
         Ext.Array.each(vehicles, function (vehicle) {
             var vehicleNumber = vehicle.vehiclenumber || vehicle.name || String(vehicle.agent_id || vehicle.agentid || ''),
-                sensors = Ext.isArray(vehicle.sensors) ? vehicle.sensors : (Ext.isArray(vehicle.sensors_status) ? vehicle.sensors_status : []);
+                sensors = Ext.isArray(vehicle.sensors) ? vehicle.sensors : (Ext.isArray(vehicle.sensors_status) ? vehicle.sensors_status : []),
+                vehicleAddress = vehicle.addr || vehicle.address || vehicle.location || '',
+                vehicleLat = !Ext.isEmpty(vehicle.lat) ? vehicle.lat : (!Ext.isEmpty(vehicle.latitude) ? vehicle.latitude : null),
+                vehicleLon = !Ext.isEmpty(vehicle.lon) ? vehicle.lon : (!Ext.isEmpty(vehicle.lng) ? vehicle.lng : (!Ext.isEmpty(vehicle.longitude) ? vehicle.longitude : null));
 
             Ext.Array.each(sensors, function (sensor) {
                 var sensorName = sensor.name || sensor.sensor_name || '',
                     sensorGroup = sensor.group || '',
-                    sensorKey = [vehicleNumber, sensorGroup, sensorName].join('::');
+                    sensorKey = [vehicleNumber, sensorGroup, sensorName].join('::'),
+                    issueValue = this.normalizeIssuesValue(sensor.issues),
+                    tags = Ext.isArray(sensor.tags) ? sensor.tags : (sensor.tags ? String(sensor.tags).split(',') : []);
 
                 rows.push({
                     vehiclenumber: vehicleNumber,
+                    addr: sensor.addr || sensor.address || vehicleAddress,
                     name: sensorName,
                     group: sensorGroup,
                     hum_value: Ext.isEmpty(sensor.hum_value) ? (Ext.isEmpty(sensor.value) ? '' : sensor.value) : sensor.hum_value,
                     change_ts: sensor.change_ts || sensor.ts || null,
-                    issues: 0,
+                    issues: issueValue,
                     sensor_key: sensorKey,
-                    tags: sensor.tags ? sensor.tags.split(',').map(function (tag) {
+                    lat: !Ext.isEmpty(sensor.lat) ? sensor.lat : (!Ext.isEmpty(sensor.latitude) ? sensor.latitude : vehicleLat),
+                    lon: !Ext.isEmpty(sensor.lon) ? sensor.lon : (!Ext.isEmpty(sensor.lng) ? sensor.lng : (!Ext.isEmpty(sensor.longitude) ? sensor.longitude : vehicleLon)),
+                    tags: tags.map(function (tag) {
                         return parseInt(tag, 10);
                     }).filter(function (tag) {
                         return Number.isInteger(tag) && tag > 0;
-                    }) : []
+                    })
                 });
-            });
-        });
+            }, this);
+        }, this);
 
         return rows;
     }
