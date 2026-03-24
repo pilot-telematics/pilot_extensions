@@ -40,6 +40,7 @@ function require_session(array $CONF): array
     if (!$token) json_err('Missing Authorization Bearer token', 401);
 
     $pdo = db($CONF);
+    $ttl = (int)($CONF['security']['token_ttl_seconds'] ?? 86400);
 
     $row = db_one($pdo, "
         SELECT s.account_id, s.user_id, u.login
@@ -51,5 +52,15 @@ function require_session(array $CONF): array
     ", [':t' => $token]);
 
     if (!$row) json_err('Invalid or expired session', 401);
+
+    db_exec($pdo, "
+        UPDATE sessions
+        SET expires_at = now() + (:ttl || ' seconds')::interval
+        WHERE token = :t
+    ", [
+        ':t' => $token,
+        ':ttl' => $ttl
+    ]);
+
     return $row;
 }

@@ -11,7 +11,7 @@ return [
         'sslmode' => 'prefer',
     ],
     'security' => [
-        'token_ttl_seconds' => 86400,
+        'token_ttl_seconds' => 259200,
     ],
     'cors' => [
         'allow_origin' => 'https://ext.pilot.tm',

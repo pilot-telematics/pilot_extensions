@@ -215,6 +215,14 @@ Current model:
 
 There was a mistaken temporary `create_db.php`, but it was removed.
 
+## Auth / Session Notes
+
+- extension auth uses its own bearer token, stored in browser `localStorage`
+- backend token TTL is now `259200` seconds (`3 days`)
+- valid sessions now use sliding expiration:
+  - every successful authenticated backend request extends `expires_at`
+  - the extension no longer uses a fixed "24 hours since login" lifetime
+
 ## API / Center Panel Notes
 
 - center panel sensor rows come from PILOT vehicle status API
