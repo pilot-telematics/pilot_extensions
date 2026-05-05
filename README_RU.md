@@ -1,234 +1,130 @@
-# PILOT Extensions - Примеры приложений для PILOT 
+# PILOT Extensions
 
-![PILOT Extensions](https://img.shields.io/badge/PILOT-Extensions-blue)
-![Ext JS](https://img.shields.io/badge/Ext%20JS-7.7%2B-orange)
-![License](https://img.shields.io/badge/License-Apache-green)
+Репозиторий с примерами, документацией и AI-контрактами для разработки расширений PILOT.
 
-Этот репозиторий содержит примеры расширений и приложений для **PILOT Extensions** - платформы для разработки пользовательских приложений в системе мониторинга PILOT.
+Главная цель репозитория: дать человеку или AI достаточно контекста, чтобы по бизнес-идее быстро собрать рабочее расширение PILOT без типовых ошибок: без отдельного SPA, без ручной загрузки Ext JS, без моков `skeleton`, с правильным встраиванием в существующий интерфейс PILOT.
 
-## 🚀 Что такое PILOT Extensions?
+## Быстрый Старт Для Людей
 
-**PILOT Extensions** позволяет разработчикам создавать собственные приложения, которые:
-- Расширяют функциональность системы PILOT
-- Интегрируют сторонние сервисы
-- Добавляют новые элементы интерфейса
-- Используют данные из системы мониторинга
+1. Если у вас есть только бизнес-идея, начните с [docs/IDEA_TO_EXTENSION_RU.md](docs/IDEA_TO_EXTENSION_RU.md).
+2. Прочитайте [карту документации](docs/README_RU.md).
+3. Пройдите [руководство разработчика](docs/HUMAN_EXTENSION_GUIDE_RU.md).
+4. Выберите ближайший пример:
+   - [examples/hello-world](examples/hello-world) - минимальное расширение с вкладкой и панелью.
+   - [examples/nearby-poi](examples/nearby-poi) - пункт контекстного меню в Online и работа с существующей картой.
+   - [examples/airports](examples/airports) - список объектов и собственная карта.
+   - [examples/communal](examples/communal) - сложный модуль с backend, авторизацией и мнемосхемами.
+5. Разместите файлы расширения на сервере и зарегистрируйте URL `Module.js` в PILOT.
 
-## 📁 Структура репозитория
+## Быстрый Старт Для AI
 
+Если вы хотите попросить AI сделать расширение по бизнес-идее:
+
+1. Дайте AI ссылку на этот репозиторий.
+2. Попросите прочитать в таком порядке:
+   - [AI_SPECS.md](AI_SPECS.md)
+   - [docs/AI_EXTENSION_GUIDE.md](docs/AI_EXTENSION_GUIDE.md)
+   - [docs/PILOT_RUNTIME_UTILS_RU.md](docs/PILOT_RUNTIME_UTILS_RU.md)
+   - подходящий пример из `examples/`
+3. Используйте готовый шаблон запроса:
+   - [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md)
+   - [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md)
+   - [docs/ChatGPT_Prompts/Prompt_based on specs.txt](docs/ChatGPT_Prompts/Prompt_based%20on%20specs.txt)
+
+Минимальная формулировка:
+
+```text
+Используй репозиторий pilot-telematics/pilot_extensions.
+Сначала прочитай AI_SPECS.md и docs/AI_EXTENSION_GUIDE.md.
+Сделай PILOT Extension по бизнес-идее ниже.
+Не создавай standalone web app. Расширение должно запускаться через Module.js внутри PILOT.
 ```
+
+## Runtime PILOT, Который Должен Знать Разработчик
+
+Расширения запускаются внутри уже загруженного PILOT UI.
+
+Ключевые глобальные объекты:
+
+- `window.skeleton` - главный контейнер интерфейса.
+- `window.skeleton.header` - верхний header.
+- `window.skeleton.navigation` - левая навигация.
+- `window.skeleton.mapframe` - основной контейнер карт/панелей в существующих примерах.
+- `window.skeleton.map_frame` - имя того же смыслового контейнера в некоторых описаниях runtime; перед использованием проверяйте фактическую сборку.
+- `window.mapContainer` - карта раздела Online.
+- `window.historyMapContainer` - карта раздела History.
+- `window.Highcharts` - графики, если доступны в текущей сборке PILOT.
+- `window.jQuery` / `window.$` - jQuery, если доступен в текущей сборке PILOT.
+- `window.uom` - единицы измерения текущего пользователя, если доступны.
+
+Связь между вкладкой навигации и основной панелью обычно хранится в свойстве компонента:
+
+```js
+navTab.map_frame = mainPanel;
+```
+
+## Структура Репозитория
+
+```text
 pilot_extensions/
-├── examples/              # Примеры приложений
-│   ├── hello-world/      # Базовый пример "Hello World"
-│   ├── airports/    # Список аэропортов с картой
-│   ├── planets/     # Пример с планетами солнечной системы
-│   └── template-app/     # Шаблон для новых приложений
-├── docs/                 # Документация
-├── tools/                # Вспомогательные инструменты
-└── README.md            # Этот файл
+├── AI_SPECS.md                 # строгий контракт для AI-generated code
+├── AI_SPECS_SHORT.md           # короткая версия контракта
+├── DEPLOY.md                   # варианты хостинга и публикации
+├── README.md                   # English overview
+├── README_RU.md                # этот файл
+├── docs/
+│   ├── README.md               # documentation map in English
+│   ├── README_RU.md            # карта документации
+│   ├── IDEA_TO_EXTENSION.md
+│   ├── IDEA_TO_EXTENSION_RU.md
+│   ├── HUMAN_EXTENSION_GUIDE.md
+│   ├── HUMAN_EXTENSION_GUIDE_RU.md
+│   ├── AI_EXTENSION_GUIDE.md
+│   ├── PILOT_RUNTIME_UTILS.md
+│   ├── PILOT_RUNTIME_UTILS_RU.md
+│   ├── MapContainer.md
+│   ├── MapContainer_RU.md
+│   ├── MarkerIconApi.md
+│   └── ChatGPT_Prompts/
+└── examples/
+    ├── hello-world/
+    ├── nearby-poi/
+    ├── airports/
+    ├── planets/
+    ├── template-app/
+    └── communal/
 ```
 
-## 🛠️ Быстрый старт
+## Минимальная Структура Расширения
 
-### Предварительные требования
-
-1. **Доступ к PILOT** с правами партнера/администратора
-2. **Веб-сервер** для хостинга файлов приложения
-3. **Базовые знания** JavaScript и Ext JS
-
-### Первые шаги
-
-1. **Склонируйте репозиторий**
-   ```bash
-   git clone https://github.com/pilot-telematics/pilot_extensions.git
-   cd pilot_extensions
-   ```
-
-2. **Изучите пример "Hello World"**
-    - Откройте `examples/hello-world/`
-    - Это минимальный рабочий пример приложения
-
-3. **Настройте свое приложение**
-    - Используйте `examples/template-app/` как основу
-    - Измените названия классов и файлов под ваш проект
-
-4. **Разместите файлы на вашем сервере**
-    - Убедитесь, что `Module.js` доступен по прямому URL
-    - Пример: `http://your-server.com/your-app/Module.js`
-
-5. **Создайте приложение в PILOT**
-    - Зайдите в **Админка → Приложения → Добавить**
-    - Заполните форму, указав URL вашего приложения
-    - Подождите 10 минут для настройки проксирования
-
-## 📚 Примеры приложений
-
-### 🎯 Hello World
-**Путь:** `examples/hello-world/`
-- Самый простой пример приложения
-- Добавляет вкладку в навигацию
-- Добавляет панель в основную область
-- Идеально для первого знакомства
-
-### ✈️ Airports List
-**Путь:** `examples/airports/`
-- Список аэропортов с отображением на карте
-- Демонстрирует работу с маркерами
-- Пример использования API карт
-
-### 🪐 Solar System
-**Путь:** `examples/planets/`
-- Интерактивный список планет солнечной системы
-- Пример работы с данными без карты
-- Демонстрирует создание пользовательских интерфейсов
-
-### 📐 Template App
-**Путь:** `examples/template-app/`
-- Готовый шаблон для новых проектов
-- Включает всю необходимую структуру
-- Содержит комментарии и подсказки
-
-## 🏗️ Архитектура приложения
-
-Каждое приложение должно содержать:
-
-### Обязательные файлы:
-- **`Module.js`** - главный файл приложения (точка входа)
-- **`doc/index.html`** - документация для приложения
-
-### Опциональные файлы:
-- **`*.js`** - дополнительные классы Ext JS
-- **`*.css`** - стили приложения
-- **`*.json`** - данные конфигурации
-
-### Базовая структура класса:
-```javascript
-Ext.define('Store.your-app.Module', {
-    extend: 'Ext.Component',
-    
-    initModule: function () {
-        // 1. Создаем компоненты
-        var navTab = Ext.create('YourNavigationComponent');
-        var mainPanel = Ext.create('YourMainComponent');
-        
-        // 2. Связываем их
-        navTab.map_frame = mainPanel;
-        
-        // 3. Добавляем в интерфейс PILOT
-        skeleton.navigation.add(navTab);
-        skeleton.mapframe.add(mainPanel);
-    }
-});
+```text
+my-extension/
+├── Module.js
+├── doc/
+│   └── index.html
+├── style.css       # опционально
+└── backend/        # опционально, если нужен PHP/backend
 ```
 
-## 🔧 Доступные API
+`Module.js` - единственная точка входа runtime-логики.
 
-### Работа с интерфейсом
-```javascript
-// Добавление вкладки в навигацию
-skeleton.navigation.add(component);
+`doc/index.html` - только документация расширения. В нем не должно быть `<script>` и логики запуска.
 
-// Добавление панели в основную область
-skeleton.mapframe.add(component);
+## Полезные Документы
 
-// Добавление кнопки в верхнюю панель
-skeleton.header.insert(position, button);
-```
+- [AI_SPECS.md](AI_SPECS.md) - обязательные правила для AI.
+- [docs/IDEA_TO_EXTENSION.md](docs/IDEA_TO_EXTENSION.md) - English version.
+- [docs/IDEA_TO_EXTENSION_RU.md](docs/IDEA_TO_EXTENSION_RU.md) - путь от бизнес-идеи до работающего Extension.
+- [docs/AI_EXTENSION_GUIDE.md](docs/AI_EXTENSION_GUIDE.md) - как AI должен читать репозиторий и проектировать расширение.
+- [docs/HUMAN_EXTENSION_GUIDE.md](docs/HUMAN_EXTENSION_GUIDE.md) - English developer guide.
+- [docs/HUMAN_EXTENSION_GUIDE_RU.md](docs/HUMAN_EXTENSION_GUIDE_RU.md) - практическое руководство для разработчиков.
+- [docs/PILOT_RUNTIME_UTILS.md](docs/PILOT_RUNTIME_UTILS.md) - English guide to built-in PILOT runtime objects and utilities.
+- [docs/PILOT_RUNTIME_UTILS_RU.md](docs/PILOT_RUNTIME_UTILS_RU.md) - встроенные runtime-объекты и утилиты PILOT, доступные Extensions.
+- [DEPLOY.md](DEPLOY.md) - Cloudflare Workers, GitHub Pages, AWS EC2/Nginx/PHP-FPM.
+- [docs/MapContainer_RU.md](docs/MapContainer_RU.md) - работа с картой.
+- [docs/MarkerIconApi.md](docs/MarkerIconApi.md) - генерация SVG-иконок маркеров.
+- [docs/communal_RU.md](docs/communal_RU.md) - разбор сложного модуля `communal`.
 
-### Работа с картами
-```javascript
-// Создание карты
-var map = new MapContainer('map-name');
-map.init(lat, lon, zoom, elementId, config);
+## Лицензия
 
-// Добавление маркера
-map.addMarker({id: "marker1", lat: 55.75, lon: 37.65});
-
-// Добавление полигона
-map.setPolygon(points, options);
-```
-
-### Работа с данными PILOT
-Описание API PILOT V3 доступно в SWAGGER: https://pilot-swagger.pilot-gps.com
-Так же доступны API в формате Yaml: https://dev.pilot-gps.com/doc/api/v3.yaml
-
-
-## 🚀 Развертывание
-
-### Локальная разработка
-1. Разместите файлы на локальном сервере
-2. Создайте приложение в PILOT с URL локального сервера
-3. Используйте инструменты разработчика браузера для отладки
-
-### Продакшн-развертывание
-1. Разместите файлы на продакшн-сервере
-2. Обновите URL в настройках приложения в PILOT
-3. Запросите публикацию у технической поддержки
-
-## 🐛 Отладка и решение проблем
-
-### Частые проблемы:
-
-1. **Приложение не загружается**
-    - Проверьте доступность `Module.js` по указанному URL
-    - Убедитесь, что прошло 10 минут после создания приложения
-    - Проверьте консоль браузера на наличие ошибок
-
-2. **Ошибки JavaScript**
-    - Используйте `console.log()` для отладки
-    - Проверьте корректность имен классов Ext JS
-    - Убедитесь в правильности структуры `skeleton`
-
-3. **Проблемы с картами**
-    - Убедитесь, что карта инициализируется после рендера компонента
-    - Проверьте корректность координат
-    - Используйте обработчик `resize` для пересчета размеров карты
-
-### Инструменты отладки:
-- **Браузер**: F12 → Console, Network, Debugger
-- **Ext JS**: `Ext.log()` для логирования
-- **PILOT**: Глобальная переменная `skeleton` для доступа к интерфейсу
-
-## 🤝 Как внести вклад
-
-Мы приветствуем ваши примеры и улучшения!
-
-1. **Форкните репозиторий**
-2. **Создайте ветку для вашего примера** (`git checkout -b store/amazing-example`)
-3. **Закоммитьте изменения** (`git commit -m 'Add amazing example'`)
-4. **Запушьте ветку** (`git push origin store/amazing-example`)
-5. **Создайте Pull Request**
-
-### Требования к примерам:
-- ✔️ Рабочий код без ошибок
-- ✔️ Четкая документация в `doc/index.html`
-- ✔️ Комментарии в коде 
-- ✔️ Соответствие стилю кода проекта
-
-## 📖 Дополнительные ресурсы
-
-- [**Официальная документация PILOT**](https://doc.pilot-gps.ru) - полное руководство PILOT
-- [**Ext JS документация**](https://docs.sencha.com/extjs/7.7.0/) - руководство по фреймворку
-- [**Leaflet документация**](https://leafletjs.com/reference.html) - работа с картами
-- [**FontAwesome иконки**](https://fontawesome.com/icons) - доступные иконки для интерфейса
-
-## 📄 Лицензия
-
-Этот проект распространяется под лицензией Apache. Смотрите файл `LICENSE` для подробностей.
-
-## 💬 Поддержка
-
-- **Вопросы по разработке**: Создайте Issue в этом репозитории
-- **Техническая поддержка PILOT**: support@pilot-gps.com
-- **Дополнительная документация**: В репозитории есть `docs/`
-- **Примеры использования ChatGPT для разработки приложений**: В репозитории есть `docs/ChatGPT_Prompts`
-
-## 🏆 Благодарности
-
-Спасибо всем разработчикам, которые размещают свои примеры и улучшения для сообщества PILOT!
-
----
-
-**Happy coding!** 🎉
-
-*Создано для сообщества разработчиков PILOT*
+Apache License. См. [LICENSE](LICENSE).
