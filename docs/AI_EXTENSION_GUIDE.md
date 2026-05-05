@@ -312,13 +312,15 @@ Use [../DEPLOY.md](../DEPLOY.md) for hosting-specific instructions.
 
 If the extension includes custom CSS, tell the AI to prefer Tailwind CSS palette colors for new custom colors. This does not mean loading Tailwind CSS; it is only a palette rule unless the user explicitly asks for Tailwind as a dependency.
 
-The final answer for a generated extension must include a concrete launch path:
+The generated Extension deliverable must be a zip archive with the complete file structure. The chat answer should not print full source code by default. It should include a concrete launch path:
 
-1. exact upload folder structure;
-2. exact public URLs that must open after upload;
-3. exact `Module.js` URL to register in PILOT;
-4. browser verification steps;
-5. troubleshooting for `404`, HTML instead of JS, CORS, `skeleton is undefined`, and missing Ext classes.
+1. zip archive name;
+2. file tree inside the zip;
+3. exact upload folder structure;
+4. exact public URLs that must open after upload;
+5. exact `Module.js` URL to register in PILOT;
+6. browser verification steps;
+7. troubleshooting for `404`, HTML instead of JS, CORS, `skeleton is undefined`, and missing Ext classes.
 
 ## 10. Final Response Checklist for AI
 
@@ -328,8 +330,9 @@ Before final answer:
 - Verify there is no standalone app bootstrap.
 - Verify `doc/index.html` has no scripts.
 - Verify all referenced files exist.
+- Package the Extension into a zip archive with the same structure that must be uploaded.
 - Verify navigation, context menu, and map integration match the selected pattern.
 - Verify deployment instructions include where to upload files and which `Module.js` URL to register.
-- Summarize files changed and any manual configuration required.
+- Summarize the zip contents and any manual configuration required.
 
 If code cannot be verified in a live PILOT instance, say that clearly and list the static checks that passed.

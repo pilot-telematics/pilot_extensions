@@ -116,4 +116,5 @@ Parse hierarchical groups and nested `children`. Do not assume a flat array.
 - Use available `Pilot.utils.*` host classes when they fit the task; do not require local PILOT source files.
 - If custom CSS needs colors, prefer Tailwind CSS palette values; do not load Tailwind itself by default.
 - Do not load duplicate Highcharts/jQuery/helper scripts if PILOT already provides them.
-- Final answer includes where to upload files, which `Module.js` URL to register, how to verify launch, and basic troubleshooting.
+- Deliver the created Extension as a zip archive with the complete file structure.
+- Do not print full source code in the chat by default; summarize the zip, upload path, `Module.js` URL, launch verification, and troubleshooting.

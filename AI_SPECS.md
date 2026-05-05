@@ -464,6 +464,8 @@ Before final output, verify:
 - If vehicles are displayed, they are loaded from PILOT API and hierarchical `children` are parsed.
 - `doc/index.html` contains no `<script>`.
 - Extension-created map markers/routes can be cleaned up.
-- The answer includes upload folder structure, final `Module.js` URL shape, PILOT registration steps, browser verification steps, and basic troubleshooting.
+- The deliverable is a zip archive that contains the complete Extension file structure.
+- The zip archive contains `Module.js`, `doc/index.html`, and every referenced JS/CSS/backend/asset file.
+- The chat answer does not print full source code by default; it only summarizes the archive, file tree, upload location, final `Module.js` URL shape, PILOT registration steps, browser verification steps, and basic troubleshooting.
 
 If any applicable item fails, regenerate or fix the code before presenting it.

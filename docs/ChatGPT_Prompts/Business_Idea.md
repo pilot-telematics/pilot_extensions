@@ -48,10 +48,12 @@ Mandatory rules:
 
 The result must include:
 1. selected architecture;
-2. file tree;
-3. full code for every file;
+2. a zip archive with the complete Extension file structure;
+3. file tree inside the zip;
 4. where to upload the files;
 5. final Module.js URL to register in PILOT;
 6. step-by-step launch verification;
 7. troubleshooting for 404, CORS, skeleton undefined, class not found.
+
+Do not print full source code in the chat by default. Put the generated files into the zip archive.
 ```

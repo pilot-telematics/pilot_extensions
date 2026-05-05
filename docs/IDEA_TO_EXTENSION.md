@@ -11,8 +11,8 @@ Build a PILOT Extension for this business idea:
 <idea>
 
 Use the pilot-telematics/pilot_extensions repository.
-Read AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, and docs/PILOT_RUNTIME_UTILS_RU.md first.
-Return complete file contents and step-by-step instructions for where to upload the files and which Module.js URL to register in PILOT.
+Read AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, and docs/PILOT_RUNTIME_UTILS.md first.
+Return a zip archive with the complete Extension file structure, plus step-by-step instructions for where to upload the files and which Module.js URL to register in PILOT.
 ```
 
 Better prompt:
@@ -55,14 +55,16 @@ The AI should choose the simplest pattern that satisfies the idea.
 The AI response should include:
 
 1. Short architecture summary.
-2. File tree.
-3. Full contents of each file.
-4. `Module.js` as the only runtime entry point.
-5. `doc/index.html` without `<script>`.
+2. Zip archive with the complete Extension file structure.
+3. File tree inside the zip.
+4. Confirmation that `Module.js` is the only runtime entry point.
+5. Confirmation that `doc/index.html` has no `<script>`.
 6. Upload/deployment steps.
 7. Final `Module.js` URL to register in PILOT.
 8. Verification checklist.
 9. Troubleshooting notes.
+
+The AI should not print full source code in the chat by default. The generated files belong in the zip archive.
 
 ## 4. Typical Output Structure
 
@@ -196,6 +198,6 @@ Requirements:
 - the Extension must run inside PILOT via Module.js;
 - use PILOT runtime objects: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery if useful and available;
 - do not build a standalone web app;
-- provide full file contents;
+- provide a zip archive with the complete Extension file structure instead of printing full source code in chat;
 - provide step-by-step instructions: where to upload files, which Module.js URL to register in PILOT, and how to verify launch.
 ```
