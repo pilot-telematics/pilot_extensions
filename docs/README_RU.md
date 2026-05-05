@@ -33,7 +33,6 @@
 
 - [ChatGPT_Prompts/Business_Idea_RU.md](ChatGPT_Prompts/Business_Idea_RU.md)
 - [ChatGPT_Prompts/Business_Idea.md](ChatGPT_Prompts/Business_Idea.md)
-- [ChatGPT_Prompts/Prompt_based on specs.txt](ChatGPT_Prompts/Prompt_based%20on%20specs.txt)
 
 ## Как Выбрать Пример
 

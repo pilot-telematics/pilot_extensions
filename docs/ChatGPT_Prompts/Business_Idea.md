@@ -11,7 +11,7 @@ https://github.com/pilot-telematics/pilot_extensions
 Before generating code, read:
 1. AI_SPECS.md
 2. docs/AI_EXTENSION_GUIDE.md
-3. docs/PILOT_RUNTIME_UTILS_RU.md
+3. docs/PILOT_RUNTIME_UTILS.md
 4. docs/IDEA_TO_EXTENSION.md
 5. the closest example in examples/
 
@@ -39,10 +39,12 @@ Mandatory rules:
 - Ext JS is already loaded by PILOT.
 - Do not load Ext JS manually.
 - Use Store.<extension>.* for extension-owned classes.
+- You may use available host classes under Pilot.utils.*, for example Pilot.utils.Toggle, Pilot.utils.LeftBarPanel, Pilot.utils.ColorField.
 - Runtime logic starts only from Module.js.
 - doc/index.html is documentation only, without <script>.
 - Use PILOT runtime objects/helpers: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery, renderers, if useful and available.
 - Do not load duplicate Highcharts/jQuery/helper scripts if PILOT already provides them.
+- If custom CSS needs colors, prefer Tailwind CSS palette values for hex colors, but do not load Tailwind CSS as a framework unless explicitly needed.
 
 The result must include:
 1. selected architecture;

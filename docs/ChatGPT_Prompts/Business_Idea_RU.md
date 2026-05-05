@@ -39,10 +39,12 @@ https://github.com/pilot-telematics/pilot_extensions
 - Ext JS уже загружен PILOT.
 - Не загружай Ext JS вручную.
 - Используй Store.<extension>.* для своих классов.
+- Можно использовать доступные host-классы Pilot.utils.*, например Pilot.utils.Toggle, Pilot.utils.LeftBarPanel, Pilot.utils.ColorField.
 - Runtime-логика только через Module.js.
 - doc/index.html только документация, без <script>.
 - Используй runtime PILOT: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery, renderers, если нужны и доступны.
 - Не подключай повторно Highcharts/jQuery/helper scripts, если они уже доступны.
+- Если нужны свои CSS-цвета, используй палитру Tailwind CSS для hex-значений, но не подключай Tailwind CSS как framework без отдельной необходимости.
 
 Результат должен включать:
 1. выбранную архитектуру;

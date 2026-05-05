@@ -39,7 +39,7 @@ Always inspect:
 1. `AI_SPECS.md`
 2. `docs/AI_EXTENSION_GUIDE.md`
 3. one closest example
-4. `docs/PILOT_RUNTIME_UTILS_RU.md`
+4. `docs/PILOT_RUNTIME_UTILS.md`
 5. `docs/IDEA_TO_EXTENSION.md` or `docs/IDEA_TO_EXTENSION_RU.md` for the expected delivery shape
 
 Example mapping:

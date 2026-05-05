@@ -29,7 +29,6 @@
 3. Используйте готовый шаблон запроса:
    - [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md)
    - [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md)
-   - [docs/ChatGPT_Prompts/Prompt_based on specs.txt](docs/ChatGPT_Prompts/Prompt_based%20on%20specs.txt)
 
 Минимальная формулировка:
 
