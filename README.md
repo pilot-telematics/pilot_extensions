@@ -9,6 +9,13 @@ The repository is organized for two audiences:
 
 ## Start Here
 
+For managers using an AI assistant:
+
+1. Open [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md).
+2. Add the business idea and this repository URL.
+3. Ask the AI for a zip archive with the complete Extension file structure.
+4. Upload the archive contents and register the final `Module.js` URL in PILOT.
+
 For developers:
 
 1. If you only have a business idea, start with [docs/IDEA_TO_EXTENSION.md](docs/IDEA_TO_EXTENSION.md).
@@ -27,7 +34,8 @@ For AI coding agents:
    - `examples/airports` for a list plus custom map.
    - `examples/communal` for a complex module with backend, auth, and business UI.
 4. Use [docs/PILOT_RUNTIME_UTILS.md](docs/PILOT_RUNTIME_UTILS.md) for PILOT runtime objects and utilities available to Extensions.
-5. For prompt templates, use [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md) or [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md).
+5. Return a zip archive, not full source code in chat.
+6. For prompt templates, use [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md) or [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md).
 
 ## PILOT Runtime Facts
 

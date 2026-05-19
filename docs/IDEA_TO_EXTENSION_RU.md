@@ -46,9 +46,13 @@
 | Действие по выбранной машине Online | Context Menu Extension |
 | Показать маркеры/маршруты на текущей карте | Existing Map Interaction |
 | Нужна отдельная карта в модуле | Custom Map Panel |
+| Глобальное действие для всего аккаунта | Header Button или Header Menu Item |
+| Панель в Reports, Vehicle Editor, History или settings | Advanced Host Integration |
 | Нужны секреты, CORS proxy, БД | Extension + backend |
 
 AI должен выбрать самый простой паттерн, который закрывает задачу.
+
+Для менеджеров без технических деталей: описывайте бизнес-результат, а не реализацию. AI должен сам выбрать паттерн и выдать zip-архив. Вам нужно только проверить, что итоговый URL `Module.js` открывается, и зарегистрировать этот URL в PILOT.
 
 ## 3. Что AI Должен Выдать
 

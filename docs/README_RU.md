@@ -1,69 +1,50 @@
-# Карта Документации PILOT Extensions
+# Документация PILOT Extensions
 
-Эта директория разделена по назначению: человеку нужно понять платформу и выбрать архитектуру, AI нужно получить строгий контракт и порядок действий.
+Эта папка организована вокруг одной цели: превратить бизнес-идею в рабочий zip-архив PILOT Extension с минимальным количеством runtime-ошибок.
 
-Соглашение по именам файлов: английский язык используется по умолчанию и идет без суффикса, русские версии имеют суффикс `_RU`.
+Английские файлы идут без суффикса. Русские версии имеют суффикс `_RU`.
 
-## Для Разработчиков
+## Быстрый Путь
 
-Читайте в таком порядке:
+Для менеджера, который использует AI-помощника:
 
-1. [IDEA_TO_EXTENSION_RU.md](IDEA_TO_EXTENSION_RU.md) - если есть бизнес-идея и нужно быстро получить рабочий Extension.
-2. [IDEA_TO_EXTENSION.md](IDEA_TO_EXTENSION.md) - English default version.
-3. [HUMAN_EXTENSION_GUIDE_RU.md](HUMAN_EXTENSION_GUIDE_RU.md) - практическое руководство по созданию расширений.
-4. [HUMAN_EXTENSION_GUIDE.md](HUMAN_EXTENSION_GUIDE.md) - English default version.
-5. [MapContainer_RU.md](MapContainer_RU.md) - работа с картой `MapContainer`.
-6. [MarkerIconApi.md](MarkerIconApi.md) - SVG-иконки для маркеров.
-7. [PILOT_RUNTIME_UTILS_RU.md](PILOT_RUNTIME_UTILS_RU.md) - какие встроенные runtime-объекты и утилиты PILOT можно использовать из Extensions.
-8. [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md) - English default version.
-9. [communal_RU.md](communal_RU.md) - подробный разбор сложного расширения `examples/communal`.
-10. [../DEPLOY.md](../DEPLOY.md) - публикация `Module.js` на Cloudflare, GitHub Pages или VPS.
+1. Откройте [ChatGPT_Prompts/Business_Idea_RU.md](ChatGPT_Prompts/Business_Idea_RU.md).
+2. Вставьте prompt в AI-помощника.
+3. Добавьте бизнес-идею и ссылку на этот репозиторий.
+4. Попросите zip-архив с полной структурой файлов Extension.
+5. Зарегистрируйте итоговый URL `Module.js` в PILOT.
 
-## Для AI
+Для разработчика:
 
-Перед генерацией кода AI должен прочитать:
+1. Начните с [IDEA_TO_EXTENSION_RU.md](IDEA_TO_EXTENSION_RU.md).
+2. Прочитайте [HUMAN_EXTENSION_GUIDE_RU.md](HUMAN_EXTENSION_GUIDE_RU.md).
+3. Используйте [PILOT_RUNTIME_UTILS_RU.md](PILOT_RUNTIME_UTILS_RU.md) для host-объектов, `Pilot.utils.*`, Highcharts, jQuery, UOM и renderers.
+4. Для публикации используйте [../DEPLOY.md](../DEPLOY.md).
 
-1. [../AI_SPECS.md](../AI_SPECS.md) - строгий контракт, обязательный к соблюдению.
-2. [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) - порядок анализа бизнес-идеи и выбора паттерна.
-3. [PILOT_RUNTIME_UTILS_RU.md](PILOT_RUNTIME_UTILS_RU.md) или [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md) - использовать только runtime-объекты и утилиты, доступные в скомпилированном PILOT app.js.
-4. [IDEA_TO_EXTENSION_RU.md](IDEA_TO_EXTENSION_RU.md) или [IDEA_TO_EXTENSION.md](IDEA_TO_EXTENSION.md) - формат ожидаемого результата и инструкции запуска.
-5. Один ближайший пример из `../examples/`.
+Для AI coding agent:
 
-Готовый prompt для передачи AI:
+1. Прочитать [../AI_SPECS.md](../AI_SPECS.md).
+2. Прочитать [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md).
+3. Прочитать [PILOT_RUNTIME_UTILS_RU.md](PILOT_RUNTIME_UTILS_RU.md) или [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md).
+4. Посмотреть один ближайший пример из `../examples/`.
+5. Вернуть zip-архив, а не полный исходный код в чате.
 
-- [ChatGPT_Prompts/Business_Idea_RU.md](ChatGPT_Prompts/Business_Idea_RU.md)
-- [ChatGPT_Prompts/Business_Idea.md](ChatGPT_Prompts/Business_Idea.md)
+## Архитектурные Паттерны
 
-## Как Выбрать Пример
+| Нужно сделать | Паттерн | Пример |
+|---|---|---|
+| Минимальная вкладка + основная панель | Full UI Extension | `examples/hello-world` |
+| Стартовая структура модуля | Full UI Extension | `examples/template-app` |
+| Таблица/список + собственная карта | Custom Map Panel | `examples/airports` |
+| UI с данными без карты | Full UI Extension | `examples/planets` |
+| Действие по выбранному объекту Online | Context Menu Extension | `examples/nearby-poi` |
+| Backend, auth, CRUD, мнемосхемы | Extension + backend | `examples/communal` |
+| Глобальное действие | Header Button / Header Menu Item | см. [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |
+| Reports/settings/editor integration | Advanced Host Integration | см. [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |
 
-| Нужно сделать | Смотрите |
-|---|---|
-| Минимальная вкладка + основная панель | `examples/hello-world` |
-| Шаблон нового UI-модуля | `examples/template-app` |
-| Таблица/список + собственная карта | `examples/airports` |
-| Простая data UI без карты | `examples/planets` |
-| Пункт контекстного меню в Online + существующая карта | `examples/nearby-poi` |
-| Сложный модуль с backend, авторизацией, CRUD и мнемосхемами | `examples/communal` |
+## Справочники
 
-## Ключевые Runtime-Объекты
-
-- `window.skeleton` - главный контейнер PILOT UI.
-- `window.skeleton.header` - header с кнопками и индикаторами.
-- `window.skeleton.navigation` - левая навигация.
-- `window.skeleton.navigation.online.online_tree` - дерево объектов Online.
-- `window.skeleton.mapframe` - основной контейнер карт/панелей в примерах репозитория.
-- `window.skeleton.map_frame` - то же смысловое место в некоторых описаниях runtime; при сомнении используйте fallback.
-- `window.mapContainer` - карта Online.
-- `window.historyMapContainer` - карта History.
-
-Связь вкладки и основной панели:
-
-```js
-navTab.map_frame = mainPanel;
-```
-
-## Правило Разделения Документов
-
-Документы для людей объясняют причины, варианты и порядок работы.
-
-Документы для AI должны быть императивными: что можно, что нельзя, какие файлы создать, какие тесты пройти.
+- [MapContainer_RU.md](MapContainer_RU.md) - работа с картой.
+- [MarkerIconApi.md](MarkerIconApi.md) - SVG-иконки маркеров.
+- [communal_RU.md](communal_RU.md) - разбор сложного Extension.
+- [ChatGPT_Prompts/Business_Idea.md](ChatGPT_Prompts/Business_Idea.md) - английский prompt-шаблон.

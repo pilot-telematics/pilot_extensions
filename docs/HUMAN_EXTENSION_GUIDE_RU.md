@@ -151,14 +151,25 @@ skeleton.map_frame
 Если вы пишете код для неизвестной сборки, можно сделать helper:
 
 ```js
-getMainFrame: function () {
-    return skeleton.mapframe || skeleton.map_frame;
+function getMainFrame() {
+    return (window.skeleton && (skeleton.mapframe || skeleton.map_frame)) || null;
 }
 ```
 
 Но для совместимости с текущими примерами используйте `skeleton.mapframe`.
 
 ## 5. Как Выбрать Архитектурный Паттерн
+
+Встроенные модули PILOT показывают полезное правило: выбирайте самый маленький способ интеграции, который решает бизнес-задачу. Простое действие по выбранной машине не должно превращаться в большой dashboard; глобальная команда не должна прятаться в контекстном меню объекта.
+
+Паттерны модулей, которые полезно переиспользовать в Extensions:
+
+- создавайте вкладку навигации и связанную `map_frame` только для настоящих рабочих областей;
+- добавляйте пункт контекстного меню для действий над выбранным объектом Online;
+- добавляйте кнопку в header или пункт в dropdown header для глобальных действий;
+- создавайте stores один раз и передавайте их в панели/окна, если несколько компонентов работают с одними данными;
+- тяжелые stores лучше грузить лениво на `show`, `beforeshow` или по кнопке;
+- интеграции с Reports, Vehicle Editor, History и settings считаются advanced: перед использованием проверяйте каждый host-объект.
 
 ### Своя вкладка и своя рабочая область
 
@@ -229,6 +240,54 @@ var map = window.historyMapContainer;
 Пример:
 
 - `examples/airports/Map.js`
+
+### Кнопка в header или пункт меню header
+
+Используйте, если действие глобальное и не связано с выбранной машиной.
+
+```js
+if (window.skeleton && skeleton.header && skeleton.header.insert) {
+    skeleton.header.insert(5, {
+        xtype: 'button',
+        cls: 'header_tool',
+        iconCls: 'fa fa-bolt',
+        tooltip: l('My Extension'),
+        handler: this.openWindow,
+        scope: this
+    });
+}
+```
+
+Для менее частых действий лучше использовать dropdown в правом верхнем меню:
+
+```js
+var menu = skeleton.header.menu_btn && skeleton.header.menu_btn.menu;
+
+if (menu && menu.add) {
+    menu.add({
+        text: l('My Extension'),
+        iconCls: 'fa fa-puzzle-piece',
+        handler: this.openWindow,
+        scope: this
+    });
+}
+```
+
+### Advanced host integration
+
+Используйте только если бизнес-идея явно требует интеграции в Reports, Vehicle Editor, History или native settings.
+
+Проверяйте каждый host-объект и optional hook:
+
+```js
+if (window.MODULE_OVERRIDER && MODULE_OVERRIDER.append) {
+    MODULE_OVERRIDER.append('Pilot.view.online.VehicleEditor', function (win) {
+        // Добавляйте UI Extension только после проверки методов host-окна.
+    });
+}
+```
+
+Весь код самого Extension держите в `Store.<extension>.*`; не завязывайтесь на namespace встроенных модулей `Pilot.modules.*`.
 
 ## 6. Работа С Картой
 
@@ -414,4 +473,5 @@ Backend нужен, если:
 - путает `skeleton.mapframe`, `skeleton.map_frame` и компонентное свойство `map_frame`;
 - использует demo vehicles вместо `/ax/tree.php`;
 - заменяет штатные меню/деревья вместо добавления своего пункта.
+- печатает полный исходный код в чате вместо zip-архива с файлами;
 - использует необязательный host-класс без проверки, что он есть в runtime нужной версии PILOT.

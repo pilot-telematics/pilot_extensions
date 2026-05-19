@@ -32,6 +32,17 @@ Use `Existing Map Interaction` when the user explicitly says to use the current 
 
 Use `Custom Map Panel` only when the extension needs its own map view.
 
+Use `Header Button` when the feature is global and should be available from the top PILOT header:
+
+- account-wide notification;
+- quick status window;
+- global import/export action;
+- link to an external business system.
+
+Use `Header Menu Item` when the action is useful but should not take header space. Add it to `skeleton.header.menu_btn.menu` only after checking that the menu exists.
+
+Use `Advanced Host Integration` only when the user explicitly asks to extend an existing PILOT workflow such as Reports, Vehicle Editor, History, or a built-in settings window. Built-in PILOT modules use these patterns, but generated Extensions must guard every host object and optional hook with existence checks.
+
 ## 2. Files to Inspect
 
 Always inspect:
@@ -44,21 +55,41 @@ Always inspect:
 
 Example mapping:
 
-| User asks for | Inspect |
-|---|---|
-| minimal tab/panel | `examples/hello-world/Module.js` |
-| starter app | `examples/template-app/Module.js` |
-| list + custom map | `examples/airports/Module.js`, `Tab.js`, `Map.js` |
-| action from Online tree | `examples/nearby-poi/Module.js` |
-| complex backend module | `examples/communal/Module.js`, `docs/communal_RU.md` |
-| map API details | `docs/MapContainer.md` |
-| marker icons | `docs/MarkerIconApi.md` |
-| deployment | `DEPLOY.md` |
-| PILOT runtime utilities, Highcharts, jQuery, UOM, renderers | `docs/PILOT_RUNTIME_UTILS.md` or `docs/PILOT_RUNTIME_UTILS_RU.md` |
+- Minimal tab/panel: `examples/hello-world/Module.js`
+- Starter app: `examples/template-app/Module.js`
+- List + custom map: `examples/airports/Module.js`, `Tab.js`, `Map.js`
+- Action from Online tree: `examples/nearby-poi/Module.js`
+- Complex backend module: `examples/communal/Module.js`, `docs/communal_RU.md`
+- Map API details: `docs/MapContainer.md`
+- Marker icons: `docs/MarkerIconApi.md`
+- Deployment: `DEPLOY.md`
+- PILOT runtime utilities, Highcharts, jQuery, UOM, renderers: `docs/PILOT_RUNTIME_UTILS.md` or `docs/PILOT_RUNTIME_UTILS_RU.md`
 
 Do not blindly copy legacy patterns that conflict with `AI_SPECS.md`.
 
 Third-party developers work with the runtime objects and classes already loaded by the compiled PILOT application. Extensions should define their own business classes under `Store.<name>.*` and may use host utilities such as `Pilot.utils.LeftBarPanel`, `Pilot.utils.Toggle`, `Pilot.utils.ColorField`, `Pilot.utils.DateTimeField`, `Pilot.utils.TreeSearchField`, and `Pilot.utils.MapContainer` when those utilities are available in the target PILOT runtime.
+
+## 2.1 Lessons From Built-In PILOT Modules
+
+The private PILOT modules were reviewed to extract architecture patterns, not to publish or copy their source code. Use these lessons:
+
+- Simple modules usually define one `Module` class, extend `Ext.Component`, and do all runtime registration in `initModule(...)`.
+- Full UI modules create a navigation component and a paired main panel, assign `navTab.map_frame = mainPanel`, then add them to `skeleton.navigation` and `skeleton.mapframe`.
+- Action modules add items to existing menus such as Online tree context menu, group context menu, folder context menu, header buttons, or the header dropdown menu.
+- Larger modules create stores in `Module.js` or a central container, then pass them into tabs, grids, maps, and windows instead of relying on random globals.
+- Expensive stores should load lazily on `show`, `beforeshow`, or explicit user action when possible.
+- Reports and editor integrations are advanced: add UI only when the target host container exists, and keep fallback behavior when it does not.
+- Built-in modules sometimes use internal hooks or module namespaces. Generated Extensions should prefer stable runtime objects first and use optional hooks only behind `if (window.MODULE_OVERRIDER)` or similar guards.
+- Always add to existing host UI; do not remove, recreate, or replace PILOT tabs, trees, maps, menus, or header components.
+
+Default pattern order for AI:
+
+1. Context menu only, if one selected object action is enough.
+2. Header button or header menu item, if the action is global.
+3. Full UI Extension, if the feature needs its own workspace.
+4. Existing map interaction, if the task is map output on the current Online/History map.
+5. Custom map panel, only if the feature needs an independent map.
+6. Advanced host integration, only when the user explicitly asks for Reports/settings/editor integration.
 
 Before generating custom charting, unit conversion, or formatting code, check PILOT runtime helpers:
 
@@ -85,8 +116,8 @@ Globals:
 Use `skeleton.mapframe` for new code in this repository. If supporting uncertain runtime builds, use:
 
 ```js
-getMainFrame: function () {
-    return skeleton.mapframe || skeleton.map_frame;
+function getMainFrame() {
+    return (window.skeleton && (skeleton.mapframe || skeleton.map_frame)) || null;
 }
 ```
 
@@ -192,12 +223,78 @@ if (!Ext.isNumber(lat) || !Ext.isNumber(lon)) {
 }
 ```
 
+## 5.1 Recommended Header Button Skeleton
+
+Use this for global actions that should be one click away.
+
+```js
+Ext.define('Store.my_extension.Module', {
+    extend: 'Ext.Component',
+
+    initModule: function () {
+        if (!window.skeleton || !skeleton.header || !skeleton.header.insert) {
+            Ext.log('my_extension: header not found');
+            return;
+        }
+
+        skeleton.header.insert(5, {
+            xtype: 'button',
+            cls: 'header_tool',
+            iconCls: 'fa fa-bolt',
+            tooltip: l('My Extension'),
+            handler: this.openWindow,
+            scope: this
+        });
+    },
+
+    openWindow: function () {
+        Ext.create('Store.my_extension.view.MainWindow', {}).show();
+    }
+});
+```
+
+Use a header dropdown menu item for less frequent actions:
+
+```js
+var menu = skeleton.header.menu_btn && skeleton.header.menu_btn.menu;
+
+if (menu && menu.add) {
+    menu.add({
+        text: l('My Extension'),
+        iconCls: 'fa fa-puzzle-piece',
+        handler: this.openWindow,
+        scope: this
+    });
+}
+```
+
+Do not remove or reorder native PILOT header items unless the user explicitly asks and the target runtime is known.
+
+## 5.2 Advanced Host Integration Rules
+
+Use these only when the business idea truly requires integration into existing PILOT sections such as Reports, Vehicle Editor, History, or native settings:
+
+- Check every host object before use.
+- Prefer adding a tab/panel/menu item over overriding existing behavior.
+- If an optional hook such as `MODULE_OVERRIDER` is available, guard it:
+
+```js
+if (window.MODULE_OVERRIDER && MODULE_OVERRIDER.append) {
+    MODULE_OVERRIDER.append('Pilot.view.online.VehicleEditor', function (win) {
+        // Add Extension UI only after checking the expected host methods.
+    });
+}
+```
+
+- Provide a fallback in the zip documentation when the hook is not available in the target PILOT build.
+- Do not depend on built-in module namespaces like `Pilot.modules.*` from an Extension. Keep Extension code under `Store.<extension>.*`.
+
 ## 6. Map Access Recipe
 
 Use this for Online map actions:
 
 ```js
-getPilotMap: function () {
+function getPilotMap() {
     if (window.getActiveTabMapContainer) {
         return getActiveTabMapContainer();
     }
@@ -209,7 +306,7 @@ getPilotMap: function () {
 Use this for History-specific actions:
 
 ```js
-getHistoryMap: function () {
+function getHistoryMap() {
     return window.historyMapContainer || null;
 }
 ```
@@ -217,8 +314,8 @@ getHistoryMap: function () {
 Before drawing new output, remove old output created by the extension.
 
 ```js
-cleanupMap: function () {
-    var map = this.getPilotMap();
+function cleanupMap(markerIds) {
+    var map = getPilotMap();
 
     if (!map) {
         return;
@@ -230,13 +327,11 @@ cleanupMap: function () {
         map.removePolyline();
     }
 
-    Ext.Array.forEach(this.markerIds || [], function (id) {
+    Ext.Array.forEach(markerIds || [], function (id) {
         if (map.removeMarker) {
             map.removeMarker(id);
         }
     });
-
-    this.markerIds = [];
 }
 ```
 

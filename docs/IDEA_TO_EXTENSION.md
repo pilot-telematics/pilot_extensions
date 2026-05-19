@@ -46,9 +46,13 @@ Deployment:
 | Action for selected Online vehicle | Context Menu Extension |
 | Markers/routes on current map | Existing Map Interaction |
 | Separate map inside the extension | Custom Map Panel |
+| Global action for the whole account | Header Button or Header Menu Item |
+| Add panel to Reports, Vehicle Editor, History, or settings | Advanced Host Integration |
 | Secrets, CORS proxy, database | Extension + backend |
 
 The AI should choose the simplest pattern that satisfies the idea.
+
+For non-technical managers: describe the business result, not the implementation. The AI should choose the pattern and produce a zip archive. You only need to verify that the final `Module.js` URL opens and then register that URL in PILOT.
 
 ## 3. What The AI Must Return
 

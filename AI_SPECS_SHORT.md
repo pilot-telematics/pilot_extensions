@@ -111,6 +111,8 @@ Parse hierarchical groups and nested `children`. Do not assume a flat array.
 - Navigation tab has `title` and `iconCls` if used.
 - `navTab.map_frame = mainPanel` exists if a paired main panel is used.
 - Existing context menu is extended, not replaced.
+- Header buttons/menu items are added only after checking `skeleton.header` and without replacing native items.
+- Reports/settings/editor integrations are advanced; guard optional hooks such as `MODULE_OVERRIDER` and document fallback behavior.
 - Existing map is reused when the task says so.
 - `doc/index.html` has no scripts.
 - Use available `Pilot.utils.*` host classes when they fit the task; do not require local PILOT source files.

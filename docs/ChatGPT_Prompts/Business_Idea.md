@@ -19,7 +19,7 @@ Business idea:
 <what the extension should do>
 
 Where the feature should appear in PILOT:
-<new tab / Online context menu / header button / current map / History / Reports>
+<let AI choose / new tab / Online context menu / header button / header menu / current map / History / Reports / Vehicle Editor / settings>
 
 Required data:
 <objects, vehicles, history, reports, external API, manual settings>
@@ -40,6 +40,8 @@ Mandatory rules:
 - Do not load Ext JS manually.
 - Use Store.<extension>.* for extension-owned classes.
 - You may use available host classes under Pilot.utils.*, for example Pilot.utils.Toggle, Pilot.utils.LeftBarPanel, Pilot.utils.ColorField.
+- Choose the simplest integration pattern that solves the business idea.
+- Use Advanced Host Integration only if Reports, Vehicle Editor, History, or settings integration is explicitly needed.
 - Runtime logic starts only from Module.js.
 - doc/index.html is documentation only, without <script>.
 - Use PILOT runtime objects/helpers: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery, renderers, if useful and available.

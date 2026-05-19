@@ -27,8 +27,8 @@ Extension должен относиться к PILOT как к host platform:
 Для совместимости:
 
 ```js
-getMainFrame: function () {
-    return skeleton.mapframe || skeleton.map_frame;
+function getMainFrame() {
+    return (window.skeleton && (skeleton.mapframe || skeleton.map_frame)) || null;
 }
 ```
 
@@ -142,7 +142,7 @@ var menu = tree.contextmenu || tree.context_menu;
 menu.add({
     text: l('My Action'),
     iconCls: 'fa fa-bolt',
-    handler: this.onAction,
+    handler: onAction,
     scope: tree
 });
 ```
@@ -150,7 +150,7 @@ menu.add({
 `scope: tree` полезен, если handler должен получить текущую запись:
 
 ```js
-onAction: function () {
+function onAction() {
     var record = this.record;
 
     if (!record) {
@@ -175,7 +175,7 @@ onAction: function () {
 Получить Online/active map:
 
 ```js
-getPilotMap: function () {
+function getPilotMap() {
     if (window.getActiveTabMapContainer) {
         return getActiveTabMapContainer();
     }
@@ -187,7 +187,7 @@ getPilotMap: function () {
 Получить History map:
 
 ```js
-getHistoryMap: function () {
+function getHistoryMap() {
     return window.historyMapContainer || null;
 }
 ```
@@ -218,8 +218,8 @@ if (map.setMapZoom) {
 Перед новой отрисовкой удаляйте следы работы своего Extension:
 
 ```js
-cleanupMap: function () {
-    var map = this.getPilotMap();
+function cleanupMap(markerIds) {
+    var map = getPilotMap();
 
     if (!map) {
         return;
@@ -231,13 +231,11 @@ cleanupMap: function () {
         map.removePolyline();
     }
 
-    Ext.Array.forEach(this.markerIds || [], function (id) {
+    Ext.Array.forEach(markerIds || [], function (id) {
         if (map.removeMarker) {
             map.removeMarker(id);
         }
     });
-
-    this.markerIds = [];
 }
 ```
 
@@ -579,6 +577,20 @@ var navTab = Ext.create(LeftTabClass, {
 - глобальные переменные, созданные разовой внутренней реализацией, а не платформой;
 - файлы, которые не доступны вашему Extension по URL;
 - side effects от внутренних модулей, если они не описаны как runtime API.
+
+## Optional Host Hooks
+
+В некоторых сборках PILOT доступны host hooks, которые используют встроенные модули, например `MODULE_OVERRIDER`. Extensions могут использовать такие hooks только для advanced integrations и только с проверками:
+
+```js
+if (window.MODULE_OVERRIDER && MODULE_OVERRIDER.append) {
+    MODULE_OVERRIDER.append('Pilot.view.online.VehicleEditor', function (win) {
+        // Добавляйте UI Extension только после проверки методов host-окна.
+    });
+}
+```
+
+Если hook отсутствует, Extension все равно должен загрузиться без поломки PILOT и должен описать недоступную advanced integration в `doc/index.html`.
 
 ## Правило Для AI
 

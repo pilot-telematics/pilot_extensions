@@ -19,7 +19,7 @@ https://github.com/pilot-telematics/pilot_extensions
 <что должно делать расширение>
 
 Где функция должна появиться в PILOT:
-<новая вкладка / пункт контекстного меню Online / кнопка в header / текущая карта / History / Reports>
+<пусть AI выберет / новая вкладка / пункт контекстного меню Online / кнопка в header / пункт меню header / текущая карта / History / Reports / Vehicle Editor / settings>
 
 Какие данные нужны:
 <объекты, машины, история, отчеты, внешний API, ручные настройки>
@@ -40,6 +40,8 @@ https://github.com/pilot-telematics/pilot_extensions
 - Не загружай Ext JS вручную.
 - Используй Store.<extension>.* для своих классов.
 - Можно использовать доступные host-классы Pilot.utils.*, например Pilot.utils.Toggle, Pilot.utils.LeftBarPanel, Pilot.utils.ColorField.
+- Выбирай самый простой integration pattern, который решает бизнес-идею.
+- Advanced Host Integration используй только если явно нужна интеграция с Reports, Vehicle Editor, History или settings.
 - Runtime-логика только через Module.js.
 - doc/index.html только документация, без <script>.
 - Используй runtime PILOT: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery, renderers, если нужны и доступны.

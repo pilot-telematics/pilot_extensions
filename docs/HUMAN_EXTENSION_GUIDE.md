@@ -149,14 +149,25 @@ skeleton.map_frame
 For uncertain builds:
 
 ```js
-getMainFrame: function () {
-    return skeleton.mapframe || skeleton.map_frame;
+function getMainFrame() {
+    return (window.skeleton && (skeleton.mapframe || skeleton.map_frame)) || null;
 }
 ```
 
 For this repository, prefer `skeleton.mapframe`.
 
 ## 5. Choosing An Architecture Pattern
+
+Built-in PILOT modules show a useful rule: choose the smallest host integration that solves the business problem. A simple selected-object action should not become a full dashboard; a global action should not hide inside a vehicle context menu.
+
+Common module patterns you can reuse in Extensions:
+
+- create a navigation tab plus paired `map_frame` only for real workspaces;
+- add a context menu item for actions on a selected Online object;
+- add a header button or header dropdown item for global actions;
+- create stores once and pass them into panels/windows when several components share data;
+- lazy-load heavy stores on `show`, `beforeshow`, or button click;
+- treat Reports, Vehicle Editor, History, and settings integrations as advanced and guard every host object before use.
 
 ### Own tab and own workspace
 
@@ -227,6 +238,54 @@ Create `new MapContainer(...)` only when the Extension truly needs its own map.
 Example:
 
 - `examples/airports/Map.js`
+
+### Header button or header menu item
+
+Use this when the action is global, not tied to a selected object.
+
+```js
+if (window.skeleton && skeleton.header && skeleton.header.insert) {
+    skeleton.header.insert(5, {
+        xtype: 'button',
+        cls: 'header_tool',
+        iconCls: 'fa fa-bolt',
+        tooltip: l('My Extension'),
+        handler: this.openWindow,
+        scope: this
+    });
+}
+```
+
+For less frequent actions, prefer the header dropdown:
+
+```js
+var menu = skeleton.header.menu_btn && skeleton.header.menu_btn.menu;
+
+if (menu && menu.add) {
+    menu.add({
+        text: l('My Extension'),
+        iconCls: 'fa fa-puzzle-piece',
+        handler: this.openWindow,
+        scope: this
+    });
+}
+```
+
+### Advanced host integration
+
+Use this only when the business idea explicitly needs Reports, Vehicle Editor, History, or native settings integration.
+
+Check every host object and optional hook:
+
+```js
+if (window.MODULE_OVERRIDER && MODULE_OVERRIDER.append) {
+    MODULE_OVERRIDER.append('Pilot.view.online.VehicleEditor', function (win) {
+        // Add Extension UI only after checking expected host methods.
+    });
+}
+```
+
+Keep all Extension-owned code under `Store.<extension>.*`; do not depend on built-in `Pilot.modules.*` namespaces.
 
 ## 6. Map Basics
 
@@ -412,4 +471,5 @@ Common AI mistakes:
 - confuses `skeleton.mapframe`, `skeleton.map_frame`, and component property `map_frame`;
 - uses demo vehicles instead of `/ax/tree.php`;
 - replaces native menus/trees instead of adding an item;
+- prints full source code in chat instead of delivering a zip archive;
 - assumes a class is available without checking the target PILOT runtime when that class is optional for the deployment.

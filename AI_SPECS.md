@@ -166,34 +166,38 @@ Use when the extension only adds an action to an existing PILOT tree, usually On
 Recommended structure:
 
 ```js
-initModule: function () {
-    var me = this;
+Ext.define('Store.my_extension.Module', {
+    extend: 'Ext.Component',
 
-    if (!window.skeleton ||
-        !skeleton.navigation ||
-        !skeleton.navigation.online ||
-        !skeleton.navigation.online.online_tree) {
-        Ext.log('my_extension: online tree not found');
-        return;
+    initModule: function () {
+        var me = this;
+
+        if (!window.skeleton ||
+            !skeleton.navigation ||
+            !skeleton.navigation.online ||
+            !skeleton.navigation.online.online_tree) {
+            Ext.log('my_extension: online tree not found');
+            return;
+        }
+
+        var tree = skeleton.navigation.online.online_tree;
+        var menu = tree.contextmenu || tree.context_menu;
+
+        if (!menu || !menu.add) {
+            Ext.log('my_extension: online tree context menu not found');
+            return;
+        }
+
+        window.myExtensionModule = me;
+
+        menu.add({
+            text: l('My Action'),
+            iconCls: 'fa fa-bolt',
+            handler: me.onTreeAction,
+            scope: tree
+        });
     }
-
-    var tree = skeleton.navigation.online.online_tree;
-    var menu = tree.contextmenu || tree.context_menu;
-
-    if (!menu || !menu.add) {
-        Ext.log('my_extension: online tree context menu not found');
-        return;
-    }
-
-    window.myExtensionModule = me;
-
-    menu.add({
-        text: l('My Action'),
-        iconCls: 'fa fa-bolt',
-        handler: me.onTreeAction,
-        scope: tree
-    });
-}
+});
 ```
 
 Rules:
@@ -210,7 +214,7 @@ Use when the extension works with the current Online or History map.
 Recommended map access:
 
 ```js
-getPilotMap: function () {
+function getPilotMap() {
     if (window.getActiveTabMapContainer) {
         return getActiveTabMapContainer();
     }
@@ -222,7 +226,7 @@ getPilotMap: function () {
 For History-specific features:
 
 ```js
-var map = window.historyMapContainer || this.getPilotMap();
+var map = window.historyMapContainer || getPilotMap();
 ```
 
 Rules:
@@ -268,6 +272,56 @@ Ext.define('Store.my_extension.view.MapPanel', {
     }
 });
 ```
+
+### Pattern E: Header Button Or Header Menu Item
+
+Use a header button only for global actions that should be visible all the time.
+
+```js
+if (window.skeleton && skeleton.header && skeleton.header.insert) {
+    skeleton.header.insert(5, {
+        xtype: 'button',
+        cls: 'header_tool',
+        iconCls: 'fa fa-bolt',
+        tooltip: l('My Extension'),
+        handler: this.openWindow,
+        scope: this
+    });
+}
+```
+
+Use the header dropdown menu for less frequent global actions:
+
+```js
+var menu = skeleton.header.menu_btn && skeleton.header.menu_btn.menu;
+
+if (menu && menu.add) {
+    menu.add({
+        text: l('My Extension'),
+        iconCls: 'fa fa-puzzle-piece',
+        handler: this.openWindow,
+        scope: this
+    });
+}
+```
+
+Rules:
+
+- Check that `skeleton.header` and the target menu exist.
+- Add only the Extension item.
+- Do not remove or replace native header buttons or menu items.
+
+### Pattern F: Advanced Host Integration
+
+Use only when the user explicitly asks to extend an existing PILOT workflow such as Reports, Vehicle Editor, History, or native settings.
+
+Rules:
+
+- Check every host object before use.
+- Prefer adding a tab, panel, or menu item over overriding native behavior.
+- Use optional hooks only behind existence checks, for example `if (window.MODULE_OVERRIDER && MODULE_OVERRIDER.append)`.
+- Provide a fallback note when the hook is not available.
+- Keep Extension code under `Store.<extension>.*`; do not depend on built-in `Pilot.modules.*` namespaces.
 
 ## 5. PILOT Data Rules
 
@@ -461,6 +515,8 @@ Before final output, verify:
 - If a navigation tab has a main panel, `navTab.map_frame = mainPanel` exists.
 - If using `skeleton.mapframe`, the code does not typo it as only `map_frame` without fallback.
 - If a context menu item is added, it preserves the existing menu and has `iconCls`.
+- If a header item is added, it preserves native header/menu items and checks host availability.
+- If advanced host integration is used, every optional hook is guarded and fallback behavior is documented.
 - If vehicles are displayed, they are loaded from PILOT API and hierarchical `children` are parsed.
 - `doc/index.html` contains no `<script>`.
 - Extension-created map markers/routes can be cleaned up.

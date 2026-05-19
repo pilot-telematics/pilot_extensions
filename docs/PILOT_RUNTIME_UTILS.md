@@ -27,8 +27,8 @@ Treat PILOT as the host platform:
 Compatibility helper:
 
 ```js
-getMainFrame: function () {
-    return skeleton.mapframe || skeleton.map_frame;
+function getMainFrame() {
+    return (window.skeleton && (skeleton.mapframe || skeleton.map_frame)) || null;
 }
 ```
 
@@ -142,7 +142,7 @@ Add an item:
 menu.add({
     text: l('My Action'),
     iconCls: 'fa fa-bolt',
-    handler: this.onAction,
+    handler: onAction,
     scope: tree
 });
 ```
@@ -150,7 +150,7 @@ menu.add({
 `scope: tree` is useful when the handler needs the current record:
 
 ```js
-onAction: function () {
+function onAction() {
     var record = this.record;
 
     if (!record) {
@@ -175,7 +175,7 @@ Usually available:
 Online/active map:
 
 ```js
-getPilotMap: function () {
+function getPilotMap() {
     if (window.getActiveTabMapContainer) {
         return getActiveTabMapContainer();
     }
@@ -187,7 +187,7 @@ getPilotMap: function () {
 History map:
 
 ```js
-getHistoryMap: function () {
+function getHistoryMap() {
     return window.historyMapContainer || null;
 }
 ```
@@ -218,8 +218,8 @@ if (map.setMapZoom) {
 Clean Extension output before drawing new output:
 
 ```js
-cleanupMap: function () {
-    var map = this.getPilotMap();
+function cleanupMap(markerIds) {
+    var map = getPilotMap();
 
     if (!map) {
         return;
@@ -231,13 +231,11 @@ cleanupMap: function () {
         map.removePolyline();
     }
 
-    Ext.Array.forEach(this.markerIds || [], function (id) {
+    Ext.Array.forEach(markerIds || [], function (id) {
         if (map.removeMarker) {
             map.removeMarker(id);
         }
     });
-
-    this.markerIds = [];
 }
 ```
 
@@ -579,6 +577,20 @@ Do not rely on:
 - globals created by one-off implementation details;
 - files that are not available to your Extension URL;
 - side effects from internal modules unless documented as runtime API.
+
+## Optional Host Hooks
+
+Some PILOT builds expose host hooks used by built-in modules, for example `MODULE_OVERRIDER`. Extensions may use such hooks only for advanced integrations and only with guards:
+
+```js
+if (window.MODULE_OVERRIDER && MODULE_OVERRIDER.append) {
+    MODULE_OVERRIDER.append('Pilot.view.online.VehicleEditor', function (win) {
+        // Add Extension UI only after checking expected host methods.
+    });
+}
+```
+
+If the hook is missing, the Extension must still load without breaking PILOT and should explain the missing advanced integration in its `doc/index.html`.
 
 ## Rule For AI
 

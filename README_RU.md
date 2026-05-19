@@ -6,6 +6,15 @@
 
 ## Быстрый Старт Для Людей
 
+Если вы менеджер и используете AI-помощника:
+
+1. Откройте [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md).
+2. Добавьте бизнес-идею и ссылку на этот репозиторий.
+3. Попросите AI выдать zip-архив с полной структурой файлов Extension.
+4. Разместите файлы из архива и зарегистрируйте итоговый URL `Module.js` в PILOT.
+
+Если вы разработчик:
+
 1. Если у вас есть только бизнес-идея, начните с [docs/IDEA_TO_EXTENSION_RU.md](docs/IDEA_TO_EXTENSION_RU.md).
 2. Прочитайте [карту документации](docs/README_RU.md).
 3. Пройдите [руководство разработчика](docs/HUMAN_EXTENSION_GUIDE_RU.md).
@@ -29,6 +38,7 @@
 3. Используйте готовый шаблон запроса:
    - [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md)
    - [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md)
+4. Требуйте результат в виде zip-архива, а не полного исходного кода в чате.
 
 Минимальная формулировка:
 
@@ -37,6 +47,7 @@
 Сначала прочитай AI_SPECS.md и docs/AI_EXTENSION_GUIDE.md.
 Сделай PILOT Extension по бизнес-идее ниже.
 Не создавай standalone web app. Расширение должно запускаться через Module.js внутри PILOT.
+Результат дай zip-архивом с полной структурой файлов.
 ```
 
 ## Runtime PILOT, Который Должен Знать Разработчик
