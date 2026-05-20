@@ -12,6 +12,7 @@ Build a PILOT Extension for this business idea:
 
 Use the pilot-telematics/pilot_extensions repository.
 Read AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, and docs/PILOT_RUNTIME_UTILS.md first.
+If the idea uses maps, map center, coordinates, markers, routes, tracks, or geozones, also read docs/MapContainer.md. PILOT MapContainer is a wrapper over Leaflet, not a Google Maps object.
 Return a zip archive with the complete Extension file structure, plus step-by-step instructions for where to upload the files and which Module.js URL to register in PILOT.
 ```
 
@@ -51,6 +52,8 @@ Deployment:
 | Secrets, CORS proxy, database | Extension + backend |
 
 The AI should choose the simplest pattern that satisfies the idea.
+
+For map-related ideas, the AI must read `docs/MapContainer.md`, use PILOT `MapContainer` methods where possible, and treat `map.map` as the underlying Leaflet map if direct center/zoom access is needed. It must not invent Google Maps-style APIs.
 
 For non-technical managers: describe the business result, not the implementation. The AI should choose the pattern and produce a zip archive. You only need to verify that the final `Module.js` URL opens and then register that URL in PILOT.
 
@@ -173,7 +176,7 @@ Check DevTools:
 | `Ext is undefined` | Built as standalone web app | Extension must run inside PILOT |
 | Class not found | Extra JS file was not loaded | Load it from `Module.js` or keep code in one file |
 | CORS error | External API blocks browser calls | Add backend/proxy |
-| Map not found | Wrong map target | Online: `getActiveTabMapContainer()` or `window.mapContainer`; History: `window.historyMapContainer` |
+| Map not found | Wrong map target or wrong map API | Online: `getActiveTabMapContainer()` or `window.mapContainer`; History: `window.historyMapContainer`; read `docs/MapContainer.md` because PILOT maps wrap Leaflet |
 
 ## 9. Release Checklist
 
@@ -201,6 +204,7 @@ Requirements:
 - follow AI_SPECS.md;
 - the Extension must run inside PILOT via Module.js;
 - use PILOT runtime objects: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery if useful and available;
+- if the idea uses maps, read docs/MapContainer.md; PILOT MapContainer wraps Leaflet, so do not invent Google Maps-style APIs;
 - do not build a standalone web app;
 - provide a zip archive with the complete Extension file structure instead of printing full source code in chat;
 - provide step-by-step instructions: where to upload files, which Module.js URL to register in PILOT, and how to verify launch.

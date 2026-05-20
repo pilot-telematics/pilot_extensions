@@ -1,435 +1,459 @@
+# Руководство По MapContainer Для PILOT Extensions
 
-# Руководство по использованию MapContainer для разработчиков
+`MapContainer` - картографическая обертка PILOT, которая используется в разделах Online и History.
 
-Данный документ представляет собой полное руководство по использованию класса `MapContainer` из файла `mapcontainer.js`. Предназначено для разработчиков, интегрирующих интерактивные карты на базе **Leaflet.js** в веб-приложения, особенно в системах управления автопарком, мониторинга и геовизуализации.
+Она построена поверх Leaflet. В Extensions не считайте ее объектом Google Maps, даже если выбран базовый слой `Google Map` или `Google Sat`.
 
----
-
-## Обзор
-
-`MapContainer` — мощная обёртка над **Leaflet.js**, расширяющая его функциональность:
-
-- Множество базовых карт (OSM, Google, Яндекс, TomTom и др.)
-- Слои трафика и морского трафика
-- Рисование и управление видимостью геозон
-- Отслеживание объектов с историей траекторий и маркерами
-- Инструменты измерения (линия, площадь)
-- Плагины (Street View, печать, измерение)
-- Контекстные меню, подсказки, тепловые карты, KML, кастомные тайлы
-- Адаптивные элементы управления и поддержка локализации
-
-Состояние сохраняется в `localStorage`, поддерживается несколько языков, возможна глубокая кастомизация.
-
----
-
-## Инициализация
-
-### Конструктор
+В большинстве Extensions нужно использовать уже существующие карты:
 
 ```js
-function MapContainer(layerName)
+var onlineMap = window.mapContainer;
+var historyMap = window.historyMapContainer;
 ```
 
-- `layerName`: строковый идентификатор экземпляра карты (используется в `localStorage`, CSS-переменных и т.д.)
-
-### `init(lat, lon, zoom, div, config)`
+Если доступен helper активной вкладки, для действий на текущей Online-карте лучше использовать его:
 
 ```js
-mapContainer.init(lat, lon, zoom, 'map-div-id', { withControls: true });
-```
+function getPilotMap() {
+    if (window.getActiveTabMapContainer) {
+        return getActiveTabMapContainer();
+    }
 
-| Параметр | Тип | Описание |
-|---------|-----|---------|
-| `lat` | Number | Начальная широта центра |
-| `lon` | Number | Начальная долгота центра |
-| `zoom` | Number | Начальный уровень масштаба |
-| `div` | String | ID контейнера `<div>` |
-| `config` | Object | Опциональная конфигурация |
-
-#### Опции конфигурации
-
-```js
-{
-  withControls: true,        // Показывать переключатель слоёв
-  withOutPlugins: false,     // Отключить встроенные плагины
-  crs: L.CRS.EPSG3857        // Переопределить систему координат
+    return window.mapContainer || null;
 }
 ```
 
-> Возвращает экземпляр `MapContainer`.
+## Правила Безопасности Для Extensions
 
----
+- Сначала используйте методы `MapContainer`: `addMarker`, `removeMarker`, `setMapCenter`, `setMapZoom`, `addPolyline`, `removePolyline`, `setPolygon`, `addCircle`.
+- К нижележащей Leaflet-карте обращайтесь только через `mapContainer.map` или `mapContainer.getMap()` и только после проверки существования.
+- Leaflet использует `{ lat, lng }`; многие PILOT-хелперы и marker options используют `lat` и `lon`.
+- Не используйте Google Maps-style код вроде `mapContainer.getMap().getCenter().lat()`; у Leaflet поля центра являются свойствами, а не функциями.
+- Запоминайте все ID маркеров, линий, полигонов и кругов, которые создает Extension, чтобы потом удалить только свои слои.
+- Не вызывайте `clearAllMarkers`, `removeAllTracks`, `removeAllHistoryTracks` и похожие широкие методы очистки из Extension, если Extension не владеет всеми этими слоями.
 
-## Базовые слои карты
-
-Поддерживаются провайдеры:
-
-```js
-'OSM', 'Google Map', 'Google Sat', 'Yandex', 'Yandex Sat',
-'TomTom', 'TomTom Dark', 'TomTom Sat', '2Gis', 'Arc GIS', 'Cosmo Sat'
-```
-
-### Переключение базовой карты
+## Получить Текущий Центр Карты
 
 ```js
-mapContainer.setBaseMap('Google Sat');
+function getMapCenter(mapContainer) {
+    var map = mapContainer && mapContainer.getMap ?
+        mapContainer.getMap() :
+        mapContainer && mapContainer.map;
+
+    if (!map || !map.getCenter) {
+        return null;
+    }
+
+    var center = map.getCenter();
+
+    return {
+        lat: center.lat,
+        lon: center.lng
+    };
+}
 ```
 
-> Используется стандартный контрол Leaflet. Сохраняется в `localStorage`.
+## Создать Новую Карту
 
----
-
-## Плагины
-
-Встроенные плагины определены в `this.plugins`.
-
-| Плагин | Назначение | Опции |
-|-------|-----------|------|
-| `polylineMeasure` | Измерение расстояния | Подсказки, единицы |
-| `PolygonAreaMeter` | Измерение площади | Кнопка переключения |
-| `streetView` | Google Street View | Чекбокс |
-| `browserPrint` | Печать карты | Портрет/Ландшафт |
-| `Traffic` | Дорожный трафик | Google/Яндекс |
-| `TrafficSea` | Морской трафик | Чекбокс (если `seamap === '1'`) |
-
-### Доступ к плагину
+Создавайте новую карту только для собственного map panel внутри Extension. Если бизнес-идея говорит использовать текущую карту PILOT, новую карту создавать не нужно.
 
 ```js
-const trafficPlugin = mapContainer.getPlugin('Traffic');
+var mapContainer = new MapContainer('my_extension_map');
+
+mapContainer.init(25.184646, 55.2644923, 10, 'my-map-div', {
+    withControls: true
+});
 ```
 
----
+`init(lat, lon, zoom, div, config)`:
+
+| Параметр | Значение |
+|---|---|
+| `lat` | Начальная широта. Если не задана, PILOT может использовать сохраненную позицию или browser geolocation. |
+| `lon` | Начальная долгота. |
+| `zoom` | Начальный zoom. Если не задан, PILOT может использовать сохраненный zoom из `localStorage`. |
+| `div` | ID DOM-элемента для Leaflet-карты. |
+| `config` | Опции Leaflet плюс флаги PILOT. |
+
+Полезные config flags:
+
+| Опция | Значение |
+|---|---|
+| `withControls` | Добавляет Leaflet layer switcher и инициализирует выбранную базовую карту. |
+| `withOutPlugins` | Если truthy, не запускает активные встроенные plugins. |
+| `crs` | Опциональное переопределение Leaflet CRS. Для Yandex слоев PILOT меняет CRS внутри. |
+
+## Базовые Карты
+
+Runtime строит `baseMaps` из встроенных провайдеров и partner/global config. Текущий слой хранится в `localStorage` как `map_<mapContainer.name>`.
+
+Частые встроенные имена:
+
+```text
+Base
+Dark
+Gray
+OSM
+2Gis
+Yandex
+Yandex Sat
+Google Map
+Google Terrain
+Google Sat
+Wiki Mapia
+TomTom
+TomTom Dark
+TomTom Sat
+Arc GIS
+Cosmo Sat
+CARTO Voyager
+CARTO Dark Matter
+CARTO Positron
+```
+
+Переключить базовую карту:
+
+```js
+mapContainer.setBaseMap('OSM');
+```
+
+Посмотреть layers после инициализации:
+
+```js
+var baseMaps = mapContainer.baseMaps;
+var layers = mapContainer.getBaseMapLayers();
+```
+
+`baseMaps` - практический словарь Leaflet layers. `getBaseMapLayers()` существует в runtime и возвращает `baseMapLayers`, если этот массив заполнен host-flow.
+
+## Plugins
+
+Имена встроенных plugins, найденные в runtime:
+
+```text
+polylineMeasure
+tracksPanel
+PolygonAreaMeter
+streetView
+browserPrint
+Traffic
+Weather
+TrafficSea
+```
+
+Получить plugin:
+
+```js
+try {
+    var traffic = mapContainer.getPlugin('Traffic');
+} catch (e) {
+    Ext.log('Traffic plugin is not available');
+}
+```
+
+`getPlugin(name)` выбрасывает исключение, если plugin не найден, поэтому используйте `try/catch`.
+
+## Методы Вида Карты
+
+| Метод | Примечание |
+|---|---|
+| `getMap(options)` | Возвращает `options.map`, если он передан, иначе нижележащую Leaflet-карту. |
+| `setMapCenter(lat, lon, options)` | Принимает `lat, lon` или массив точек. Массив вызывает Leaflet `fitBounds`; координаты вызывают `panTo`. `options.zoom` выставляет zoom после перемещения. |
+| `setMapCenterBounds(position, options)` | Вызывает Leaflet `fitBounds(position, options)`. |
+| `setMapCenterAnimate(lat, lon, options)` | Использует `flyToBounds`; `options.zoom` становится `maxZoom`, `options.duration` задает длительность анимации. |
+| `setMapZoom(zoom)` | Устанавливает zoom и сохраняет его в `localStorage`. |
+| `checkResize()` | Вызывает Leaflet invalidation logic для изменившегося контейнера. Используйте после показа/resize собственного map panel. |
+| `panToBounds(bounds_arr)` | Helper для bounds arrays. |
+| `setFullscreen(isActive)` | Переключает fullscreen state карты. |
 
 ## Маркеры
 
-### `addMarker(options)`
+Добавить маркер:
 
 ```js
-mapContainer.addMarker({
-  id: 'veh_123',
-  lat: 25.1846,
-  lon: 55.2645,
-  icon: 'icons/truck.png',
-  size: 'medium', // или [x, y]
-  tooltip: { msg: 'Грузовик #123', direction: 'top' },
-  popupContent: '<b>Грузовик 123</b>',
-  click: () => alert('Нажато!'),
-  dragend: (e) => console.log(e.latlng)
+var marker = mapContainer.addMarker({
+    id: 'my_extension_marker_1',
+    lat: 25.1846,
+    lon: 55.2645,
+    icon: 'https://example.com/icon.png',
+    size: 'medium',
+    tooltip: {
+        msg: 'My marker',
+        options: { direction: 'bottom' }
+    },
+    click: function (marker) {
+        marker.showPopup();
+    },
+    customOptions: {
+        type: 'my_extension'
+    }
 });
 ```
 
-#### Размеры маркеров
+Важные marker options:
 
-| Размер | Размеры |
-|--------|--------|
-| `micro` | 16×16 |
-| `mini` | 24×24 |
-| `medium` | 32×32 |
-| `big` | 48×48 |
+| Опция | Значение |
+|---|---|
+| `id` | Обязательный уникальный ID. Дубликаты логируются warning. |
+| `lat`, `lon` | Обязательны. Координаты `0` отклоняются. |
+| `icon` | URL иконки. |
+| `size` | `micro`, `mini`, `mediumMini`, `medium`, `big`. |
+| `x`, `y`, `a` | Ручные ширина, высота и anchor y. |
+| `tooltip` | `{ msg, options }` для Leaflet tooltip. |
+| `label` | Постоянная подпись. Не совмещайте с `tooltip`. |
+| `poupContent` | HTML popup. В runtime исторически используется опечатка `poupContent`. |
+| `data` | PILOT vehicle-like данные для автоматической сборки popup HTML. |
+| `click` | Вызывается как `click(marker)`. |
+| `dragend` | Включает dragging и вызывается как `dragend(marker, event)`. |
+| `contextmenu` | Пункты context menu маркера. |
+| `notBindToMap` | Создает marker object, но не добавляет его на карту. |
+| `customOptions.type` | Удобно для группировки маркеров Extension. |
 
-Или задать вручную через `x`, `y`.
+PILOT добавляет к marker helper-методы:
 
-### Удаление маркера
+| Метод | Примечание |
+|---|---|
+| `marker.getId()` | Возвращает ID маркера. |
+| `marker.getLatLng()` | Возвращает Leaflet lat/lng. |
+| `marker.showPopup()` | Открывает popup после пересборки content. |
+| `marker.focus(zoom, duration)` | Фокусирует маркер. |
+| `marker.getStorage(key)` / `marker.setStorage(key, value)` | Хранит данные Extension на marker. |
+| `marker.updateTooltip(options)` | Обновляет постоянный tooltip/label. |
+| `marker.clearListeners()` | Удаляет listeners, которые использует PILOT. |
+
+Найти и удалить marker:
 
 ```js
-mapContainer.removeMarker(marker); // или по ID через внутренний учёт
+var marker = mapContainer.getMarker('my_extension_marker_1');
+
+if (marker) {
+    mapContainer.removeMarker(marker);
+}
 ```
 
----
+Связанные методы:
 
-## Исторические траектории
+| Метод | Примечание |
+|---|---|
+| `getMarker(id)` | Возвращает marker из внутреннего `_gmarkers`. |
+| `deleteMarker(id)` | ID-based helper удаления. |
+| `removeMarker(marker)` | Удаляет marker object с карты и из внутреннего storage. |
+| `removeMarkers(markers)` | Удаляет список. |
+| `removeAllMarkers(type)` | Широкая очистка. Избегайте в Extensions, если не владеете scope. |
+| `clearAllMarkers()` | Удаляет все tracked markers. Избегайте в Extensions. |
+| `showMarkers(markersIDs)` / `hideMarkers(markersIDs)` | Показать/скрыть по ID. |
+| `fitBoundsToMarkers()` | Подогнать карту под текущие markers. |
+| `flyToMarker(marker)` | Анимированный фокус. |
 
-### `addHistoryTrack(data, options)`
+## Polylines, Routes, Tracks
 
-```js
-mapContainer.addHistoryTrack({
-  points: [[lat, lng, speed, timestamp], ...],
-  markers: [опции_маркера, ...]
-}, {
-  id: 'track_1',
-  color: '#FF0000',
-  veh_name: 'Грузовик 123'
-});
-```
-
-- Цвет по скорости или значениям датчиков
-- Интерактивная подсказка при наведении: скорость/время/адрес
-- Клик — измерение расстояния между точками
-
-### Удаление траектории
+Простая managed polyline:
 
 ```js
-mapContainer.removeHistoryTrack('track_1');
-mapContainer.removeAllHistoryTracks();
-```
-
----
-
-## Геозоны
-
-Хранятся в `this.geofences` (LayerGroup)
-
-### Добавление полигона
-
-```js
-const polygon = mapContainer.addPolyline([
-  [lat1, lng1], [lat2, lng2], ...
+var polyline = mapContainer.addPolyline([
+    [25.18, 55.26],
+    [25.19, 55.27]
 ], {
-  id: 'zone_1',
-  color: '#FF0000',
-  label: 'Склад А'
+    id: 'my_extension_line_1',
+    color: '#0EA5E9',
+    label: 'Route'
 });
 ```
 
-### Управление видимостью
-
-- Автоматически скрывает мелкие геозоны при низком масштабе
-- Подсказки появляются только если размер > 50px
-- Вызывать `updateGeofenceVisibility()` при `moveend`
+Удалить:
 
 ```js
-mapContainer.map.on('moveend', () => mapContainer.updateGeofenceVisibility());
+mapContainer.removePolyline('my_extension_line_1');
 ```
 
----
+Методы polyline/route:
 
-## Инструменты измерения
+| Метод | Примечание |
+|---|---|
+| `addPolyline(points, options)` | Добавляет managed polyline в `geofences`; возвращает `{ id, layer, options, focus, setTooltip }`. |
+| `getPolyline(id)` | Возвращает managed polyline record. |
+| `removePolyline(id)` | Удаляет managed polyline по ID. |
+| `setPolyline(latlngs, color, options)` | Добавляет generic Leaflet polyline с `name: 'polyline'`; хранится как `mapContainer.polyline`. |
+| `removePilyline()` | Удаляет generic polylines с option `name: 'polyline'`. Опечатка в названии реальная. |
+| `setPolylineBlue(points)` | Shortcut с синим цветом. |
+| `decodeRoute(encoded, precision)` | Декодирует encoded route в `{ lat, lng }`. |
+| `addArrowRoute(points, options)` | Добавляет route со стрелками направления или corridor width. |
+| `getArrowRoute(id)` / `removeArrowRoute(route)` | Управление arrow route objects. |
+| `removeAllArrowRoutesType(type)` | Удаляет arrow routes по type. |
+| `createInteractivePolyline(points, options)` | Добавляет hover/click interaction. Требует валидный `options`; history tracks передают `rawPoints`. |
+| `addHistoryTrack(data, options)` | Добавляет цветной history route, route arrows, markers и hover behavior. |
+| `getHistoryTrack(id)` / `removeHistoryTrack(id)` | Управление history tracks. |
+| `removeAllHistoryTracks()` | Широкая очистка. Избегайте, если не владеете всеми history tracks. |
 
-### Измерение линии
-
-Включается через плагин. Поддерживает:
-- Перетаскивание
-- SHIFT + клик — удалить точку
-- CTRL + клик — добавить/продолжить
-
-### Измерение площади
+History track input:
 
 ```js
-mapContainer.activatePolygonAreaMeter();
-// Рисовать несколько полигонов
-mapContainer.disablePolygonAreaMeter();
+{
+    points: [
+        [lat, lng, speed, timestamp]
+    ],
+    markers: [
+        { id: 'm1', lat: 25.18, lon: 55.26 }
+    ]
+}
 ```
 
-> Двойной клик — завершить полигон.
+## Circles And Polygons
 
----
-
-## Слои трафика
-
-### Дорожный трафик
-
-Переключается чекбоксом (вверху справа). Использует:
-- Google Traffic API
-- Яндекс.Пробки
+Circle:
 
 ```js
-localStorage.setItem('traffic-layer', 'google'); // или 'yandex'
-```
-
-### Морской трафик
-
-Включается, если `global_conf.conf.org.conf.seamap === '1'`
-
-```html
-<input type="checkbox" id="traffic-sea-btn">
-<label>Морская карта</label>
-```
-
----
-
-## Координаты и взаимодействие
-
-### Отображение координат
-
-```js
-mapContainer.map.on('mousemove', mapContainer.showCoords);
-```
-
-Отображается в правом нижнем углу.
-
-### CTRL + Клик → Копирование координат
-
-```js
-// Включено автоматически
-// Копирует: "25.18465, 55.26449"
-```
-
-Показывает временное уведомление: "Скопировано: ..."
-
----
-
-## Контекстное меню
-
-```js
-mapContainer.contexmenu(L, {
-  width: 160,
-  items: [
-    { text: 'Добавить маркер', callback: () => { ... } },
-    { text: 'Измерить', callback: () => { ... } }
-  ]
+var circle = mapContainer.addCircle({
+    id: 'my_extension_circle_1',
+    lat: 25.1846,
+    lng: 55.2645,
+    radius: 500,
+    label: '500 m',
+    color: '#0EA5E9'
 });
 ```
 
-> Правая кнопка мыши на карте.
-
----
-
-## Тепловые карты
+Polygon:
 
 ```js
-mapContainer.setHeatmap([
-  { lat: 25.1, lng: 55.1, count: 10 },
-  { lat: 25.2, lng: 55.2, count: 50 }
-], true, 'Плотность ТС');
+var polygon = mapContainer.setPolygon([
+    [25.18, 55.26],
+    [25.19, 55.26],
+    [25.19, 55.27]
+], {
+    id: 'my_extension_polygon_1',
+    label: 'Zone',
+    color: '#22C55E',
+    fillOpacity: 0.2
+});
 ```
 
-- Включает чекбокс переключения
-- Автоматический фокус, если `isBounds = true`
+Методы:
 
----
+| Метод | Примечание |
+|---|---|
+| `addCircle(options, marker)` | Добавляет Leaflet circle или marker-bound great circle. Использует `lat/lng`, не `lat/lon`. |
+| `getCircle(id)` / `removeCircle(id)` | Управление circles. |
+| `removeCircles(circles)` / `removeAllCircles(type)` | Удаление групп. |
+| `setPolygon(points, options)` | Добавляет polygon в `geofences`; поддерживает `label`, `tooltip`, `popup`, `color`, `fillOpacity`. |
+| `getPolygon(id)` / `removePolygon(id)` | Управление polygons. |
+| `clearAllPolygons()` | Широкая очистка. Избегайте, если Extension не владеет всеми polygons. |
+| `getPointsZoneData(data)` | Парсит строки вида `lat,lng\|lat,lng\|...`. |
+| `updateGeofenceVisibility()` | Обновляет видимость labels/layers по zoom и pixel size. |
+| `setMinimalSizeNameGeozone(fontSize)` / `getMinimalSizeNameGeozone()` | Helpers размера labels. |
 
-## KML и кастомные тайлы
+## KML, Tiles, Heatmaps
 
-### Добавление KML
+KML:
 
 ```js
-mapContainer.addKmlLayer('data.zones.kml', 'Зоны');
-mapContainer.removeKmlLayer('Зоны');
+mapContainer.addKmlLayer('/zones.kml', 'zones');
+mapContainer.removeKmlLayer('zones');
 ```
 
-### Добавление кастомного тайлового слоя
+Tile layer:
 
 ```js
 mapContainer.addTileLayer({
-  id: 'custom',
-  url: 'https://tiles.example.com/{z}/{x}/{y}.png',
-  minZoom: 10,
-  maxZoom: 18,
-  bounds: { corner_1: {lat,lng}, corner_2: {lat,lng} }
+    id: 'my_tiles',
+    url: 'https://tiles.example.com/{z}/{x}/{y}.png',
+    minZoom: 10,
+    maxZoom: 22,
+    bounds: {
+        corner_1: { lat: 25.0, lng: 55.0 },
+        corner_2: { lat: 26.0, lng: 56.0 }
+    }
 });
 ```
 
----
-
-## Полезные методы
-
-| Метод | Описание |
-|------|---------|
-| `setMapCenter(lat, lon)` | Переместить центр |
-| `setMapCenterBounds(bounds)` | Подогнать под границы |
-| `setMapZoom(zoom)` | Установить масштаб |
-| `getDistanceBetweenLatLng(a, b)` | Расстояние по Хаверсину (метры) |
-| `geodesicArea(latLngs)` | Площадь полигона (м²) |
-| `createInteractivePolyline(points, opts)` | Подсказки + измерение расстояния |
-
----
-
-## События
+Heatmap:
 
 ```js
-mapContainer.map.on('baselayerchange', (e) => {
-  console.log('Переключено на:', e.name);
-});
+var heat = mapContainer.setHeatmap([
+    { lat: 25.18, lng: 55.26, count: 10 },
+    { lat: 25.19, lng: 55.27, count: 25 }
+], true, 'Density');
 
-mapContainer.map.on('zoomend', () => {
-  localStorage.setItem('zoom', mapContainer.map.getZoom());
-});
+mapContainer.removeHeatMap(heat.id);
 ```
 
----
+Методы:
 
-## Стилизация и темы
+| Метод | Примечание |
+|---|---|
+| `addKmlLayer(url, name)` | Загружает KML через jQuery и добавляет слой. Runtime хранит `name` как key слоя. |
+| `getKmlLayer(name)` / `removeKmlLayer(name)` / `clearKmlLayers()` | Управление KML layers. |
+| `addTileLayer(config)` / `getTileLayer(config)` / `removeTileLayer(config)` / `clearTileLayers()` | Управление tile layers по `config.id`. |
+| `setHeatmap(points, isBounds, name)` | Добавляет `HeatmapOverlay` с полями `lat`, `lng`, `count`. Возвращает heat object с generated `id`. |
+| `removeHeatMap(id)` / `removeAllHeatsMap()` | Управление heatmaps. |
 
-### Динамический цвет подсказок
+## Controls And Interaction
 
-```css
---map1_tooltip: #FFFFFF; /* Светлый для тёмных карт */
-```
+| Метод | Примечание |
+|---|---|
+| `contexmenu(L, menu)` | Включает context menu карты. Историческое название метода - `contexmenu`. |
+| `markercontexmenu(L, menu)` | Helper context menu маркеров. |
+| `setHiddenContexMenu(isHide)` | Скрывает/показывает context menu behavior. |
+| `bindClick(cursor, callback)` | Ставит cursor и bind Leaflet map click. |
+| `unBindClick(cursor)` | Снимает map click binding и cursor. |
+| `setCursor(cursor)` | Ставит CSS cursor на map container. |
+| `showCoords(event)` | Обновляет `#geomessage` координатами мыши. |
+| `addControlMap(control)` / `removeControlMap(id)` / `getControl(id)` | Управление controls в формате `{ id, control }`. |
+| `addCustomControl(name, domEl, position)` / `getCustomControl(name)` / `removeCustomControl(name)` | Управление custom Leaflet controls. |
+| `addControl(name, html, position)` / `removeControl(name)` | Простой control helper. |
+| `addLegend(html, position)` / `removeLegend()` | Helper легенды. |
 
-Автоматически устанавливается в зависимости от базового слоя.
+После `init(...)` карта слушает движение мыши и обновляет `#geomessage`. `Ctrl + click` по Leaflet-карте копирует координаты в формате `lat, lng` в clipboard и показывает короткий popup.
 
-### Пользовательские CSS
+## Geometry Helpers
 
-```css
-.tooltip_map1 { color: var(--map1_tooltip) !important; }
-```
+| Метод | Примечание |
+|---|---|
+| `getDistanceBetweenLatLng(a, b)` | Ожидает `{ lat, lng }`; возвращает метры или `null` при невалидном input. |
+| `getDistanceBetweenLatLngHaversine(a, b)` | Haversine distance в метрах. |
+| `getDistanceBetweenPoints(a, b)` | Использует Leaflet point distance. |
+| `geodesicArea(latLngs)` | Площадь polygon в квадратных метрах. |
+| `geodesicAreaCircle(radius)` | Площадь circle. |
+| `inBounds(lat, lng, bounds)` | Проверяет, находится ли точка внутри bounds. |
+| `getAzimuth(firstPoint, secondPoint)` | Bearing helper. |
+| `toRadians(degrees)` / `toDegrees(angle)` | Conversion helpers. |
 
----
-
-## Локализация (`l()`)
+## Cleanup Pattern Для Extensions
 
 ```js
-l('Traffic') → 'Traffic' или 'Движение' (RU)
-```
+Ext.define('Store.my_extension.MapLayerStore', {
+    singleton: true,
 
-Используется в:
-- Подсказках
-- Кнопках
-- Всплывающих окнах
+    markerIds: [],
+    polylineIds: [],
 
----
+    clear: function (map) {
+        Ext.Array.forEach(this.markerIds, function (id) {
+            var marker = map.getMarker && map.getMarker(id);
 
-## Лучшие практики
+            if (marker && map.removeMarker) {
+                map.removeMarker(marker);
+            }
+        });
 
-1. **Всегда вызывать `init()` первым**
-2. **Использовать уникальный `layerName` для каждой карты**
-3. **Сохранять масштаб/центр в `localStorage`**
-4. **Вызывать `updateGeofenceVisibility()` при перемещении**
-5. **Избегать утечек памяти: удалять маркеры/траектории**
+        Ext.Array.forEach(this.polylineIds, function (id) {
+            if (map.removePolyline) {
+                map.removePolyline(id);
+            }
+        });
 
----
-
-## Пример: Полная настройка
-
-```html
-<div id="map" style="height: 600px;"></div>
-```
-
-```js
-const mapContainer = new MapContainer('main');
-mapContainer.init(25.1846, 55.2645, 12, 'map', {
-  withControls: true
+        this.markerIds = [];
+        this.polylineIds = [];
+    }
 });
-
-// Добавить ТС
-mapContainer.addMarker({
-  id: 'v1',
-  lat: 25.18,
-  lon: 55.26,
-  icon: 'truck.png',
-  tooltip: { msg: 'Грузовик 1' }
-});
-
-// Добавить историю
-mapContainer.addHistoryTrack(trackData, { id: 't1' });
 ```
 
----
+## Частые Ошибки
 
-## Устранение неисправностей
-
-| Проблема | Решение |
-|--------|--------|
-| Карта не загружается | Проверьте ID `div` |
-| Плагины не работают | Убедитесь, что подключены плагины Leaflet |
-| Трафик не отображается | Проверьте API-ключи / CORS |
-| Координаты не копируются | Разрешите доступ к буферу обмена |
-| Геозоны исчезают | Увеличьте `MIN_VISIBLE_SIZE_PIXELS` |
-
----
-
-## Зависимости
-
-- Leaflet.js
-- Плагины Leaflet:
-    - `leaflet.polylineMeasure`
-    - `leaflet.browser.print`
-    - `leaflet.streetview`
-    - `leaflet-editable`
-    - `leaflet-corridor`
-    - `leaflet-heatmap`
-
----
-
-**Создано для производительности, масштабируемости и мониторинга в реальном времени.**
-
+| Ошибка | Правильный подход |
+|---|---|
+| `mapContainer.getMap().getCenter().lat()` | `mapContainer.getMap().getCenter().lat` |
+| Использовать `lon` внутри Leaflet | В Leaflet используйте `lng`, для PILOT marker helpers переводите в `lon`. |
+| `removeMarker('id')` | Используйте `getMarker(id)` и передайте marker object или `deleteMarker(id)`, если доступен. |
+| Вызвать `clearAllMarkers()` из Extension | Запоминайте и удаляйте только маркеры своего Extension. |
+| Создать новый `MapContainer` для работы с текущей картой | Используйте `window.mapContainer`, `window.historyMapContainer` или `getActiveTabMapContainer()`. |

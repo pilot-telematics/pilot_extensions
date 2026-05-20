@@ -14,6 +14,7 @@ Before generating code, read:
 3. docs/PILOT_RUNTIME_UTILS.md
 4. docs/IDEA_TO_EXTENSION.md
 5. the closest example in examples/
+6. docs/MapContainer.md if the idea uses maps, map center, coordinates, markers, routes, tracks, or geozones
 
 Business idea:
 <what the extension should do>
@@ -45,6 +46,7 @@ Mandatory rules:
 - Runtime logic starts only from Module.js.
 - doc/index.html is documentation only, without <script>.
 - Use PILOT runtime objects/helpers: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery, renderers, if useful and available.
+- PILOT MapContainer is a wrapper over Leaflet. For map features, use docs/MapContainer.md and do not assume Google Maps-style getMap().getCenter().lat()/lng() APIs.
 - Do not load duplicate Highcharts/jQuery/helper scripts if PILOT already provides them.
 - If custom CSS needs colors, prefer Tailwind CSS palette values for hex colors, but do not load Tailwind CSS as a framework unless explicitly needed.
 

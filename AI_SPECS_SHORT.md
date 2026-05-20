@@ -35,6 +35,7 @@ Use safe Ext JS namespaces such as `Store.my_extension.Module`.
 - `window.mapContainer` - Online map.
 - `window.historyMapContainer` - History map.
 - `window.getActiveTabMapContainer()` - preferred helper if available.
+- PILOT maps are `MapContainer` wrappers over Leaflet. For map features, read `docs/MapContainer.md`; do not assume Google Maps-style `getMap().getCenter().lat()` APIs.
 - `window.skeleton.header` - top header.
 - `window.skeleton.navigation` - left navigation.
 - `window.skeleton.navigation.online.online_tree` - Online objects tree.
@@ -89,6 +90,8 @@ var map = window.getActiveTabMapContainer ?
     window.mapContainer;
 ```
 
+When reading map center, treat `map.map` as the underlying Leaflet map if it exists and convert Leaflet `lng` to business `lon` for PILOT helpers.
+
 ## Vehicle Data
 
 If vehicles are displayed, load them from PILOT:
@@ -108,15 +111,19 @@ Parse hierarchical groups and nested `children`. Do not assume a flat array.
 - Class extends `Ext.Component`.
 - `initModule` is a class method.
 - No standalone app/bootstrap code.
+- No `Ext.ns(...)` or plain singleton object as the module entry; use `Ext.define('Store.<safe_namespace>.Module', ...)`.
 - Navigation tab has `title` and `iconCls` if used.
 - `navTab.map_frame = mainPanel` exists if a paired main panel is used.
 - Existing context menu is extended, not replaced.
 - Header buttons/menu items are added only after checking `skeleton.header` and without replacing native items.
 - Reports/settings/editor integrations are advanced; guard optional hooks such as `MODULE_OVERRIDER` and document fallback behavior.
 - Existing map is reused when the task says so.
+- If the idea uses maps, markers, routes, geozones, map center, or coordinates, `docs/MapContainer.md` was used and no Google Maps-style API was invented.
 - `doc/index.html` has no scripts.
 - Use available `Pilot.utils.*` host classes when they fit the task; do not require local PILOT source files.
 - If custom CSS needs colors, prefer Tailwind CSS palette values; do not load Tailwind itself by default.
 - Do not load duplicate Highcharts/jQuery/helper scripts if PILOT already provides them.
 - Deliver the created Extension as a zip archive with the complete file structure.
 - Do not print full source code in the chat by default; summarize the zip, upload path, `Module.js` URL, launch verification, and troubleshooting.
+- For managers, deployment instructions must be browser UI-first. Do not require `npm`, `wrangler`, Git, or terminal commands unless explicitly requested.
+- Do not invent a download link unless an actual zip artifact is attached.

@@ -12,6 +12,7 @@
 
 Используй репозиторий pilot-telematics/pilot_extensions.
 Сначала прочитай AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md и docs/PILOT_RUNTIME_UTILS_RU.md.
+Если идея использует карту, центр карты, координаты, маркеры, маршруты, треки или геозоны, также прочитай docs/MapContainer_RU.md. PILOT MapContainer - это обертка над Leaflet, а не объект Google Maps.
 В результате дай zip-архив с полной структурой файлов Extension и пошаговую инструкцию куда их положить и какой Module.js URL зарегистрировать в PILOT.
 ```
 
@@ -51,6 +52,8 @@
 | Нужны секреты, CORS proxy, БД | Extension + backend |
 
 AI должен выбрать самый простой паттерн, который закрывает задачу.
+
+Для задач с картой AI обязан прочитать `docs/MapContainer_RU.md`, использовать методы PILOT `MapContainer`, где это возможно, и считать `map.map` нижележащей Leaflet-картой, если нужен прямой доступ к центру/масштабу. Нельзя придумывать Google Maps-style API.
 
 Для менеджеров без технических деталей: описывайте бизнес-результат, а не реализацию. AI должен сам выбрать паттерн и выдать zip-архив. Вам нужно только проверить, что итоговый URL `Module.js` открывается, и зарегистрировать этот URL в PILOT.
 
@@ -173,7 +176,7 @@ https://ext.example.com/my-extension/Module.js
 | `Ext is undefined` | Extension сделали как отдельный сайт | Не загружайте вне PILOT, не делайте SPA |
 | Класс не найден | Не загружен дополнительный JS-файл | В `Module.js` нужно загрузить файл через `Ext.Loader.loadScript` или держать код в одном файле |
 | CORS error | Внешний API не разрешает browser-call | Нужен backend/proxy |
-| Карта не найдена | Использована не та карта | Для Online: `getActiveTabMapContainer()` или `window.mapContainer`; для History: `window.historyMapContainer` |
+| Карта не найдена | Использована не та карта или неверный API карты | Для Online: `getActiveTabMapContainer()` или `window.mapContainer`; для History: `window.historyMapContainer`; прочитайте `docs/MapContainer_RU.md`, потому что PILOT-карты оборачивают Leaflet |
 
 ## 9. Чеклист Для Быстрого Релиза
 
@@ -201,6 +204,7 @@ https://ext.example.com/my-extension/Module.js
 - соблюдай AI_SPECS.md;
 - Extension должен работать внутри PILOT через Module.js;
 - используй runtime-объекты PILOT: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery если нужны и доступны;
+- если идея использует карту, прочитай docs/MapContainer_RU.md; PILOT MapContainer оборачивает Leaflet, поэтому не придумывай Google Maps-style API;
 - не делай standalone web app;
 - дай zip-архив с полной структурой файлов Extension вместо печати полного исходного кода в чате;
 - дай пошаговую инструкцию: куда положить файлы, какой URL Module.js зарегистрировать в PILOT, как проверить запуск.

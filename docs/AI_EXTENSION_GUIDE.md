@@ -29,6 +29,7 @@ Use `Existing Map Interaction` when the user explicitly says to use the current 
 - Online map: `window.mapContainer`;
 - History map: `window.historyMapContainer`;
 - active tab map: `getActiveTabMapContainer()` if available.
+- PILOT maps are `MapContainer` wrappers over Leaflet; read `docs/MapContainer.md` before using map center, markers, routes, geozones, or coordinates.
 
 Use `Custom Map Panel` only when the extension needs its own map view.
 
@@ -60,7 +61,7 @@ Example mapping:
 - List + custom map: `examples/airports/Module.js`, `Tab.js`, `Map.js`
 - Action from Online tree: `examples/nearby-poi/Module.js`
 - Complex backend module: `examples/communal/Module.js`, `docs/communal_RU.md`
-- Map API details: `docs/MapContainer.md`
+- Map API details: `docs/MapContainer.md` or `docs/MapContainer_RU.md` when the idea uses maps, markers, routes, geozones, map center, or coordinates
 - Marker icons: `docs/MarkerIconApi.md`
 - Deployment: `DEPLOY.md`
 - PILOT runtime utilities, Highcharts, jQuery, UOM, renderers: `docs/PILOT_RUNTIME_UTILS.md` or `docs/PILOT_RUNTIME_UTILS_RU.md`
@@ -291,6 +292,8 @@ if (window.MODULE_OVERRIDER && MODULE_OVERRIDER.append) {
 
 ## 6. Map Access Recipe
 
+Read `docs/MapContainer.md` before generating map code. `MapContainer` is a PILOT wrapper over Leaflet. Do not assume Google Maps-style APIs such as `getMap().getCenter().lat()` / `.lng()` unless that adapter was verified in the target runtime.
+
 Use this for Online map actions:
 
 ```js
@@ -310,6 +313,29 @@ function getHistoryMap() {
     return window.historyMapContainer || null;
 }
 ```
+
+Use this guarded helper when the feature needs the current map center:
+
+```js
+function getMapCenter(map) {
+    if (!map) {
+        return null;
+    }
+
+    if (map.map && map.map.getCenter) {
+        var center = map.map.getCenter();
+
+        return {
+            lat: center.lat,
+            lon: center.lng
+        };
+    }
+
+    return null;
+}
+```
+
+PILOT marker helpers generally use `lat` and `lon`; Leaflet internals use `lat` and `lng`.
 
 Before drawing new output, remove old output created by the extension.
 

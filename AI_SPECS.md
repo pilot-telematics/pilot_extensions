@@ -40,6 +40,7 @@ Forbidden:
 - Creating React, Vue, Angular, SPA, Vite, Webpack, or npm-based frontend projects.
 - Mocking, simulating, or replacing `skeleton`.
 - Defining global `function initModule()`.
+- Defining the module through `Ext.ns(...)`, plain objects, singleton literals, or `Store.X.Module = { ... }` instead of `Ext.define(...)`.
 - Using `Ext.onReady(...)` as the extension entry point.
 - Running extension JavaScript from `doc/index.html`.
 - Passing plain objects into `skeleton.navigation.add(...)`.
@@ -78,6 +79,7 @@ Maps:
 - `window.mapContainer` - map of the Online section.
 - `window.historyMapContainer` - map of the History section.
 - `window.getActiveTabMapContainer()` - preferred helper when available.
+- PILOT maps are `MapContainer` wrappers over Leaflet. Do not assume Google Maps-style APIs such as `getMap().getCenter().lat()` / `.lng()` unless the target runtime explicitly exposes them.
 
 Main layout:
 
@@ -211,6 +213,8 @@ Rules:
 
 Use when the extension works with the current Online or History map.
 
+For any map-related business idea, read [docs/MapContainer.md](docs/MapContainer.md) first. PILOT `MapContainer` is a wrapper over Leaflet, so use PILOT `MapContainer` methods where possible and guarded Leaflet access through `map.map` only when needed.
+
 Recommended map access:
 
 ```js
@@ -234,6 +238,8 @@ Rules:
 - Prefer `getActiveTabMapContainer()` when available.
 - Fall back to `window.mapContainer` for Online.
 - Fall back to `window.historyMapContainer` for History features.
+- Treat `map.map` as the underlying Leaflet map when it exists; do not invent a Google Maps object model.
+- To get the current center, prefer a helper that checks `map.map.getCenter()` and then reads Leaflet `{ lat, lng }`, converting `lng` to business `lon` when passing data to PILOT marker helpers.
 - Do not create a new map when the task says to use the existing map.
 - Track marker IDs and route IDs created by the extension so they can be cleaned up.
 
@@ -357,10 +363,13 @@ Use [docs/MapContainer.md](docs/MapContainer.md) and [docs/MapContainer_RU.md](d
 
 Important basics:
 
+- `MapContainer` is a PILOT wrapper over Leaflet. It is not a Google Maps object, even when one of the selectable base layers is named Google Map or Google Sat.
+- The underlying Leaflet instance is usually available as `mapContainer.map`. Leaflet centers use `{ lat, lng }`.
 - Markers use `lat` and `lon`.
 - Existing maps may expose methods such as `addMarker`, `removeMarker`, `getMarker`, `setMapCenter`, `setMapZoom`, `decodeRoute`, `setPolylineBlue`, and `removePilyline`.
 - Check method existence before calling version-sensitive methods.
 - Some route/polyline helpers may expect Leaflet-style `lng`; marker helpers generally use `lon`.
+- Do not write Google Maps-style code such as `mapContainer.getMap().getCenter().lat()` unless the specific runtime was verified to expose that adapter.
 
 Safe example:
 
@@ -502,6 +511,32 @@ my-extension/
 
 Do not create package.json, build config, node_modules, or standalone HTML app files unless the user specifically asks for tooling outside the PILOT extension runtime.
 
+Do not create or require `npm`, `node`, `wrangler`, terminal, shell, or CLI deployment steps unless the user explicitly asks for a developer/CLI deployment path.
+
+## 9.1 Deployment Instructions For Managers
+
+Default deployment instructions must be manager-friendly.
+
+When the user chooses Cloudflare for a static Extension and does not explicitly ask for CLI:
+
+- Use Cloudflare dashboard / browser upload instructions.
+- Prefer Cloudflare Pages Direct Upload for static `Module.js`, CSS, docs, JSON, and assets.
+- Do not tell the user to install `npm`, Node.js, Wrangler, Git, or any terminal tool.
+- Tell the user to upload the generated zip archive or its extracted folder through the Cloudflare dashboard.
+- Tell the user to verify the public `https://.../Module.js` URL in a browser before registering it in PILOT.
+
+When the user chooses GitHub Pages and does not explicitly ask for CLI:
+
+- Use GitHub web UI upload instructions or repository web upload flow.
+- Do not require local Git commands.
+
+When a backend/proxy is required:
+
+- Explain that a technical person may be needed.
+- If Cloudflare Worker code is needed, provide browser-dashboard steps first and CLI steps only as an optional developer path.
+
+Never claim that a zip file is downloadable unless an actual file attachment/artifact is created. If the current AI environment cannot attach files, say so clearly and do not invent a download link.
+
 ## 10. Mandatory Acceptance Checklist
 
 Before final output, verify:
@@ -519,9 +554,12 @@ Before final output, verify:
 - If advanced host integration is used, every optional hook is guarded and fallback behavior is documented.
 - If vehicles are displayed, they are loaded from PILOT API and hierarchical `children` are parsed.
 - `doc/index.html` contains no `<script>`.
+- If the idea uses maps, markers, routes, geozones, map center, or coordinates, [docs/MapContainer.md](docs/MapContainer.md) was used and no Google Maps-style API was invented.
 - Extension-created map markers/routes can be cleaned up.
 - The deliverable is a zip archive that contains the complete Extension file structure.
 - The zip archive contains `Module.js`, `doc/index.html`, and every referenced JS/CSS/backend/asset file.
 - The chat answer does not print full source code by default; it only summarizes the archive, file tree, upload location, final `Module.js` URL shape, PILOT registration steps, browser verification steps, and basic troubleshooting.
+- Cloudflare/GitHub deployment instructions are browser UI-first for managers and do not require `npm`, `wrangler`, Git, or terminal commands unless explicitly requested.
+- The answer does not invent a fake download link for the zip archive.
 
 If any applicable item fails, regenerate or fix the code before presenting it.

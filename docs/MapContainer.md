@@ -1,441 +1,459 @@
+# MapContainer Guide For PILOT Extensions
 
-# MapContainer Usage Manual for Developers
+`MapContainer` is the PILOT map wrapper used by the Online and History sections.
 
-This document provides a comprehensive guide to using the `MapContainer` class from `mapcontainer.js`. It is designed for developers integrating interactive Leaflet-based maps into web applications, particularly in fleet management, tracking, or geospatial visualization systems.
+It is built on top of Leaflet. In Extensions, do not treat it as a Google Maps object, even when the selected base layer is named `Google Map` or `Google Sat`.
 
----
-
-## Overview
-
-`MapContainer` is a powerful wrapper around **Leaflet.js** that extends its functionality with:
-
-- Multiple base map layers (OSM, Google, Yandex, TomTom, etc.)
-- Traffic and sea traffic overlays
-- Geofence drawing and visibility management
-- Vehicle tracking with history tracks and markers
-- Measurement tools (polyline, polygon area)
-- Plugins (Street View, Print, Measure)
-- Context menus, tooltips, heatmaps, KML, custom tiles
-- Responsive controls and localization support
-
-It manages state via `localStorage`, supports multiple languages, and allows deep customization.
-
----
-
-## Initialization
-
-### Constructor
+Most Extensions should reuse existing map instances:
 
 ```js
-function MapContainer(layerName)
+var onlineMap = window.mapContainer;
+var historyMap = window.historyMapContainer;
 ```
 
-- `layerName`: String identifier for the map instance (used in `localStorage`, CSS variables, etc.)
-
-### `init(lat, lon, zoom, div, config)`
+If the active tab helper exists, prefer it for Online/current-map actions:
 
 ```js
-mapContainer.init(lat, lon, zoom, 'map-div-id', { withControls: true });
-```
+function getPilotMap() {
+    if (window.getActiveTabMapContainer) {
+        return getActiveTabMapContainer();
+    }
 
-| Parameter | Type | Description |
-|--------|------|-----------|
-| `lat` | Number | Initial center latitude |
-| `lon` | Number | Initial center longitude |
-| `zoom` | Number | Initial zoom level |
-| `div` | String | ID of the `<div>` container |
-| `config` | Object | Optional config |
-
-#### Config Options
-
-```js
-{
-  withControls: true,        // Show layer switcher
-  withOutPlugins: false,     // Disable built-in plugins
-  crs: L.CRS.EPSG3857        // Override coordinate system
+    return window.mapContainer || null;
 }
 ```
 
-> Returns the `MapContainer` instance.
+## Extension Safety Rules
 
----
+- Use `MapContainer` methods first: `addMarker`, `removeMarker`, `setMapCenter`, `setMapZoom`, `addPolyline`, `removePolyline`, `setPolygon`, `addCircle`.
+- Use the underlying Leaflet map only through `mapContainer.map` or `mapContainer.getMap()` and only after checking that it exists.
+- Leaflet uses `{ lat, lng }`; many PILOT helpers and marker options use `lat` and `lon`.
+- Do not use Google Maps-style code such as `mapContainer.getMap().getCenter().lat()`; Leaflet center fields are properties, not functions.
+- Track every marker/polyline/polygon/circle ID created by your Extension so you can remove your own layers later.
+- Do not call `clearAllMarkers`, `removeAllTracks`, `removeAllHistoryTracks`, or similar broad cleanup methods from an Extension unless the feature owns all those layers.
 
-## Base Map Layers
-
-Supports multiple providers:
-
-```js
-'OSM', 'Google Map', 'Google Sat', 'Yandex', 'Yandex Sat',
-'TomTom', 'TomTom Dark', 'TomTom Sat', '2Gis', 'Arc GIS', 'Cosmo Sat'
-```
-
-### Switch Base Map
+## Getting Current Map Center
 
 ```js
-mapContainer.setBaseMap('Google Sat');
+function getMapCenter(mapContainer) {
+    var map = mapContainer && mapContainer.getMap ?
+        mapContainer.getMap() :
+        mapContainer && mapContainer.map;
+
+    if (!map || !map.getCenter) {
+        return null;
+    }
+
+    var center = map.getCenter();
+
+    return {
+        lat: center.lat,
+        lon: center.lng
+    };
+}
 ```
 
-> Uses Leaflet layer control. Persisted in `localStorage`.
+## Creating A New Map
 
----
+Create a new map only for a custom Extension panel. Do not create a new map when the business idea says to use the current PILOT map.
+
+```js
+var mapContainer = new MapContainer('my_extension_map');
+
+mapContainer.init(25.184646, 55.2644923, 10, 'my-map-div', {
+    withControls: true
+});
+```
+
+`init(lat, lon, zoom, div, config)`:
+
+| Parameter | Meaning |
+|---|---|
+| `lat` | Initial latitude. If missing, PILOT may use saved position or browser geolocation. |
+| `lon` | Initial longitude. |
+| `zoom` | Initial zoom. If missing, PILOT may use saved zoom from `localStorage`. |
+| `div` | DOM element id for the Leaflet map container. |
+| `config` | Optional Leaflet options plus PILOT flags. |
+
+Useful config flags:
+
+| Option | Meaning |
+|---|---|
+| `withControls` | Adds the Leaflet layer switcher and initializes the selected base map. |
+| `withOutPlugins` | Skips active built-in plugins when truthy. |
+| `crs` | Optional Leaflet CRS override. PILOT changes CRS for Yandex layers internally. |
+
+## Base Maps
+
+The runtime builds `baseMaps` from built-in providers and partner/global config. The current layer is stored in `localStorage` as `map_<mapContainer.name>`.
+
+Common built-in names:
+
+```text
+Base
+Dark
+Gray
+OSM
+2Gis
+Yandex
+Yandex Sat
+Google Map
+Google Terrain
+Google Sat
+Wiki Mapia
+TomTom
+TomTom Dark
+TomTom Sat
+Arc GIS
+Cosmo Sat
+CARTO Voyager
+CARTO Dark Matter
+CARTO Positron
+```
+
+Switch base map:
+
+```js
+mapContainer.setBaseMap('OSM');
+```
+
+Inspect layers after initialization:
+
+```js
+var baseMaps = mapContainer.baseMaps;
+var layers = mapContainer.getBaseMapLayers();
+```
+
+`baseMaps` is the practical Leaflet layer dictionary. `getBaseMapLayers()` exists in the runtime and returns `baseMapLayers` when that array is populated by the host flow.
 
 ## Plugins
 
-Built-in plugins are defined in `this.plugins`.
+Built-in plugin names observed in the runtime:
 
-| Plugin | Purpose | Options |
-|-------|--------|--------|
-| `polylineMeasure` | Measure distance | Tooltips, units |
-| `PolygonAreaMeter` | Measure area | Toggle button |
-| `streetView` | Google Street View | Checkbox |
-| `browserPrint` | Print map | Portrait/Landscape |
-| `Traffic` | Road traffic | Google/Yandex |
-| `TrafficSea` | Marine traffic | Checkbox (if `seamap === '1'`) |
-
-### Access Plugin
-
-```js
-const trafficPlugin = mapContainer.getPlugin('Traffic');
+```text
+polylineMeasure
+tracksPanel
+PolygonAreaMeter
+streetView
+browserPrint
+Traffic
+Weather
+TrafficSea
 ```
 
----
+Access a plugin:
+
+```js
+try {
+    var traffic = mapContainer.getPlugin('Traffic');
+} catch (e) {
+    Ext.log('Traffic plugin is not available');
+}
+```
+
+`getPlugin(name)` throws when the plugin is not found, so guard it with `try/catch` or check behavior carefully.
+
+## Map View Methods
+
+| Method | Notes |
+|---|---|
+| `getMap(options)` | Returns `options.map` if provided, otherwise the underlying Leaflet map. |
+| `setMapCenter(lat, lon, options)` | Accepts either `lat, lon` or an array of points. Arrays call Leaflet `fitBounds`; scalar coordinates call `panTo`. `options.zoom` sets zoom after moving. |
+| `setMapCenterBounds(position, options)` | Calls Leaflet `fitBounds(position, options)`. |
+| `setMapCenterAnimate(lat, lon, options)` | Uses `flyToBounds`; `options.zoom` maps to `maxZoom`, `options.duration` controls animation duration. |
+| `setMapZoom(zoom)` | Sets map zoom and stores it in `localStorage`. |
+| `checkResize()` | Calls Leaflet invalidation logic for resized containers. Use after showing/resizing custom map panels. |
+| `panToBounds(bounds_arr)` | Pan/fit helper for bounds arrays. |
+| `setFullscreen(isActive)` | Toggles fullscreen state for the map container. |
 
 ## Markers
 
-### `addMarker(options)`
+Add marker:
 
 ```js
-mapContainer.addMarker({
-  id: 'veh_123',
-  lat: 25.1846,
-  lon: 55.2645,
-  icon: 'icons/truck.png',
-  size: 'medium', // or [x, y]
-  tooltip: { msg: 'Truck #123', direction: 'top' },
-  popupContent: '<b>Truck 123</b>',
-  click: () => alert('Clicked!'),
-  dragend: (e) => console.log(e.latlng)
+var marker = mapContainer.addMarker({
+    id: 'my_extension_marker_1',
+    lat: 25.1846,
+    lon: 55.2645,
+    icon: 'https://example.com/icon.png',
+    size: 'medium',
+    tooltip: {
+        msg: 'My marker',
+        options: { direction: 'bottom' }
+    },
+    click: function (marker) {
+        marker.showPopup();
+    },
+    customOptions: {
+        type: 'my_extension'
+    }
 });
 ```
 
-#### Marker Sizes
+Important marker options:
 
-| Size | Dimensions |
-|------|------------|
-| `micro` | 16×16 |
-| `mini` | 24×24 |
-| `medium` | 32×32 |
-| `big` | 48×48 |
+| Option | Meaning |
+|---|---|
+| `id` | Required. Must be unique. Duplicate IDs are logged as warnings. |
+| `lat`, `lon` | Required. `0` coordinates are rejected. |
+| `icon` | Icon URL. |
+| `size` | One of `micro`, `mini`, `mediumMini`, `medium`, `big`. |
+| `x`, `y`, `a` | Manual icon width, height, and anchor y. |
+| `tooltip` | `{ msg, options }` for Leaflet tooltip. |
+| `label` | Permanent label. Do not combine with `tooltip`. |
+| `poupContent` | Popup HTML. The runtime uses the historical misspelling `poupContent`. |
+| `data` | PILOT vehicle-like data used to auto-build popup HTML. |
+| `click` | Called as `click(marker)`. |
+| `dragend` | Enables dragging and is called as `dragend(marker, event)`. |
+| `contextmenu` | Marker context menu items. |
+| `notBindToMap` | Creates marker object without adding it to the map. |
+| `customOptions.type` | Useful for grouping extension markers. |
 
-Or set `x`, `y` manually.
+Marker helpers added by PILOT:
 
-### Remove Marker
+| Method | Notes |
+|---|---|
+| `marker.getId()` | Returns marker ID. |
+| `marker.getLatLng()` | Returns Leaflet lat/lng. |
+| `marker.showPopup()` | Opens popup after rebuilding content. |
+| `marker.focus(zoom, duration)` | Focuses marker. |
+| `marker.getStorage(key)` / `marker.setStorage(key, value)` | Stores extension data on the marker. |
+| `marker.updateTooltip(options)` | Updates permanent tooltip/label. |
+| `marker.clearListeners()` | Removes marker listeners used by PILOT. |
+
+Find and remove markers:
 
 ```js
-mapContainer.removeMarker(marker); // or by ID via internal tracking
+var marker = mapContainer.getMarker('my_extension_marker_1');
+
+if (marker) {
+    mapContainer.removeMarker(marker);
+}
 ```
 
----
+Related marker methods:
 
-## History Tracks
+| Method | Notes |
+|---|---|
+| `getMarker(id)` | Returns marker from internal `_gmarkers`. |
+| `deleteMarker(id)` | ID-based removal helper. |
+| `removeMarker(marker)` | Removes a marker object from map and internal storage. |
+| `removeMarkers(markers)` | Removes a list. |
+| `removeAllMarkers(type)` | Broad cleanup. Avoid in Extensions unless you own the scope. |
+| `clearAllMarkers()` | Removes all tracked markers. Avoid in Extensions. |
+| `showMarkers(markersIDs)` / `hideMarkers(markersIDs)` | Show/hide by IDs. |
+| `fitBoundsToMarkers()` | Fits map to current markers. |
+| `flyToMarker(marker)` | Animated focus. |
 
-### `addHistoryTrack(data, options)`
+## Polylines, Routes, And Tracks
 
-```js
-mapContainer.addHistoryTrack({
-  points: [[lat, lng, speed, timestamp], ...],
-  markers: [markerOptions, ...]
-}, {
-  id: 'track_1',
-  color: '#FF0000',
-  veh_name: 'Truck 123'
-});
-```
-
-- Colors by speed or sensor values
-- Interactive hover popup with speed/time/address
-- Click to measure distance between points
-
-### Remove Track
+Simple named polyline:
 
 ```js
-mapContainer.removeHistoryTrack('track_1');
-mapContainer.removeAllHistoryTracks();
-```
-
----
-
-## Geofences
-
-Stored in `this.geofences` (LayerGroup)
-
-### Add Polygon
-
-```js
-const polygon = mapContainer.addPolyline([
-  [lat1, lng1], [lat2, lng2], ...
+var polyline = mapContainer.addPolyline([
+    [25.18, 55.26],
+    [25.19, 55.27]
 ], {
-  id: 'zone_1',
-  color: '#FF0000',
-  label: 'Warehouse A'
+    id: 'my_extension_line_1',
+    color: '#0EA5E9',
+    label: 'Route'
 });
 ```
 
-### Visibility Management
-
-- Automatically hides small geofences at low zoom
-- Tooltips appear only if size > 50px
-- Use `updateGeofenceVisibility()` on `moveend`
+Remove it:
 
 ```js
-mapContainer.map.on('moveend', () => mapContainer.updateGeofenceVisibility());
+mapContainer.removePolyline('my_extension_line_1');
 ```
 
----
+Polyline and route methods:
 
-## Measurement Tools
+| Method | Notes |
+|---|---|
+| `addPolyline(points, options)` | Adds a managed polyline into `geofences`; returns `{ id, layer, options, focus, setTooltip }`. |
+| `getPolyline(id)` | Returns managed polyline record. |
+| `removePolyline(id)` | Removes managed polyline by ID. |
+| `setPolyline(latlngs, color, options)` | Adds a generic Leaflet polyline named `polyline`; stored as `mapContainer.polyline`. |
+| `removePilyline()` | Removes generic polylines with option `name: 'polyline'`. The misspelling is real in the runtime. |
+| `setPolylineBlue(points)` | Shortcut using blue color. |
+| `decodeRoute(encoded, precision)` | Decodes encoded route into `{ lat, lng }` objects. |
+| `addArrowRoute(points, options)` | Adds route with direction arrows or corridor width. |
+| `getArrowRoute(id)` / `removeArrowRoute(route)` | Manage arrow route objects. |
+| `removeAllArrowRoutesType(type)` | Removes arrow routes by type. |
+| `createInteractivePolyline(points, options)` | Adds hover/click interaction. Requires valid `options`; history tracks pass `rawPoints`. |
+| `addHistoryTrack(data, options)` | Adds colored history route, route arrows, markers, and interactive hover behavior. |
+| `getHistoryTrack(id)` / `removeHistoryTrack(id)` | Manage history tracks. |
+| `removeAllHistoryTracks()` | Broad cleanup. Avoid unless you own all history tracks. |
 
-### Polyline Measure
-
-Enabled via plugin. Supports:
-- Drag to move
-- SHIFT + click to delete
-- CTRL + click to resume/add
-
-### Polygon Area Meter
+History track input uses:
 
 ```js
-mapContainer.activatePolygonAreaMeter();
-// Draw multiple polygons
-mapContainer.disablePolygonAreaMeter();
+{
+    points: [
+        [lat, lng, speed, timestamp]
+    ],
+    markers: [
+        { id: 'm1', lat: 25.18, lon: 55.26 }
+    ]
+}
 ```
 
-> Double-click to finish polygon.
+## Circles And Polygons
 
----
-
-## Traffic Layers
-
-### Road Traffic
-
-Toggles via checkbox (top-right). Uses:
-- Google Traffic API
-- Yandex Traffic
+Circle:
 
 ```js
-localStorage.setItem('traffic-layer', 'google'); // or 'yandex'
-```
-
-### Sea Traffic (Marine)
-
-Enabled if `global_conf.conf.org.conf.seamap === '1'`
-
-```html
-<input type="checkbox" id="traffic-sea-btn">
-<label>Sea map</label>
-```
-
----
-
-## Coordinates & Interaction
-
-### Show Coordinates
-
-```js
-mapContainer.map.on('mousemove', mapContainer.showCoords);
-```
-
-Displays in bottom-right corner.
-
-### CTRL + Click → Copy Coordinates
-
-```js
-// Automatically enabled
-// Copies: "25.18465, 55.26449"
-```
-
-Shows temporary popup: "Copied: ..."
-
----
-
-## Context Menu
-
-```js
-mapContainer.contexmenu(L, {
-  width: 160,
-  items: [
-    { text: 'Add Marker', callback: () => { ... } },
-    { text: 'Measure', callback: () => { ... } }
-  ]
+var circle = mapContainer.addCircle({
+    id: 'my_extension_circle_1',
+    lat: 25.1846,
+    lng: 55.2645,
+    radius: 500,
+    label: '500 m',
+    color: '#0EA5E9'
 });
 ```
 
-> Right-click on map.
-
----
-
-## Heatmaps
+Polygon:
 
 ```js
-mapContainer.setHeatmap([
-  { lat: 25.1, lng: 55.1, count: 10 },
-  { lat: 25.2, lng: 55.2, count: 50 }
-], true, 'Vehicle Density');
+var polygon = mapContainer.setPolygon([
+    [25.18, 55.26],
+    [25.19, 55.26],
+    [25.19, 55.27]
+], {
+    id: 'my_extension_polygon_1',
+    label: 'Zone',
+    color: '#22C55E',
+    fillOpacity: 0.2
+});
 ```
 
-- Includes toggle checkbox
-- Auto-fit bounds if `isBounds = true`
+Methods:
 
----
+| Method | Notes |
+|---|---|
+| `addCircle(options, marker)` | Adds Leaflet circle or marker-bound great circle. Uses `lat/lng`, not `lat/lon`. |
+| `getCircle(id)` / `removeCircle(id)` | Manage circles. |
+| `removeCircles(circles)` / `removeAllCircles(type)` | Remove groups. |
+| `setPolygon(points, options)` | Adds polygon to `geofences`; supports `label`, `tooltip`, `popup`, `color`, `fillOpacity`. |
+| `getPolygon(id)` / `removePolygon(id)` | Manage polygons. |
+| `clearAllPolygons()` | Broad cleanup. Avoid unless you own all polygons. |
+| `getPointsZoneData(data)` | Parses strings like `lat,lng\|lat,lng\|...`. |
+| `updateGeofenceVisibility()` | Updates label/layer visibility based on zoom and pixel size. |
+| `setMinimalSizeNameGeozone(fontSize)` / `getMinimalSizeNameGeozone()` | Label sizing helpers. |
 
-## KML & Custom Tiles
+## KML, Tiles, Heatmaps
 
-### Add KML
+KML:
 
 ```js
-mapContainer.addKmlLayer('data.zones.kml', 'Zones');
-mapContainer.removeKmlLayer('Zones');
+mapContainer.addKmlLayer('/zones.kml', 'zones');
+mapContainer.removeKmlLayer('zones');
 ```
 
-### Add Custom Tile Layer
+Tile layer:
 
 ```js
 mapContainer.addTileLayer({
-  id: 'custom',
-  url: 'https://tiles.example.com/{z}/{x}/{y}.png',
-  minZoom: 10,
-  maxZoom: 18,
-  bounds: { corner_1: {lat,lng}, corner_2: {lat,lng} }
+    id: 'my_tiles',
+    url: 'https://tiles.example.com/{z}/{x}/{y}.png',
+    minZoom: 10,
+    maxZoom: 22,
+    bounds: {
+        corner_1: { lat: 25.0, lng: 55.0 },
+        corner_2: { lat: 26.0, lng: 56.0 }
+    }
 });
 ```
 
----
-
-## Utility Methods
-
-| Method | Description |
-|-------|-------------|
-| `setMapCenter(lat, lon)` | Pan to location |
-| `setMapCenterBounds(bounds)` | Fit bounds |
-| `setMapZoom(zoom)` | Set zoom |
-| `getDistanceBetweenLatLng(a, b)` | Haversine distance (meters) |
-| `geodesicArea(latLngs)` | Polygon area (m²) |
-| `createInteractivePolyline(points, opts)` | Hover info + distance measure |
-
----
-
-## Events
+Heatmap:
 
 ```js
-mapContainer.map.on('baselayerchange', (e) => {
-  console.log('Switched to:', e.name);
-});
+var heat = mapContainer.setHeatmap([
+    { lat: 25.18, lng: 55.26, count: 10 },
+    { lat: 25.19, lng: 55.27, count: 25 }
+], true, 'Density');
 
-mapContainer.map.on('zoomend', () => {
-  localStorage.setItem('zoom', mapContainer.map.getZoom());
-});
+mapContainer.removeHeatMap(heat.id);
 ```
 
----
+Methods:
 
-## Styling & Theming
+| Method | Notes |
+|---|---|
+| `addKmlLayer(url, name)` | Fetches KML via jQuery and adds it. The runtime stores `name` as the layer key. |
+| `getKmlLayer(name)` / `removeKmlLayer(name)` / `clearKmlLayers()` | Manage KML layers. |
+| `addTileLayer(config)` / `getTileLayer(config)` / `removeTileLayer(config)` / `clearTileLayers()` | Manage tile layers by `config.id`. |
+| `setHeatmap(points, isBounds, name)` | Adds `HeatmapOverlay` with fields `lat`, `lng`, `count`. Returns heat object with generated `id`. |
+| `removeHeatMap(id)` / `removeAllHeatsMap()` | Manage heatmaps. |
 
-### Dynamic Tooltip Color
+## Controls And Interaction
 
-```css
---map1_tooltip: #FFFFFF; /* Light for dark maps */
-```
+| Method | Notes |
+|---|---|
+| `contexmenu(L, menu)` | Enables map context menu. Historical spelling is `contexmenu`. |
+| `markercontexmenu(L, menu)` | Marker context menu helper. |
+| `setHiddenContexMenu(isHide)` | Hides/shows context menu behavior. |
+| `bindClick(cursor, callback)` | Sets cursor and binds Leaflet map click. |
+| `unBindClick(cursor)` | Clears map click binding and cursor. |
+| `setCursor(cursor)` | Sets CSS cursor on the map container. |
+| `showCoords(event)` | Updates `#geomessage` with mouse coordinates. |
+| `addControlMap(control)` / `removeControlMap(id)` / `getControl(id)` | Manage controls stored as `{ id, control }`. |
+| `addCustomControl(name, domEl, position)` / `getCustomControl(name)` / `removeCustomControl(name)` | Manage custom Leaflet controls. |
+| `addControl(name, html, position)` / `removeControl(name)` | Simple control helper. |
+| `addLegend(html, position)` / `removeLegend()` | Legend helper. |
 
-Auto-set based on base layer.
+After `init(...)`, the map listens to mouse movement and updates `#geomessage`. `Ctrl + click` on the Leaflet map copies coordinates as `lat, lng` to the clipboard and shows a short popup.
 
-### Custom CSS
+## Geometry Helpers
 
-```css
-.tooltip_map1 { color: var(--map1_tooltip) !important; }
-```
+| Method | Notes |
+|---|---|
+| `getDistanceBetweenLatLng(a, b)` | Expects `{ lat, lng }`; returns meters or `null` for invalid input. |
+| `getDistanceBetweenLatLngHaversine(a, b)` | Haversine distance in meters. |
+| `getDistanceBetweenPoints(a, b)` | Uses Leaflet point distance. |
+| `geodesicArea(latLngs)` | Polygon area in square meters. |
+| `geodesicAreaCircle(radius)` | Circle area. |
+| `inBounds(lat, lng, bounds)` | Checks whether point is inside bounds. |
+| `getAzimuth(firstPoint, secondPoint)` | Bearing helper. |
+| `toRadians(degrees)` / `toDegrees(angle)` | Conversion helpers. |
 
----
-
-## Localization (`l()` function)
+## Cleanup Pattern For Extensions
 
 ```js
-l('Traffic') → 'Traffic' or 'Движение' (RU)
-```
+Ext.define('Store.my_extension.MapLayerStore', {
+    singleton: true,
 
-Used in:
-- Tooltips
-- Buttons
-- Popups
+    markerIds: [],
+    polylineIds: [],
 
----
+    clear: function (map) {
+        Ext.Array.forEach(this.markerIds, function (id) {
+            var marker = map.getMarker && map.getMarker(id);
 
-## Best Practices
+            if (marker && map.removeMarker) {
+                map.removeMarker(marker);
+            }
+        });
 
-1. **Always call `init()` first**
-2. **Use unique `layerName` per map instance**
-3. **Persist zoom/center in `localStorage`**
-4. **Call `updateGeofenceVisibility()` on move**
-5. **Avoid memory leaks: remove markers/tracks**
+        Ext.Array.forEach(this.polylineIds, function (id) {
+            if (map.removePolyline) {
+                map.removePolyline(id);
+            }
+        });
 
----
-
-## Example: Full Setup
-
-```html
-<div id="map" style="height: 600px;"></div>
-```
-
-```js
-const mapContainer = new MapContainer('main');
-mapContainer.init(25.1846, 55.2645, 12, 'map', {
-  withControls: true
+        this.markerIds = [];
+        this.polylineIds = [];
+    }
 });
-
-// Add vehicle
-mapContainer.addMarker({
-  id: 'v1',
-  lat: 25.18,
-  lon: 55.26,
-  icon: 'truck.png',
-  tooltip: { msg: 'Truck 1' }
-});
-
-// Add history
-mapContainer.addHistoryTrack(trackData, { id: 't1' });
 ```
 
----
+## Common Mistakes
 
-## Troubleshooting
-
-| Issue | Solution |
-|------|----------|
-| Map not loading | Check `div` ID exists |
-| Plugins missing | Ensure Leaflet plugins loaded |
-| Traffic not showing | Check API keys / CORS |
-| Coordinates not copying | Allow clipboard access |
-| Geofences disappear | Increase `MIN_VISIBLE_SIZE_PIXELS` |
-
----
-
-## Dependencies
-
-- Leaflet.js
-- Leaflet plugins:
-    - `leaflet.polylineMeasure`
-    - `leaflet.browser.print`
-    - `leaflet.streetview`
-    - `leaflet-editable`
-    - `leaflet-corridor`
-    - `leaflet-heatmap`
-
----
-
-**Built for performance, scalability, and real-time tracking.**
-
----
-```
-
-**Save as:** `MAPCONTAINER_USAGE_MANUAL.md`  
-**Ready to paste directly into any Markdown file or documentation system.**
-```
+| Mistake | Correct approach |
+|---|---|
+| `mapContainer.getMap().getCenter().lat()` | `mapContainer.getMap().getCenter().lat` |
+| Using `lon` with Leaflet internals | Use `lng` inside Leaflet objects and convert to `lon` for PILOT marker helpers. |
+| `removeMarker('id')` | Use `getMarker(id)` and pass the marker object, or use `deleteMarker(id)` if available. |
+| Calling `clearAllMarkers()` from an Extension | Track and remove only Extension-created markers. |
+| Creating a new `MapContainer` for current-map features | Reuse `window.mapContainer`, `window.historyMapContainer`, or `getActiveTabMapContainer()`. |

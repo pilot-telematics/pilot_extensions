@@ -14,6 +14,7 @@ https://github.com/pilot-telematics/pilot_extensions
 3. docs/PILOT_RUNTIME_UTILS_RU.md
 4. docs/IDEA_TO_EXTENSION_RU.md
 5. ближайший пример из examples/
+6. docs/MapContainer_RU.md, если идея использует карту, центр карты, координаты, маркеры, маршруты, треки или геозоны
 
 Бизнес-идея:
 <что должно делать расширение>
@@ -45,6 +46,7 @@ https://github.com/pilot-telematics/pilot_extensions
 - Runtime-логика только через Module.js.
 - doc/index.html только документация, без <script>.
 - Используй runtime PILOT: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery, renderers, если нужны и доступны.
+- PILOT MapContainer - это обертка над Leaflet. Для функций карты используй docs/MapContainer_RU.md и не придумывай Google Maps-style API вроде getMap().getCenter().lat()/lng().
 - Не подключай повторно Highcharts/jQuery/helper scripts, если они уже доступны.
 - Если нужны свои CSS-цвета, используй палитру Tailwind CSS для hex-значений, но не подключай Tailwind CSS как framework без отдельной необходимости.
 
