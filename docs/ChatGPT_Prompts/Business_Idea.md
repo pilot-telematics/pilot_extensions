@@ -51,6 +51,7 @@ Mandatory rules:
 - If custom CSS needs colors, prefer Tailwind CSS palette values for hex colors, but do not load Tailwind CSS as a framework unless explicitly needed.
 - If deployment is Cloudflare and I did not explicitly ask for a developer CLI flow, give manager-friendly Cloudflare dashboard/browser UI steps only. Do not require npm, Node.js, Wrangler, Git, terminal, or shell commands.
 - Do not invent a download link. Attach/create a real zip artifact if your environment supports files; otherwise clearly say that you cannot attach files in this chat.
+- Do not replace the zip artifact with Python/Node/PowerShell/Bash code that I must run locally to create the archive.
 
 The result must include:
 1. selected architecture;
@@ -62,4 +63,5 @@ The result must include:
 7. troubleshooting for 404, CORS, skeleton undefined, class not found.
 
 Do not print full source code in the chat by default. Put the generated files into the zip archive.
+Do not give me a local script that creates the zip unless I explicitly ask for a developer workaround.
 ```

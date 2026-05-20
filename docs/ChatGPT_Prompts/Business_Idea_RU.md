@@ -51,6 +51,7 @@ https://github.com/pilot-telematics/pilot_extensions
 - Если нужны свои CSS-цвета, используй палитру Tailwind CSS для hex-значений, но не подключай Tailwind CSS как framework без отдельной необходимости.
 - Если развертывание Cloudflare и я явно не попросил developer CLI flow, дай manager-friendly инструкцию только через Cloudflare dashboard/browser UI. Не требуй npm, Node.js, Wrangler, Git, terminal или shell commands.
 - Не придумывай ссылку на скачивание. Приложи/создай настоящий zip-артефакт, если твоя среда поддерживает файлы; иначе честно скажи, что не можешь приложить файлы в этом чате.
+- Не заменяй zip-артефакт Python/Node/PowerShell/Bash кодом, который я должен запускать локально для создания архива.
 
 Результат должен включать:
 1. выбранную архитектуру;
@@ -62,4 +63,5 @@ https://github.com/pilot-telematics/pilot_extensions
 7. troubleshooting для 404, CORS, skeleton undefined, class not found.
 
 Не печатай полный исходный код в чате по умолчанию. Сложи сгенерированные файлы в zip-архив.
+Не давай локальный script для создания zip, если я явно не попросил developer workaround.
 ```

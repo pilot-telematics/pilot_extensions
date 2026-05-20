@@ -513,6 +513,8 @@ Do not create package.json, build config, node_modules, or standalone HTML app f
 
 Do not create or require `npm`, `node`, `wrangler`, terminal, shell, or CLI deployment steps unless the user explicitly asks for a developer/CLI deployment path.
 
+Do not replace the required zip deliverable with a local build script such as Python, Node.js, PowerShell, Bash, or “run this script to create the zip”. For manager-facing output, the AI must either attach/create the actual zip artifact or clearly state that the current chat cannot attach files.
+
 ## 9.1 Deployment Instructions For Managers
 
 Default deployment instructions must be manager-friendly.
@@ -535,7 +537,7 @@ When a backend/proxy is required:
 - Explain that a technical person may be needed.
 - If Cloudflare Worker code is needed, provide browser-dashboard steps first and CLI steps only as an optional developer path.
 
-Never claim that a zip file is downloadable unless an actual file attachment/artifact is created. If the current AI environment cannot attach files, say so clearly and do not invent a download link.
+Never claim that a zip file is downloadable unless an actual file attachment/artifact is created. If the current AI environment cannot attach files, say so clearly and do not invent a download link or ask the user to run a local script to build the archive.
 
 ## 10. Mandatory Acceptance Checklist
 
@@ -561,5 +563,6 @@ Before final output, verify:
 - The chat answer does not print full source code by default; it only summarizes the archive, file tree, upload location, final `Module.js` URL shape, PILOT registration steps, browser verification steps, and basic troubleshooting.
 - Cloudflare/GitHub deployment instructions are browser UI-first for managers and do not require `npm`, `wrangler`, Git, or terminal commands unless explicitly requested.
 - The answer does not invent a fake download link for the zip archive.
+- The answer does not replace the zip artifact with Python/Node/PowerShell/Bash code that the user must run locally.
 
 If any applicable item fails, regenerate or fix the code before presenting it.

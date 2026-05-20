@@ -73,6 +73,8 @@ The AI response should include:
 
 The AI should not print full source code in the chat by default. The generated files belong in the zip archive.
 
+If the AI environment cannot attach files, it must say so clearly. It must not replace the zip with Python/Node/PowerShell/Bash code that the user must run locally, unless the user explicitly asks for a developer workaround.
+
 ## 4. Typical Output Structure
 
 Frontend-only:
@@ -207,5 +209,6 @@ Requirements:
 - if the idea uses maps, read docs/MapContainer.md; PILOT MapContainer wraps Leaflet, so do not invent Google Maps-style APIs;
 - do not build a standalone web app;
 - provide a zip archive with the complete Extension file structure instead of printing full source code in chat;
+- do not replace the zip archive with a local script that I must run to create it;
 - provide step-by-step instructions: where to upload files, which Module.js URL to register in PILOT, and how to verify launch.
 ```

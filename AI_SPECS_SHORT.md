@@ -127,3 +127,4 @@ Parse hierarchical groups and nested `children`. Do not assume a flat array.
 - Do not print full source code in the chat by default; summarize the zip, upload path, `Module.js` URL, launch verification, and troubleshooting.
 - For managers, deployment instructions must be browser UI-first. Do not require `npm`, `wrangler`, Git, or terminal commands unless explicitly requested.
 - Do not invent a download link unless an actual zip artifact is attached.
+- Do not replace the zip artifact with Python/Node/PowerShell/Bash code that the user must run locally.
