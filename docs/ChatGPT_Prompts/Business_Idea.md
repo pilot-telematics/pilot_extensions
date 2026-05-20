@@ -49,12 +49,14 @@ Mandatory rules:
 - PILOT MapContainer is a wrapper over Leaflet. For map features, use docs/MapContainer.md and do not assume Google Maps-style getMap().getCenter().lat()/lng() APIs.
 - Do not load duplicate Highcharts/jQuery/helper scripts if PILOT already provides them.
 - If custom CSS needs colors, prefer Tailwind CSS palette values for hex colors, but do not load Tailwind CSS as a framework unless explicitly needed.
+- If deployment is Cloudflare and I did not explicitly ask for a developer CLI flow, give manager-friendly Cloudflare dashboard/browser UI steps only. Do not require npm, Node.js, Wrangler, Git, terminal, or shell commands.
+- Do not invent a download link. Attach/create a real zip artifact if your environment supports files; otherwise clearly say that you cannot attach files in this chat.
 
 The result must include:
 1. selected architecture;
 2. a zip archive with the complete Extension file structure;
 3. file tree inside the zip;
-4. where to upload the files;
+4. where to upload the files, with browser UI-first instructions for Cloudflare/GitHub;
 5. final Module.js URL to register in PILOT;
 6. step-by-step launch verification;
 7. troubleshooting for 404, CORS, skeleton undefined, class not found.

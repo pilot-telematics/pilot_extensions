@@ -49,12 +49,14 @@ https://github.com/pilot-telematics/pilot_extensions
 - PILOT MapContainer - это обертка над Leaflet. Для функций карты используй docs/MapContainer_RU.md и не придумывай Google Maps-style API вроде getMap().getCenter().lat()/lng().
 - Не подключай повторно Highcharts/jQuery/helper scripts, если они уже доступны.
 - Если нужны свои CSS-цвета, используй палитру Tailwind CSS для hex-значений, но не подключай Tailwind CSS как framework без отдельной необходимости.
+- Если развертывание Cloudflare и я явно не попросил developer CLI flow, дай manager-friendly инструкцию только через Cloudflare dashboard/browser UI. Не требуй npm, Node.js, Wrangler, Git, terminal или shell commands.
+- Не придумывай ссылку на скачивание. Приложи/создай настоящий zip-артефакт, если твоя среда поддерживает файлы; иначе честно скажи, что не можешь приложить файлы в этом чате.
 
 Результат должен включать:
 1. выбранную архитектуру;
 2. zip-архив с полной структурой файлов Extension;
 3. дерево файлов внутри zip;
-4. инструкцию куда положить файлы;
+4. инструкцию куда положить файлы, с browser UI-first шагами для Cloudflare/GitHub;
 5. итоговый URL Module.js для регистрации в PILOT;
 6. пошаговую проверку запуска;
 7. troubleshooting для 404, CORS, skeleton undefined, class not found.
