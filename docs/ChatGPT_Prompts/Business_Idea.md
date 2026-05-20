@@ -49,8 +49,11 @@ Mandatory rules:
 - PILOT MapContainer is a wrapper over Leaflet. For map features, use docs/MapContainer.md and do not assume Google Maps-style getMap().getCenter().lat()/lng() APIs.
 - Do not load duplicate Highcharts/jQuery/helper scripts if PILOT already provides them.
 - If custom CSS needs colors, prefer Tailwind CSS palette values for hex colors, but do not load Tailwind CSS as a framework unless explicitly needed.
+- If adding a header button, add `header_tool <extension>-header-btn` and CSS with a visible background plus readable text/icon color. Do not leave a white icon/text directly on the light gray PILOT header.
 - If deployment is Cloudflare and I did not explicitly ask for a developer CLI flow, give manager-friendly Cloudflare dashboard/browser UI steps only. Do not require npm, Node.js, Wrangler, Git, terminal, or shell commands.
-- PILOT admin stores the external base URL, but runtime files are proxied under /store/<extension>/ for CORS compatibility. Use/document /store/<extension>/... for Extension assets, docs, JSON, and backend calls.
+- Use a safe lowercase snake_case PILOT Extension name, for example weather_demo. Do not use hyphens in the PILOT Extension name, because PILOT creates Store.<extension_name>.Module from it.
+- The Module.js class must exactly match the PILOT Extension name: Ext.define('Store.weather_demo.Module', ...). A public Cloudflare/GitHub project URL may still use hyphens, for example https://weather-demo.YOUR.pages.dev/.
+- PILOT admin stores the external base URL, but runtime files are proxied under /store/<extension>/ for CORS compatibility. Use/document /store/<extension>/... for Extension assets, docs, JSON, and backend calls. The <extension> segment is the safe PILOT Extension name, for example /store/weather_demo/Module.js.
 - Do not invent a download link. Attach/create a real zip artifact if your environment supports files; otherwise clearly say that you cannot attach files in this chat.
 - Do not replace the zip artifact with Python/Node/PowerShell/Bash code that I must run locally to create the archive.
 
@@ -60,10 +63,11 @@ The result must include:
 3. file tree inside the zip;
 4. where to upload the files, with browser UI-first instructions for Cloudflare/GitHub;
 5. direct Module.js URL to verify in a browser;
-6. base URL to register in PILOT admin, for example https://weather-demo.YOUR.workers.dev/;
-7. proxied runtime URLs, for example /store/weather-demo/Module.js, /store/weather-demo/doc/index.html, /store/weather-demo/backend/;
-8. step-by-step launch verification;
-9. troubleshooting for 404, CORS, skeleton undefined, class not found.
+6. safe PILOT Extension name to enter in admin, for example weather_demo;
+7. base URL to register in PILOT admin, for example https://weather-demo.YOUR.workers.dev/;
+8. proxied runtime URLs, for example /store/weather_demo/Module.js, /store/weather_demo/doc/index.html, /store/weather_demo/backend/;
+9. step-by-step launch verification;
+10. troubleshooting for 404, CORS, skeleton undefined, class not found, especially Store.weather-demo.Module vs Store.weather_demo.Module name mismatches.
 
 Do not print full source code in the chat by default. Put the generated files into the zip archive.
 Do not give me a local script that creates the zip unless I explicitly ask for a developer workaround.

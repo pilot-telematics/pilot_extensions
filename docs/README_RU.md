@@ -12,8 +12,9 @@
 2. Вставьте prompt в AI-помощника.
 3. Добавьте бизнес-идею и ссылку на этот репозиторий.
 4. Попросите zip-архив с полной структурой файлов Extension.
-5. Проверьте итоговый `/Module.js` в браузере, затем зарегистрируйте base URL в PILOT.
-6. Используйте proxied runtime URLs `/store/<extension>/...` для assets, docs и backend-вызовов Extension, когда это нужно.
+5. Используйте безопасное `snake_case` имя PILOT Extension, например `weather_demo`, а не `weather-demo`.
+6. Проверьте итоговый `/Module.js` в браузере, затем зарегистрируйте base URL в PILOT.
+7. Используйте proxied runtime URLs `/store/<extension>/...` для assets, docs и backend-вызовов Extension, когда это нужно.
 
 Для разработчика:
 
@@ -34,11 +35,11 @@
 
 | Нужно сделать | Паттерн | Пример |
 |---|---|---|
-| Минимальная вкладка + основная панель | Full UI Extension | `examples/hello-world` |
-| Стартовая структура модуля | Full UI Extension | `examples/template-app` |
+| Минимальная вкладка + основная панель | Full UI Extension | `examples/hello_world` |
+| Стартовая структура модуля | Full UI Extension | `examples/template_app` |
 | Таблица/список + собственная карта | Custom Map Panel | `examples/airports` |
 | UI с данными без карты | Full UI Extension | `examples/planets` |
-| Действие по выбранному объекту Online | Context Menu Extension | `examples/nearby-poi` |
+| Действие по выбранному объекту Online | Context Menu Extension | `examples/nearby_poi` |
 | Backend, auth, CRUD, мнемосхемы | Extension + backend | `examples/communal` |
 | Глобальное действие | Header Button / Header Menu Item | см. [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |
 | Reports/settings/editor integration | Advanced Host Integration | см. [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |

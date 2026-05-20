@@ -10,7 +10,8 @@ Extension должен относиться к PILOT как к host platform:
 
 - PILOT предоставляет оболочку, Ext JS, карты, деревья, header, переводы и часть utility-классов.
 - Extension поставляет свои `Module.js`, JS/CSS/assets и при необходимости внешний backend.
-- Extension-owned классы должны жить в namespace `Store.<extension>.*`.
+- Extension-owned классы должны жить в namespace `Store.<extension>.*`, где `<extension>` - точное безопасное lowercase `snake_case` имя Extension из PILOT admin, например `weather_demo`.
+- Не используйте дефисы в имени Extension в PILOT. PILOT создает `Store.<extension>.Module` из этого имени.
 - Не нужно требовать локальные исходные файлы PILOT.
 - Не следует зависеть от внутренних business-классов основного приложения, если они не описаны как runtime API.
 
@@ -61,6 +62,31 @@ if (skeleton.header.menu_btn && skeleton.header.menu_btn.menu) {
 ```
 
 Не удаляйте и не заменяйте штатные элементы header.
+
+Для custom header buttons добавляйте Extension-specific class с заметным фоном. Белый текст или иконки на светло-сером header PILOT плохо читаются.
+
+```js
+skeleton.header.insert(5, {
+    xtype: 'button',
+    cls: 'header_tool my_extension-header-btn',
+    iconCls: 'fa fa-bolt',
+    tooltip: l('My Extension'),
+    handler: this.openWindow,
+    scope: this
+});
+```
+
+```css
+.my_extension-header-btn {
+    background: #2563eb !important;
+    border-color: #1d4ed8 !important;
+}
+
+.my_extension-header-btn .x-btn-inner,
+.my_extension-header-btn .x-btn-icon-el {
+    color: #ffffff !important;
+}
+```
 
 ### Navigation
 

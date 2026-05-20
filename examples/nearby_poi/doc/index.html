@@ -46,12 +46,14 @@
 <h2>Установка</h2>
 
 <ol>
-    <li>Скопируйте папку <code>examples/nearby-poi</code> на ваш веб-сервер.</li>
-    <li>Убедитесь, что файл <code>Module.js</code> доступен по URL, например:
-        <br><code>https://your-server/pilot_extensions/examples/nearby-poi/Module.js</code>
+    <li>Скопируйте папку <code>examples/nearby_poi</code> на ваш веб-сервер.</li>
+    <li>В PILOT admin используйте имя Extension <code>nearby_poi</code>.</li>
+    <li>Убедитесь, что файл <code>Module.js</code> доступен по прямому URL, например:
+        <br><code>https://your-server/pilot_extensions/examples/nearby_poi/Module.js</code>
     </li>
     <li>
-        В админ-панели PILOT создайте новое приложение, указав URL на <code>Module.js</code>.
+        В админ-панели PILOT создайте новое приложение, указав base URL папки:
+        <br><code>https://your-server/pilot_extensions/examples/nearby_poi/</code>
     </li>
     <li>Подождите ~10 минут для применения настроек прокси.</li>
 </ol>

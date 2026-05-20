@@ -19,7 +19,7 @@
  *  - глобальный base_url для OSRM и иконок
  */
 
-Ext.define('Store.nearby-poi.Module', {
+Ext.define('Store.nearby_poi.Module', {
     extend: 'Ext.Component',
 
     /**

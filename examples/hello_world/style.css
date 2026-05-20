@@ -4,7 +4,7 @@
  */
 
 /* Custom styling for the hello world content */
-.hello-world-message {
+.hello_world-message {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 20px;
@@ -13,7 +13,7 @@
     margin: 10px;
 }
 
-.hello-world-features {
+.hello_world-features {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 8px;
@@ -21,20 +21,34 @@
     margin: 15px 0;
 }
 
-.hello-world-features h3 {
+.hello_world-features h3 {
     color: #495057;
     margin-top: 0;
 }
 
 /* Custom button styles */
-.hello-world-btn {
+.hello_world-header-btn {
+    background: #2563eb !important;
+    border-color: #1d4ed8 !important;
+}
+
+.hello_world-header-btn .x-btn-inner,
+.hello_world-header-btn .x-btn-icon-el {
+    color: #ffffff !important;
+}
+
+.hello_world-header-btn:hover {
+    background: #1d4ed8 !important;
+}
+
+.hello_world-btn {
     background: #28a745 !important;
     border-color: #28a745 !important;
     border-radius: 20px !important;
     padding: 8px 20px !important;
 }
 
-.hello-world-btn:hover {
+.hello_world-btn:hover {
     background: #218838 !important;
     border-color: #1e7e34 !important;
 }

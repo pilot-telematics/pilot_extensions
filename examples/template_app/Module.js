@@ -3,7 +3,7 @@
  * Use this as a base for your own applications
  */
 
-Ext.define('Store.template-app.Module', {
+Ext.define('Store.template_app.Module', {
     extend: 'Ext.Component',
 
     /**
@@ -13,13 +13,13 @@ Ext.define('Store.template-app.Module', {
         console.log('Template application initialized');
 
         // 1. CREATE NAVIGATION TAB COMPONENT
-        var navTab = Ext.create('Store.template-app.Tab', {
+        var navTab = Ext.create('Store.template_app.Tab', {
             title: 'Template App',
             iconCls: 'fa fa-rocket'
         });
 
         // 2. CREATE MAIN CONTENT COMPONENT
-        var mainPanel = Ext.create('Store.template-app.Map', {
+        var mainPanel = Ext.create('Store.template_app.Map', {
             // Configuration for main panel
         });
 
@@ -44,7 +44,7 @@ Ext.define('Store.template-app.Module', {
         var cssLink = document.createElement("link");
         cssLink.setAttribute("rel", "stylesheet");
         cssLink.setAttribute("type", "text/css");
-        cssLink.setAttribute("href", '/store/template-app/style.css');
+        cssLink.setAttribute("href", '/store/template_app/style.css');
         document.head.appendChild(cssLink);
     },
 
@@ -53,7 +53,7 @@ Ext.define('Store.template-app.Module', {
      */
     loadConfig: function() {
         Ext.Ajax.request({
-            url: '/store/template-app/config.json',
+            url: '/store/template_app/config.json',
             method: 'GET',
             success: function(response) {
                 var config = Ext.JSON.decode(response.responseText);

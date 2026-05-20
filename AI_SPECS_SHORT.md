@@ -28,7 +28,16 @@ Ext.define('Store.my_extension.Module', {
 });
 ```
 
-Use safe Ext JS namespaces such as `Store.my_extension.Module`.
+Use a safe `snake_case` PILOT Extension name, for example `my_extension`. PILOT creates the runtime class as `Store.<extension_name>.Module`, so the `Module.js` class must match it exactly:
+
+```js
+Ext.define('Store.my_extension.Module', {
+    extend: 'Ext.Component',
+    initModule: function () {}
+});
+```
+
+Do not use hyphens in the PILOT Extension name. A public host may be `https://weather-demo.YOUR.pages.dev/`, but the PILOT Extension name should be `weather_demo`, producing `/store/weather_demo/Module.js`.
 
 ## Important PILOT Globals
 
@@ -41,7 +50,7 @@ Use safe Ext JS namespaces such as `Store.my_extension.Module`.
 - `window.skeleton.navigation.online.online_tree` - Online objects tree.
 - `window.skeleton.mapframe` - main content/map frame in repo examples.
 - `window.skeleton.map_frame` - same conceptual frame in some runtime notes; use fallback if needed.
-- PILOT admin stores the external base URL, but runtime files are proxied as `/store/<extension>/...` for CORS compatibility.
+- PILOT admin stores the external base URL, but runtime files are proxied as `/store/<extension>/...` for CORS compatibility. The `<extension>` segment is the safe PILOT Extension name, not necessarily the external host/project name.
 
 Navigation and main content are linked with:
 
@@ -112,11 +121,12 @@ Parse hierarchical groups and nested `children`. Do not assume a flat array.
 - Class extends `Ext.Component`.
 - `initModule` is a class method.
 - No standalone app/bootstrap code.
-- No `Ext.ns(...)` or plain singleton object as the module entry; use `Ext.define('Store.<safe_namespace>.Module', ...)`.
+- No `Ext.ns(...)` or plain singleton object as the module entry; use `Ext.define('Store.<extension_name>.Module', ...)` with the exact safe PILOT Extension name.
 - Navigation tab has `title` and `iconCls` if used.
 - `navTab.map_frame = mainPanel` exists if a paired main panel is used.
 - Existing context menu is extended, not replaced.
 - Header buttons/menu items are added only after checking `skeleton.header` and without replacing native items.
+- Header buttons use `header_tool <extension>-header-btn` plus CSS with a visible background and readable text/icon color. Do not put a white icon directly on the light gray PILOT header.
 - Reports/settings/editor integrations are advanced; guard optional hooks such as `MODULE_OVERRIDER` and document fallback behavior.
 - Existing map is reused when the task says so.
 - If the idea uses maps, markers, routes, geozones, map center, or coordinates, `docs/MapContainer.md` was used and no Google Maps-style API was invented.
@@ -129,4 +139,4 @@ Parse hierarchical groups and nested `children`. Do not assume a flat array.
 - For managers, deployment instructions must be browser UI-first. Do not require `npm`, `wrangler`, Git, or terminal commands unless explicitly requested.
 - Do not invent a download link unless an actual zip artifact is attached.
 - Do not replace the zip artifact with Python/Node/PowerShell/Bash code that the user must run locally.
-- Verify external `/Module.js`, register the external base URL, and use/document proxied `/store/<extension>/...` URLs for runtime assets/backend.
+- Verify external `/Module.js`, register the external base URL, and use/document proxied `/store/<extension>/...` URLs for runtime assets/backend. Use a `snake_case` Extension name such as `weather_demo`; avoid hyphenated names such as `weather-demo`.

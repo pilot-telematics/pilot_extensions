@@ -14,6 +14,8 @@ PILOT then loads `Module.js` from that base URL. The public file that must open 
 https://YOUR-HOST/Module.js
 ```
 
+The Extension name configured in PILOT must be safe for both URLs and Ext JS class names. Use lowercase `snake_case`, for example `weather_demo` or `myapp`; do not use `weather-demo`. PILOT creates the runtime class name as `Store.<extension_name>.Module`, so a hyphenated Extension name makes PILOT try to load `Store.weather-demo.Module`.
+
 At runtime, PILOT also exposes the Extension through a same-origin store proxy:
 
 ```text
@@ -26,6 +28,8 @@ https://pilot-gps.com/store/myapp/backend/        -> https://somehost.com/blabla
 ```
 
 Use this `/store/<extension>/...` path from Extension runtime code for assets, docs, JSON, and backend endpoints when you need CORS-compatible same-origin requests.
+
+The `<extension>` segment is the safe PILOT Extension name. The external hosting project can still have a hyphenated URL such as `https://weather-demo.YOUR.pages.dev/`, but if the PILOT Extension name is `weather_demo`, runtime URLs are `/store/weather_demo/Module.js`, `/store/weather_demo/doc/index.html`, and `/store/weather_demo/backend/`.
 
 or, if you prefer grouping several extensions:
 
@@ -671,12 +675,13 @@ The browser must show JavaScript source code, not:
 
 1. `Module.js` opens directly in browser.
 2. CSS file opens directly in browser.
-3. Proxied `/store/<extension>/Module.js`, docs, CSS, and backend paths open inside PILOT after registration.
-4. No CORS errors in browser console.
-5. Extension button appears in PILOT header.
-6. Button click opens the extension window.
-7. External API requests are visible in DevTools Network tab.
-8. Extension works after full page reload.
+3. The PILOT Extension name is lowercase `snake_case` and `Module.js` defines exactly `Store.<extension_name>.Module`.
+4. Proxied `/store/<extension>/Module.js`, docs, CSS, and backend paths open inside PILOT after registration.
+5. No CORS errors in browser console.
+6. Extension button appears in PILOT header.
+7. Button click opens the extension window.
+8. External API requests are visible in DevTools Network tab.
+9. Extension works after full page reload.
 
 ---
 
@@ -737,6 +742,8 @@ When asking AI to create a PILOT Extension, include hosting requirements explici
 Deployment target:
 - static files only;
 - upload folder root must contain index.html, Module.js, extension.css, doc/index.html;
+- PILOT Extension name must be lowercase snake_case, for example weather_demo, and Module.js must define Store.weather_demo.Module exactly;
+- do not use hyphenated PILOT Extension names such as weather-demo; hyphens are acceptable only in the external host/project URL;
 - direct Module.js verification URL must be https://HOST/Module.js;
 - PILOT admin registration URL must be the base URL, for example https://HOST/;
 - after registration, runtime URLs are proxied as /store/<extension>/Module.js, /store/<extension>/doc/index.html, /store/<extension>/backend/;

@@ -10,7 +10,8 @@ Treat PILOT as the host platform:
 
 - PILOT provides the shell, Ext JS, maps, trees, header, translations, and some utility classes.
 - The Extension ships its own `Module.js`, JS/CSS/assets, and optional external backend.
-- Extension-owned classes should live under `Store.<extension>.*`.
+- Extension-owned classes should live under `Store.<extension>.*`, where `<extension>` is the exact safe lowercase `snake_case` PILOT Extension name from admin, for example `weather_demo`.
+- Do not use hyphens in the PILOT Extension name. PILOT creates `Store.<extension>.Module` from that name.
 - Do not require local PILOT source files.
 - Do not depend on internal business classes unless they are documented as runtime API.
 
@@ -61,6 +62,31 @@ if (skeleton.header.menu_btn && skeleton.header.menu_btn.menu) {
 ```
 
 Do not remove or replace native header items.
+
+For custom header buttons, add an Extension-specific class with a visible background. White text or icons on the light gray PILOT header are hard to read.
+
+```js
+skeleton.header.insert(5, {
+    xtype: 'button',
+    cls: 'header_tool my_extension-header-btn',
+    iconCls: 'fa fa-bolt',
+    tooltip: l('My Extension'),
+    handler: this.openWindow,
+    scope: this
+});
+```
+
+```css
+.my_extension-header-btn {
+    background: #2563eb !important;
+    border-color: #1d4ed8 !important;
+}
+
+.my_extension-header-btn .x-btn-inner,
+.my_extension-header-btn .x-btn-icon-el {
+    color: #ffffff !important;
+}
+```
 
 ### Navigation
 

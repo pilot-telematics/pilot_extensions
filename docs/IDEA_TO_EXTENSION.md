@@ -83,7 +83,7 @@ If the AI environment cannot attach files, it must say so clearly. It must not r
 Frontend-only:
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 ├── style.css
 └── doc/
@@ -93,7 +93,7 @@ my-extension/
 With backend:
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 ├── style.css
 ├── doc/
@@ -143,7 +143,7 @@ https://USERNAME.github.io/REPOSITORY/Module.js
 VPS/Nginx:
 
 ```text
-https://ext.example.com/my-extension/Module.js
+https://ext.example.com/my_extension/Module.js
 ```
 
 See [../DEPLOY.md](../DEPLOY.md).
@@ -166,12 +166,14 @@ Verify in browser: https://weather-demo.YOUR.workers.dev/Module.js
 Register in PILOT: https://weather-demo.YOUR.workers.dev/
 ```
 
-If the Extension slug/name is `weather-demo`, PILOT proxies the registered base URL under:
+Use a safe `snake_case` Extension name in PILOT admin, for example `weather_demo`. Do not use `weather-demo` as the PILOT Extension name, because PILOT creates the runtime class as `Store.weather-demo.Module`.
+
+If the Extension name is `weather_demo`, PILOT proxies the registered base URL under:
 
 ```text
-/store/weather-demo/Module.js
-/store/weather-demo/doc/index.html
-/store/weather-demo/backend/
+/store/weather_demo/Module.js
+/store/weather_demo/doc/index.html
+/store/weather_demo/backend/
 ```
 
 Use these proxied paths from runtime code when loading Extension assets or calling the Extension backend.
@@ -186,6 +188,7 @@ Check DevTools:
 - CSS returns HTTP 200 if used.
 - Proxied `/store/<extension>/...` URLs return the expected files after registration.
 - Custom CSS uses Tailwind CSS palette values for new colors when practical, without loading Tailwind by default.
+- Header buttons use `header_tool <extension>-header-btn` and CSS with a visible background plus readable text/icon color.
 - External API calls have no CORS errors.
 - Backend endpoints return JSON, not HTML/PHP warnings.
 
@@ -199,14 +202,16 @@ Check DevTools:
 | Extension does not load in PILOT, but `/Module.js` opens | Registered direct file URL instead of base URL | Register the base URL, for example `https://HOST/` |
 | `skeleton is undefined` | Code is run outside PILOT | Test inside PILOT, not as standalone page |
 | `Ext is undefined` | Built as standalone web app | Extension must run inside PILOT |
-| Class not found | Extra JS file was not loaded | Load it from `Module.js` or keep code in one file |
+| `Store.weather-demo.Module` class not found | Hyphenated PILOT Extension name | Rename the PILOT Extension to `weather_demo`, define `Store.weather_demo.Module`, and use `/store/weather_demo/...` |
+| Class not found | Extra JS file was not loaded or class name does not match the PILOT Extension name | Load it from `Module.js`, keep code in one file, and make `Ext.define('Store.<extension_name>.Module', ...)` match the admin name exactly |
 | CORS error | External API blocks browser calls | Add backend/proxy |
 | Map not found | Wrong map target or wrong map API | Online: `getActiveTabMapContainer()` or `window.mapContainer`; History: `window.historyMapContainer`; read `docs/MapContainer.md` because PILOT maps wrap Leaflet |
 
 ## 9. Release Checklist
 
 - [ ] `Module.js` opens by direct URL.
-- [ ] `Module.js` contains `Ext.define('Store.<name>.Module', ...)`.
+- [ ] PILOT Extension name is safe `snake_case`, for example `weather_demo`.
+- [ ] `Module.js` contains `Ext.define('Store.<name>.Module', ...)` with the exact same `<name>` as in PILOT admin.
 - [ ] `initModule` is a class method.
 - [ ] No standalone HTML/React/Vue/Vite.
 - [ ] Navigation tab is added to `skeleton.navigation` if used.

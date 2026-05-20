@@ -83,7 +83,7 @@ AI не должен печатать полный исходный код в ч
 Frontend-only:
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 ├── style.css
 └── doc/
@@ -93,7 +93,7 @@ my-extension/
 С backend:
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 ├── style.css
 ├── doc/
@@ -143,7 +143,7 @@ https://USERNAME.github.io/REPOSITORY/Module.js
 Вариант VPS/Nginx:
 
 ```text
-https://ext.example.com/my-extension/Module.js
+https://ext.example.com/my_extension/Module.js
 ```
 
 Подробно см. [../DEPLOY.md](../DEPLOY.md).
@@ -166,12 +166,14 @@ https://ext.example.com/my-extension/Module.js
 Зарегистрировать в PILOT: https://weather-demo.YOUR.workers.dev/
 ```
 
-Если slug/name Extension — `weather-demo`, PILOT проксирует зарегистрированный base URL так:
+В PILOT admin используйте безопасное `snake_case` имя Extension, например `weather_demo`. Не используйте `weather-demo` как имя Extension в PILOT, потому что PILOT создает runtime-класс `Store.weather-demo.Module`.
+
+Если имя Extension — `weather_demo`, PILOT проксирует зарегистрированный base URL так:
 
 ```text
-/store/weather-demo/Module.js
-/store/weather-demo/doc/index.html
-/store/weather-demo/backend/
+/store/weather_demo/Module.js
+/store/weather_demo/doc/index.html
+/store/weather_demo/backend/
 ```
 
 Используйте эти proxied paths из runtime-кода для загрузки assets Extension и вызова backend Extension.
@@ -186,6 +188,7 @@ https://ext.example.com/my-extension/Module.js
 - Если есть CSS: CSS загружается с HTTP 200.
 - Proxied URLs `/store/<extension>/...` после регистрации возвращают ожидаемые файлы.
 - Если есть свои CSS-цвета: по возможности используются значения из палитры Tailwind CSS, без подключения Tailwind по умолчанию.
+- Кнопки в header используют `header_tool <extension>-header-btn` и CSS с заметным фоном и читаемым цветом текста/иконки.
 - Если есть внешний API: нет CORS ошибок.
 - Если есть backend: endpoint возвращает JSON, а не HTML/PHP warning.
 
@@ -199,14 +202,16 @@ https://ext.example.com/my-extension/Module.js
 | Extension не загружается в PILOT, но `/Module.js` открывается | Зарегистрирован прямой URL файла вместо base URL | Зарегистрируйте base URL, например `https://HOST/` |
 | `skeleton is undefined` | Код запущен вне PILOT | Проверять Extension нужно внутри PILOT, а не как standalone page |
 | `Ext is undefined` | Extension сделали как отдельный сайт | Не загружайте вне PILOT, не делайте SPA |
-| Класс не найден | Не загружен дополнительный JS-файл | В `Module.js` нужно загрузить файл через `Ext.Loader.loadScript` или держать код в одном файле |
+| `Store.weather-demo.Module` class not found | Имя Extension в PILOT содержит дефис | Переименуйте Extension в `weather_demo`, определите `Store.weather_demo.Module` и используйте `/store/weather_demo/...` |
+| Класс не найден | Не загружен дополнительный JS-файл или имя класса не совпадает с именем Extension в PILOT | В `Module.js` нужно загрузить файл через `Ext.Loader.loadScript` или держать код в одном файле; `Ext.define('Store.<extension_name>.Module', ...)` должен точно совпадать с именем в admin |
 | CORS error | Внешний API не разрешает browser-call | Нужен backend/proxy |
 | Карта не найдена | Использована не та карта или неверный API карты | Для Online: `getActiveTabMapContainer()` или `window.mapContainer`; для History: `window.historyMapContainer`; прочитайте `docs/MapContainer_RU.md`, потому что PILOT-карты оборачивают Leaflet |
 
 ## 9. Чеклист Для Быстрого Релиза
 
 - [ ] `Module.js` доступен по прямому URL.
-- [ ] `Module.js` содержит `Ext.define('Store.<name>.Module', ...)`.
+- [ ] Имя Extension в PILOT безопасное `snake_case`, например `weather_demo`.
+- [ ] `Module.js` содержит `Ext.define('Store.<name>.Module', ...)`, где `<name>` точно совпадает с именем в PILOT admin.
 - [ ] `initModule` является методом класса.
 - [ ] Нет standalone HTML/React/Vue/Vite.
 - [ ] Если есть вкладка, она добавляется в `skeleton.navigation`.

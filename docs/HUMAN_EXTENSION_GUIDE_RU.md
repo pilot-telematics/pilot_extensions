@@ -53,11 +53,15 @@ Admin URL: https://somehost.com/blabla/
 ## 2. Минимальная Структура
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 └── doc/
     └── index.html
 ```
+
+Используйте одно и то же безопасное lowercase `snake_case` имя в PILOT admin и в Ext JS class name. Например, Extension с именем `my_extension` должен определять `Store.my_extension.Module`.
+
+Не называйте PILOT Extension `my-extension` или `weather-demo`. PILOT собирает class name из имени в admin, поэтому имя с дефисом заставит его искать `Store.weather-demo.Module`.
 
 `Module.js` - единственная runtime-точка входа.
 
@@ -123,6 +127,7 @@ Ext.define('Store.my_extension.Module', {
 ```js
 skeleton.header.insert(5, {
     xtype: 'button',
+    cls: 'header_tool my_extension-header-btn',
     text: l('My Action'),
     iconCls: 'fa fa-bolt',
     handler: function () {
@@ -130,6 +135,8 @@ skeleton.header.insert(5, {
     }
 });
 ```
+
+Для custom header buttons задавайте отдельный class с фоном. Иначе белый текст или иконка могут плохо читаться на светло-сером header PILOT.
 
 Не удаляйте и не заменяйте штатные элементы header.
 
@@ -196,8 +203,8 @@ function getMainFrame() {
 
 Примеры:
 
-- `examples/hello-world`
-- `examples/template-app`
+- `examples/hello_world`
+- `examples/template_app`
 - `examples/communal`
 
 ### Только пункт контекстного меню
@@ -206,7 +213,7 @@ function getMainFrame() {
 
 Пример:
 
-- `examples/nearby-poi`
+- `examples/nearby_poi`
 
 Шаблон:
 
@@ -262,12 +269,30 @@ var map = window.historyMapContainer;
 if (window.skeleton && skeleton.header && skeleton.header.insert) {
     skeleton.header.insert(5, {
         xtype: 'button',
-        cls: 'header_tool',
+        cls: 'header_tool my_extension-header-btn',
         iconCls: 'fa fa-bolt',
         tooltip: l('My Extension'),
         handler: this.openWindow,
         scope: this
     });
+}
+```
+
+CSS:
+
+```css
+.my_extension-header-btn {
+    background: #2563eb !important;
+    border-color: #1d4ed8 !important;
+}
+
+.my_extension-header-btn .x-btn-inner,
+.my_extension-header-btn .x-btn-icon-el {
+    color: #ffffff !important;
+}
+
+.my_extension-header-btn:hover {
+    background: #1d4ed8 !important;
 }
 ```
 
@@ -435,7 +460,7 @@ var jq = window.jQuery || window.$;
 var css = document.createElement('link');
 css.setAttribute('rel', 'stylesheet');
 css.setAttribute('type', 'text/css');
-css.setAttribute('href', '/store/my-extension/style.css');
+css.setAttribute('href', '/store/my_extension/style.css');
 document.head.appendChild(css);
 ```
 

@@ -19,8 +19,8 @@
 2. Прочитайте [карту документации](docs/README_RU.md).
 3. Пройдите [руководство разработчика](docs/HUMAN_EXTENSION_GUIDE_RU.md).
 4. Выберите ближайший пример:
-   - [examples/hello-world](examples/hello-world) - минимальное расширение с вкладкой и панелью.
-   - [examples/nearby-poi](examples/nearby-poi) - пункт контекстного меню в Online и работа с существующей картой.
+   - [examples/hello_world](examples/hello_world) - минимальное расширение с вкладкой и панелью.
+   - [examples/nearby_poi](examples/nearby_poi) - пункт контекстного меню в Online и работа с существующей картой.
    - [examples/airports](examples/airports) - список объектов и собственная карта.
    - [examples/communal](examples/communal) - сложный модуль с backend, авторизацией и мнемосхемами.
 5. Разместите файлы расширения на сервере, проверьте публичный `/Module.js` и зарегистрируйте публичный base URL в PILOT.
@@ -98,24 +98,26 @@ pilot_extensions/
 │   ├── MarkerIconApi.md
 │   └── ChatGPT_Prompts/
 └── examples/
-    ├── hello-world/
-    ├── nearby-poi/
+    ├── hello_world/
+    ├── nearby_poi/
     ├── airports/
     ├── planets/
-    ├── template-app/
+    ├── template_app/
     └── communal/
 ```
 
 ## Минимальная Структура Расширения
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 ├── doc/
 │   └── index.html
 ├── style.css       # опционально
 └── backend/        # опционально, если нужен PHP/backend
 ```
+
+Используйте безопасное lowercase `snake_case` имя PILOT Extension, например `my_extension` или `weather_demo`. PILOT создает entry class name как `Store.<extension>.Module`, поэтому имена с дефисом вроде `weather-demo` приводят к ошибке загрузки `Store.weather-demo.Module`.
 
 `Module.js` - единственная точка входа runtime-логики.
 

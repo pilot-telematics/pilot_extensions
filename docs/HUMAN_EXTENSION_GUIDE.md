@@ -51,11 +51,15 @@ See [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md).
 ## 2. Minimal Structure
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 └── doc/
     └── index.html
 ```
+
+Use the same safe lowercase `snake_case` name in PILOT admin and in the Ext JS class name. For example, an Extension named `my_extension` must define `Store.my_extension.Module`.
+
+Do not name a PILOT Extension `my-extension` or `weather-demo`. PILOT builds the class name from the admin name, so a hyphenated name makes it try to create `Store.weather-demo.Module`.
 
 `Module.js` is the only runtime entry point.
 
@@ -121,6 +125,7 @@ Add custom items carefully:
 ```js
 skeleton.header.insert(5, {
     xtype: 'button',
+    cls: 'header_tool my_extension-header-btn',
     text: l('My Action'),
     iconCls: 'fa fa-bolt',
     handler: function () {
@@ -128,6 +133,8 @@ skeleton.header.insert(5, {
     }
 });
 ```
+
+Give custom header buttons their own background class. Otherwise white text or icons can be unreadable on the light gray PILOT header.
 
 Do not remove or replace native header items.
 
@@ -194,8 +201,8 @@ Create:
 
 Examples:
 
-- `examples/hello-world`
-- `examples/template-app`
+- `examples/hello_world`
+- `examples/template_app`
 - `examples/communal`
 
 ### Context menu only
@@ -204,7 +211,7 @@ Use when the action starts from an existing PILOT object: Online vehicle, Histor
 
 Example:
 
-- `examples/nearby-poi`
+- `examples/nearby_poi`
 
 Template:
 
@@ -260,12 +267,30 @@ Use this when the action is global, not tied to a selected object.
 if (window.skeleton && skeleton.header && skeleton.header.insert) {
     skeleton.header.insert(5, {
         xtype: 'button',
-        cls: 'header_tool',
+        cls: 'header_tool my_extension-header-btn',
         iconCls: 'fa fa-bolt',
         tooltip: l('My Extension'),
         handler: this.openWindow,
         scope: this
     });
+}
+```
+
+CSS:
+
+```css
+.my_extension-header-btn {
+    background: #2563eb !important;
+    border-color: #1d4ed8 !important;
+}
+
+.my_extension-header-btn .x-btn-inner,
+.my_extension-header-btn .x-btn-icon-el {
+    color: #ffffff !important;
+}
+
+.my_extension-header-btn:hover {
+    background: #1d4ed8 !important;
 }
 ```
 
@@ -433,7 +458,7 @@ Load Extension CSS from `Module.js`:
 var css = document.createElement('link');
 css.setAttribute('rel', 'stylesheet');
 css.setAttribute('type', 'text/css');
-css.setAttribute('href', '/store/my-extension/style.css');
+css.setAttribute('href', '/store/my_extension/style.css');
 document.head.appendChild(css);
 ```
 

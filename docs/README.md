@@ -12,8 +12,9 @@ For a manager using an AI assistant:
 2. Paste the prompt into the AI assistant.
 3. Add the business idea and this repository URL.
 4. Ask for a zip archive with the complete Extension file structure.
-5. Verify the final `/Module.js` URL in a browser, then register the base URL in PILOT.
-6. Use `/store/<extension>/...` proxied runtime URLs for Extension assets, docs, and backend calls when needed.
+5. Use a safe `snake_case` PILOT Extension name, for example `weather_demo`, not `weather-demo`.
+6. Verify the final `/Module.js` URL in a browser, then register the base URL in PILOT.
+7. Use `/store/<extension>/...` proxied runtime URLs for Extension assets, docs, and backend calls when needed.
 
 For a developer:
 
@@ -34,11 +35,11 @@ For an AI coding agent:
 
 | Need | Pattern | Example |
 |---|---|---|
-| Minimal tab + main panel | Full UI Extension | `examples/hello-world` |
-| Starter module structure | Full UI Extension | `examples/template-app` |
+| Minimal tab + main panel | Full UI Extension | `examples/hello_world` |
+| Starter module structure | Full UI Extension | `examples/template_app` |
 | List/grid + own map | Custom Map Panel | `examples/airports` |
 | Data UI without map | Full UI Extension | `examples/planets` |
-| Action on selected Online object | Context Menu Extension | `examples/nearby-poi` |
+| Action on selected Online object | Context Menu Extension | `examples/nearby_poi` |
 | Backend, auth, CRUD, mnemonic diagrams | Extension + backend | `examples/communal` |
 | Global action | Header Button / Header Menu Item | see [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |
 | Reports/settings/editor integration | Advanced Host Integration | see [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |

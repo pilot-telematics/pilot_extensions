@@ -56,10 +56,10 @@ Always inspect:
 
 Example mapping:
 
-- Minimal tab/panel: `examples/hello-world/Module.js`
-- Starter app: `examples/template-app/Module.js`
+- Minimal tab/panel: `examples/hello_world/Module.js`
+- Starter app: `examples/template_app/Module.js`
 - List + custom map: `examples/airports/Module.js`, `Tab.js`, `Map.js`
-- Action from Online tree: `examples/nearby-poi/Module.js`
+- Action from Online tree: `examples/nearby_poi/Module.js`
 - Complex backend module: `examples/communal/Module.js`, `docs/communal_RU.md`
 - Map API details: `docs/MapContainer.md` or `docs/MapContainer_RU.md` when the idea uses maps, markers, routes, geozones, map center, or coordinates
 - Marker icons: `docs/MarkerIconApi.md`
@@ -128,6 +128,32 @@ Do not confuse:
 - `navTab.map_frame` - a property that links one navigation component to its paired main panel.
 
 The same convention is exposed in the runtime: a navigation component can keep a reference to its paired main panel in `map_frame`, while the host main frame is `skeleton.mapframe` or, in some builds, `skeleton.map_frame`.
+
+## 3.1 Extension Name And Class Name
+
+The PILOT Extension name entered in admin must be safe for Ext JS class names. Use lowercase `snake_case`, for example `weather_demo`.
+
+PILOT creates the entry class name from that admin name:
+
+```text
+Store.<extension_name>.Module
+```
+
+So this is correct:
+
+```js
+Ext.define('Store.weather_demo.Module', {
+    extend: 'Ext.Component'
+});
+```
+
+This is not a safe PILOT Extension name:
+
+```text
+weather-demo
+```
+
+It makes PILOT try to create `Store.weather-demo.Module`, which will not match `Store.weather_demo.Module`. Public hosting project names may still use hyphens, for example `https://weather-demo.YOUR.pages.dev/`, but the PILOT Extension name and `/store/...` path should be `weather_demo`.
 
 ## 4. Recommended Full UI Skeleton
 
@@ -240,7 +266,7 @@ Ext.define('Store.my_extension.Module', {
 
         skeleton.header.insert(5, {
             xtype: 'button',
-            cls: 'header_tool',
+            cls: 'header_tool my_extension-header-btn',
             iconCls: 'fa fa-bolt',
             tooltip: l('My Extension'),
             handler: this.openWindow,
@@ -252,6 +278,24 @@ Ext.define('Store.my_extension.Module', {
         Ext.create('Store.my_extension.view.MainWindow', {}).show();
     }
 });
+```
+
+Add a CSS rule for every header button class. The PILOT header can be light gray, so a white icon or white text without a button background has poor contrast.
+
+```css
+.my_extension-header-btn {
+    background: #2563eb !important;
+    border-color: #1d4ed8 !important;
+}
+
+.my_extension-header-btn .x-btn-inner,
+.my_extension-header-btn .x-btn-icon-el {
+    color: #ffffff !important;
+}
+
+.my_extension-header-btn:hover {
+    background: #1d4ed8 !important;
+}
 ```
 
 Use a header dropdown menu item for less frequent actions:
@@ -448,6 +492,8 @@ After registration, runtime code should use the PILOT same-origin proxy path:
 
 Example: if the Extension name is `myapp` and the admin URL is `https://somehost.com/blabla/`, then `/store/myapp/backend/` proxies to `https://somehost.com/blabla/backend/`.
 
+If the external host is `https://weather-demo.YOUR.pages.dev/`, still prefer `weather_demo` as the PILOT Extension name. The runtime path then becomes `/store/weather_demo/Module.js`, not `/store/weather-demo/Module.js`.
+
 Use [../DEPLOY.md](../DEPLOY.md) for hosting-specific instructions.
 
 If the extension includes custom CSS, tell the AI to prefer Tailwind CSS palette colors for new custom colors. This does not mean loading Tailwind CSS; it is only a palette rule unless the user explicitly asks for Tailwind as a dependency.
@@ -459,18 +505,21 @@ The generated Extension deliverable must be a zip archive with the complete file
 3. exact upload folder structure;
 4. exact public URLs that must open after upload;
 5. exact direct `Module.js` URL to verify in a browser;
-6. exact base URL to register in PILOT admin;
-7. proxied `/store/<extension>/...` runtime URLs for docs/assets/backend;
-8. browser verification steps;
-9. troubleshooting for `404`, HTML instead of JS, CORS, `skeleton is undefined`, and missing Ext classes.
+6. safe `snake_case` PILOT Extension name to enter in admin;
+7. exact base URL to register in PILOT admin;
+8. proxied `/store/<extension>/...` runtime URLs for docs/assets/backend;
+9. browser verification steps;
+10. troubleshooting for `404`, HTML instead of JS, CORS, `skeleton is undefined`, `Store.weather-demo.Module` name mismatches, and missing Ext classes.
 
 ## 10. Final Response Checklist for AI
 
 Before final answer:
 
 - Inspect generated `Module.js`.
+- Verify the PILOT Extension name is lowercase `snake_case` and the class name matches it exactly.
 - Verify there is no standalone app bootstrap.
 - Verify `doc/index.html` has no scripts.
+- Verify every header button has an Extension-specific class with a visible background and readable text/icon color.
 - Verify all referenced files exist.
 - Package the Extension into a zip archive with the same structure that must be uploaded.
 - Verify navigation, context menu, and map integration match the selected pattern.

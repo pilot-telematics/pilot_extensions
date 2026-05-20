@@ -3,9 +3,9 @@
  * This component appears in the left navigation panel
  */
 
-Ext.define('Store.template-app.Tab', {
+Ext.define('Store.template_app.Tab', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.template-app-tab',
+    alias: 'widget.template_app-tab',
 
     title: 'Template App',
     iconCls: 'fa fa-rocket',

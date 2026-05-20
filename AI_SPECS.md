@@ -67,8 +67,22 @@ Rules:
 
 - `extend` must be `Ext.Component`.
 - `initModule` must be a class method.
-- Prefer class names without hyphens, for example `Store.my_extension.Module`.
-- The URL/folder slug may use hyphens, but the Ext JS namespace should be safe for generated code.
+- The Extension name/slug configured in PILOT must be an Ext JS-safe identifier segment: use lowercase `snake_case`, for example `weather_demo` or `my_extension`.
+- Do not use hyphens, spaces, dots, or other punctuation in the PILOT Extension name/slug. PILOT creates the runtime class as `Store.<extension_name>.Module`, so a name like `weather-demo` makes PILOT try to create `Store.weather-demo.Module`.
+- The `Module.js` class name must exactly match the PILOT Extension name/slug:
+
+```js
+Ext.define('Store.weather_demo.Module', {
+    extend: 'Ext.Component',
+    extensionName: 'weather_demo',
+
+    initModule: function () {
+        // Extension initialization.
+    }
+});
+```
+
+- External host/project names may use hyphens, for example `https://weather-demo.YOUR.pages.dev/`, but the PILOT Extension name and proxied store path should still use the safe name: `/store/weather_demo/Module.js`.
 
 ## 3. PILOT Runtime Object Catalog
 
@@ -287,12 +301,30 @@ Use a header button only for global actions that should be visible all the time.
 if (window.skeleton && skeleton.header && skeleton.header.insert) {
     skeleton.header.insert(5, {
         xtype: 'button',
-        cls: 'header_tool',
+        cls: 'header_tool my_extension-header-btn',
         iconCls: 'fa fa-bolt',
         tooltip: l('My Extension'),
         handler: this.openWindow,
         scope: this
     });
+}
+```
+
+Header buttons must include an Extension-specific CSS class with a visible background. Do not rely on white text or a white icon directly on the light gray PILOT header.
+
+```css
+.my_extension-header-btn {
+    background: #2563eb !important;
+    border-color: #1d4ed8 !important;
+}
+
+.my_extension-header-btn .x-btn-inner,
+.my_extension-header-btn .x-btn-icon-el {
+    color: #ffffff !important;
+}
+
+.my_extension-header-btn:hover {
+    background: #1d4ed8 !important;
 }
 ```
 
@@ -316,6 +348,7 @@ Rules:
 - Check that `skeleton.header` and the target menu exist.
 - Add only the Extension item.
 - Do not remove or replace native header buttons or menu items.
+- Header buttons have an Extension-specific class with a visible background and readable text/icon color.
 
 ### Pattern F: Advanced Host Integration
 
@@ -444,7 +477,7 @@ Rules:
 - Register only the external base URL in PILOT admin: `https://somehost.com/blabla/`.
 - Inside the running Extension, prefer same-origin proxied URLs under `/store/<extension>/...` for Extension assets, docs, JSON, and backend calls.
 - Do not hardcode `https://pilot-gps.com`; use a root-relative path such as `/store/myapp/backend/api.php` or derive the current script base from the loaded `Module.js`.
-- For generated code, keep the Extension slug/name stable and URL-safe, because it becomes the `/store/<extension>/` path segment.
+- For generated code, keep the PILOT Extension slug/name stable, URL-safe, and Ext JS-safe (`snake_case`), because it becomes both the `/store/<extension>/` path segment and the `Store.<extension>.Module` class segment.
 - This proxy path exists for CORS compatibility. Do not call the external host directly from runtime code unless the task explicitly requires it and CORS is known to be safe.
 
 ## 8.2 Runtime Libraries, Units, And Renderers
@@ -517,7 +550,7 @@ When an Extension needs its own CSS:
 For a small frontend-only extension:
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 ├── doc/
 │   └── index.html
@@ -527,7 +560,7 @@ my-extension/
 For a backend extension:
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 ├── doc/
 │   └── index.html
@@ -572,7 +605,8 @@ Never claim that a zip file is downloadable unless an actual file attachment/art
 Before final output, verify:
 
 - `Module.js` exists.
-- `Module.js` uses `Ext.define('Store.<safe_namespace>.Module', ...)`.
+- `Module.js` uses `Ext.define('Store.<extension_name>.Module', ...)`, where `<extension_name>` exactly matches the safe `snake_case` Extension name configured in PILOT.
+- The Extension name/slug contains no hyphens. If the public host is `weather-demo.YOUR.pages.dev`, register the PILOT Extension as `weather_demo` and use `/store/weather_demo/...` inside runtime URLs.
 - The class extends `Ext.Component`.
 - `initModule` is a class method.
 - No forbidden bootstrap pattern exists.
@@ -581,6 +615,7 @@ Before final output, verify:
 - If using `skeleton.mapframe`, the code does not typo it as only `map_frame` without fallback.
 - If a context menu item is added, it preserves the existing menu and has `iconCls`.
 - If a header item is added, it preserves native header/menu items and checks host availability.
+- If a header button is added, it uses `header_tool <extension>-header-btn` and CSS gives that class a visible background plus readable text/icon color.
 - If advanced host integration is used, every optional hook is guarded and fallback behavior is documented.
 - If vehicles are displayed, they are loaded from PILOT API and hierarchical `children` are parsed.
 - `doc/index.html` contains no `<script>`.

@@ -3,9 +3,9 @@
  * This component appears in the main content area
  */
 
-Ext.define('Store.template-app.Map', {
+Ext.define('Store.template_app.Map', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.template-app-map',
+    alias: 'widget.template_app-map',
 
     layout: 'fit',
 

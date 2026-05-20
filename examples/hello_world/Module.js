@@ -3,7 +3,7 @@
  * This is the simplest possible application to demonstrate the basics
  */
 
-Ext.define('Store.hello-world.Module', {
+Ext.define('Store.hello_world.Module', {
     extend: 'Ext.Component',
 
     /**
@@ -106,6 +106,7 @@ Ext.define('Store.hello-world.Module', {
         // 5. ADD BUTTON TO HEADER (Optional)
         skeleton.header.insert(5, {
             xtype: 'button',
+            cls: 'header_tool hello_world-header-btn',
             text: 'Hello!',
             iconCls: 'fa fa-rocket',
             tooltip: 'Click me!',
@@ -129,7 +130,7 @@ Ext.define('Store.hello-world.Module', {
         var cssLink = document.createElement("link");
         cssLink.setAttribute("rel", "stylesheet");
         cssLink.setAttribute("type", "text/css");
-        cssLink.setAttribute("href", '/store/hello-world/style.css');
+        cssLink.setAttribute("href", '/store/hello_world/style.css');
         document.head.appendChild(cssLink);
     }
 });

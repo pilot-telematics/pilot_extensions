@@ -30,8 +30,8 @@ For AI coding agents:
 1. Read [AI_SPECS.md](AI_SPECS.md).
 2. Read [docs/AI_EXTENSION_GUIDE.md](docs/AI_EXTENSION_GUIDE.md).
 3. Inspect the closest example:
-   - `examples/hello-world` for a basic tab and panel.
-   - `examples/nearby-poi` for an Online tree context menu and existing map usage.
+   - `examples/hello_world` for a basic tab and panel.
+   - `examples/nearby_poi` for an Online tree context menu and existing map usage.
    - `examples/airports` for a list plus custom map.
    - `examples/communal` for a complex module with backend, auth, and business UI.
 4. Use [docs/PILOT_RUNTIME_UTILS.md](docs/PILOT_RUNTIME_UTILS.md) for PILOT runtime objects and utilities available to Extensions.
@@ -63,6 +63,8 @@ navTab.map_frame = mainPanel;
 
 Extensions can use objects and utilities that are already loaded by the compiled PILOT application, such as `skeleton`, `mapContainer`, `historyMapContainer`, `l(...)`, and available `Pilot.utils.*` classes. Extension-owned business classes should live under `Store.<extension>.*`.
 
+Use a safe lowercase `snake_case` PILOT Extension name, for example `my_extension` or `weather_demo`. PILOT creates the entry class name as `Store.<extension>.Module`, so hyphenated names such as `weather-demo` lead to `Store.weather-demo.Module` class loading errors.
+
 ## Repository Layout
 
 ```text
@@ -85,18 +87,18 @@ pilot_extensions/
 │   ├── MarkerIconApi.md
 │   └── ChatGPT_Prompts/
 └── examples/
-    ├── hello-world/
-    ├── nearby-poi/
+    ├── hello_world/
+    ├── nearby_poi/
     ├── airports/
     ├── planets/
-    ├── template-app/
+    ├── template_app/
     └── communal/
 ```
 
 ## Minimal Extension
 
 ```text
-my-extension/
+my_extension/
 ├── Module.js
 └── doc/
     └── index.html

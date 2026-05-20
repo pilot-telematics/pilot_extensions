@@ -5,11 +5,11 @@
  */
 
 /* Main application styles */
-.template-app-container {
+.template_app-container {
     font-family: Arial, sans-serif;
 }
 
-.template-app-header {
+.template_app-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 20px;
@@ -17,40 +17,40 @@
     margin-bottom: 20px;
 }
 
-.template-app-content {
+.template_app-content {
     padding: 15px;
 }
 
 /* Custom grid styles */
-.template-app-grid .x-grid-cell {
+.template_app-grid .x-grid-cell {
     padding: 8px 12px;
 }
 
-.template-app-grid .x-grid-row-alt {
+.template_app-grid .x-grid-row-alt {
     background-color: #f8f9fa;
 }
 
 /* Button styles */
-.template-app-btn-primary {
+.template_app-btn-primary {
     background: #3498db !important;
     border-color: #3498db !important;
     border-radius: 4px !important;
 }
 
-.template-app-btn-success {
+.template_app-btn-success {
     background: #27ae60 !important;
     border-color: #27ae60 !important;
     border-radius: 4px !important;
 }
 
 /* Panel styles */
-.template-app-panel {
+.template_app-panel {
     border: 1px solid #bdc3c7;
     border-radius: 6px;
     margin: 10px 0;
 }
 
-.template-app-panel .x-panel-header {
+.template_app-panel .x-panel-header {
     background: #ecf0f1;
     border-bottom: 1px solid #bdc3c7;
 }
