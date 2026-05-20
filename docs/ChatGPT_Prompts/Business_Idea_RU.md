@@ -50,6 +50,7 @@ https://github.com/pilot-telematics/pilot_extensions
 - Не подключай повторно Highcharts/jQuery/helper scripts, если они уже доступны.
 - Если нужны свои CSS-цвета, используй палитру Tailwind CSS для hex-значений, но не подключай Tailwind CSS как framework без отдельной необходимости.
 - Если развертывание Cloudflare и я явно не попросил developer CLI flow, дай manager-friendly инструкцию только через Cloudflare dashboard/browser UI. Не требуй npm, Node.js, Wrangler, Git, terminal или shell commands.
+- PILOT admin хранит внешний base URL, но runtime-файлы проксируются через /store/<extension>/ для CORS compatibility. Используй/опиши /store/<extension>/... для assets, docs, JSON и backend-запросов Extension.
 - Не придумывай ссылку на скачивание. Приложи/создай настоящий zip-артефакт, если твоя среда поддерживает файлы; иначе честно скажи, что не можешь приложить файлы в этом чате.
 - Не заменяй zip-артефакт Python/Node/PowerShell/Bash кодом, который я должен запускать локально для создания архива.
 
@@ -58,9 +59,11 @@ https://github.com/pilot-telematics/pilot_extensions
 2. zip-архив с полной структурой файлов Extension;
 3. дерево файлов внутри zip;
 4. инструкцию куда положить файлы, с browser UI-first шагами для Cloudflare/GitHub;
-5. итоговый URL Module.js для регистрации в PILOT;
-6. пошаговую проверку запуска;
-7. troubleshooting для 404, CORS, skeleton undefined, class not found.
+5. прямой URL `/Module.js` для проверки в браузере;
+6. base URL для регистрации в PILOT admin, например https://weather-demo.YOUR.workers.dev/;
+7. proxied runtime URLs, например /store/weather-demo/Module.js, /store/weather-demo/doc/index.html, /store/weather-demo/backend/;
+8. пошаговую проверку запуска;
+9. troubleshooting для 404, CORS, skeleton undefined, class not found.
 
 Не печатай полный исходный код в чате по умолчанию. Сложи сгенерированные файлы в zip-архив.
 Не давай локальный script для создания zip, если я явно не попросил developer workaround.

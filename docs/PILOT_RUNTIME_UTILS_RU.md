@@ -232,8 +232,10 @@ function cleanupMap(markerIds) {
     }
 
     Ext.Array.forEach(markerIds || [], function (id) {
-        if (map.removeMarker) {
-            map.removeMarker(id);
+        var marker = map.getMarker && map.getMarker(id);
+
+        if (marker && map.removeMarker) {
+            map.removeMarker(marker);
         }
     });
 }
@@ -246,7 +248,7 @@ function cleanupMap(markerIds) {
 Часто полезны:
 
 - `l('Text')` - перевод строки.
-- `base_url` - базовый URL текущего PILOT.
+- `base_url` - базовый URL текущего PILOT, не base URL хостинга Extension.
 - `global_conf` - глобальная конфигурация текущей установки.
 - `language` - текущий язык, если доступен в сборке.
 - `lang` - словарь переводов, если доступен в сборке.
@@ -265,6 +267,32 @@ if (typeof base_url !== 'undefined') {
     // safe to build relative PILOT URL
 }
 ```
+
+## Store Proxy Для Extension
+
+PILOT admin хранит внешний base URL Extension, например `https://somehost.com/blabla/`. В runtime PILOT проксирует этот URL внутри текущего домена PILOT:
+
+```text
+/store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
+/store/myapp/doc/index.html  -> https://somehost.com/blabla/doc/index.html
+/store/myapp/backend/        -> https://somehost.com/blabla/backend/
+```
+
+Используйте root-relative URLs `/store/<extension>/...` для assets, docs, JSON и backend endpoints Extension, когда нужны same-origin CORS-compatible запросы.
+
+```js
+var extensionSlug = 'myapp';
+var extensionBase = '/store/' + extensionSlug + '/';
+
+Ext.Ajax.request({
+    url: extensionBase + 'backend/status.php',
+    success: function (response) {
+        var data = Ext.decode(response.responseText);
+    }
+});
+```
+
+Для переносимой загрузки assets от текущего `Module.js` можно также вычислять директорию текущего script. В PILOT это обычно будет `/store/<extension>/`.
 
 ## Сторонние Библиотеки, Загружаемые PILOT
 

@@ -2,11 +2,30 @@
 
 This document explains where and how to host `Module.js` files for PILOT Extensions.
 
-A PILOT Extension is loaded by URL. The public entry point is usually:
+A PILOT Extension is hosted as a folder/base URL. PILOT admin should usually store the base URL with a trailing slash:
+
+```text
+https://YOUR-HOST/
+```
+
+PILOT then loads `Module.js` from that base URL. The public file that must open in a browser is:
 
 ```text
 https://YOUR-HOST/Module.js
 ```
+
+At runtime, PILOT also exposes the Extension through a same-origin store proxy:
+
+```text
+Admin URL: https://somehost.com/blabla/
+Extension name: myapp
+
+https://pilot-gps.com/store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
+https://pilot-gps.com/store/myapp/doc/index.html  -> https://somehost.com/blabla/doc/index.html
+https://pilot-gps.com/store/myapp/backend/        -> https://somehost.com/blabla/backend/
+```
+
+Use this `/store/<extension>/...` path from Extension runtime code for assets, docs, JSON, and backend endpoints when you need CORS-compatible same-origin requests.
 
 or, if you prefer grouping several extensions:
 
@@ -45,6 +64,15 @@ https://YOUR-HOST/extension.css
 https://YOUR-HOST/doc/index.html
 ```
 
+After registration in PILOT as extension `myapp`, these proxied URLs should work inside the PILOT domain:
+
+```text
+/store/myapp/
+/store/myapp/Module.js
+/store/myapp/extension.css
+/store/myapp/doc/index.html
+```
+
 This avoids confusion between:
 
 ```text
@@ -57,13 +85,19 @@ and:
 https://YOUR-HOST/weather/Module.js
 ```
 
-If you upload a parent folder that contains `weather/Module.js`, then your final URL will be:
+If you upload a parent folder that contains `weather/Module.js`, then the `Module.js` verification URL will be:
 
 ```text
 https://YOUR-HOST/weather/Module.js
 ```
 
-not:
+and the PILOT admin registration URL should be:
+
+```text
+https://YOUR-HOST/weather/
+```
+
+not the root:
 
 ```text
 https://YOUR-HOST/Module.js
@@ -124,10 +158,10 @@ https://YOUR-PROJECT.YOUR-SUBDOMAIN.workers.dev/Module.js
 https://YOUR-PROJECT.YOUR-SUBDOMAIN.workers.dev/extension.css
 ```
 
-8. Register the extension in PILOT using the `Module.js` URL:
+8. Register the extension in PILOT using the base URL, not the `Module.js` URL:
 
 ```text
-https://YOUR-PROJECT.YOUR-SUBDOMAIN.workers.dev/Module.js
+https://YOUR-PROJECT.YOUR-SUBDOMAIN.workers.dev/
 ```
 
 ## 2. Cloudflare deployment with API Worker
@@ -385,7 +419,7 @@ or, for multiple extensions:
 https://USERNAME.github.io/REPOSITORY/weather/Module.js
 ```
 
-10. Register the final `Module.js` URL in PILOT.
+10. Register the final base URL in PILOT. For example, if `Module.js` opens at `https://USERNAME.github.io/REPOSITORY/Module.js`, register `https://USERNAME.github.io/REPOSITORY/`.
 
 ## GitHub Pages limitations
 
@@ -574,14 +608,22 @@ Update `fastcgi_pass` to the actual socket path if needed.
 
 # Registering hosted extension in PILOT
 
-After hosting is ready, use the public URL of `Module.js`.
+After hosting is ready, verify the public `Module.js` file, then register the base URL in PILOT.
 
-Examples:
+Verification URLs:
 
 ```text
 https://weather-demo.YOUR.workers.dev/Module.js
 https://USERNAME.github.io/pilot-weather/Module.js
 https://ext.example.com/weather/Module.js
+```
+
+PILOT admin registration URLs:
+
+```text
+https://weather-demo.YOUR.workers.dev/
+https://USERNAME.github.io/pilot-weather/
+https://ext.example.com/weather/
 ```
 
 In PILOT:
@@ -594,14 +636,28 @@ Use:
 
 ```text
 Name: Weather Demo
-URL: https://YOUR-HOST/Module.js
+URL: https://YOUR-HOST/
 ```
 
 Save, enable the extension for the user, and reload PILOT.
 
+If the application name/slug is `myapp`, PILOT will proxy the registered base URL under:
+
+```text
+/store/myapp/
+```
+
+Examples:
+
+```text
+/store/myapp/Module.js       -> https://YOUR-HOST/Module.js
+/store/myapp/doc/index.html  -> https://YOUR-HOST/doc/index.html
+/store/myapp/backend/        -> https://YOUR-HOST/backend/
+```
+
 ## Browser verification
 
-Before registering in PILOT, always open `Module.js` directly in a browser.
+Before registering in PILOT, always open `Module.js` directly in a browser, but paste the base URL into the PILOT admin panel.
 
 The browser must show JavaScript source code, not:
 
@@ -615,11 +671,12 @@ The browser must show JavaScript source code, not:
 
 1. `Module.js` opens directly in browser.
 2. CSS file opens directly in browser.
-3. No CORS errors in browser console.
-4. Extension button appears in PILOT header.
-5. Button click opens the extension window.
-6. External API requests are visible in DevTools Network tab.
-7. Extension works after full page reload.
+3. Proxied `/store/<extension>/Module.js`, docs, CSS, and backend paths open inside PILOT after registration.
+4. No CORS errors in browser console.
+5. Extension button appears in PILOT header.
+6. Button click opens the extension window.
+7. External API requests are visible in DevTools Network tab.
+8. Extension works after full page reload.
 
 ---
 
@@ -680,7 +737,9 @@ When asking AI to create a PILOT Extension, include hosting requirements explici
 Deployment target:
 - static files only;
 - upload folder root must contain index.html, Module.js, extension.css, doc/index.html;
-- final entry URL must be https://HOST/Module.js;
+- direct Module.js verification URL must be https://HOST/Module.js;
+- PILOT admin registration URL must be the base URL, for example https://HOST/;
+- after registration, runtime URLs are proxied as /store/<extension>/Module.js, /store/<extension>/doc/index.html, /store/<extension>/backend/;
 - provide Cloudflare upload instructions;
 - provide GitHub Pages instructions if backend is not needed;
 - provide AWS EC2 + Nginx + PHP-FPM instructions if backend/PHP is needed.

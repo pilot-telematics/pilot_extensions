@@ -232,8 +232,10 @@ function cleanupMap(markerIds) {
     }
 
     Ext.Array.forEach(markerIds || [], function (id) {
-        if (map.removeMarker) {
-            map.removeMarker(id);
+        var marker = map.getMarker && map.getMarker(id);
+
+        if (marker && map.removeMarker) {
+            map.removeMarker(marker);
         }
     });
 }
@@ -246,7 +248,7 @@ See [MapContainer.md](MapContainer.md).
 Often useful:
 
 - `l('Text')` - translate string.
-- `base_url` - current PILOT base URL.
+- `base_url` - current PILOT base URL, not the Extension hosting base URL.
 - `global_conf` - global configuration.
 - `language` - current language, if available.
 - `lang` - translation dictionary, if available.
@@ -265,6 +267,32 @@ if (typeof base_url !== 'undefined') {
     // safe to build relative PILOT URL
 }
 ```
+
+## Extension Store Proxy
+
+PILOT admin stores the external Extension base URL, for example `https://somehost.com/blabla/`. At runtime, PILOT proxies that URL under the current PILOT domain:
+
+```text
+/store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
+/store/myapp/doc/index.html  -> https://somehost.com/blabla/doc/index.html
+/store/myapp/backend/        -> https://somehost.com/blabla/backend/
+```
+
+Use root-relative `/store/<extension>/...` URLs for Extension assets, docs, JSON, and backend endpoints when you need same-origin CORS-compatible requests.
+
+```js
+var extensionSlug = 'myapp';
+var extensionBase = '/store/' + extensionSlug + '/';
+
+Ext.Ajax.request({
+    url: extensionBase + 'backend/status.php',
+    success: function (response) {
+        var data = Ext.decode(response.responseText);
+    }
+});
+```
+
+For portable asset loading from the current `Module.js`, you may also derive the current script directory. In PILOT this will usually be `/store/<extension>/`.
 
 ## Libraries Loaded By PILOT
 

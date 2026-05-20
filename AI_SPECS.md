@@ -420,7 +420,34 @@ Rules:
 - Do not write external data back into PILOT unless the user explicitly requests a supported backend flow.
 - For CORS or secret handling, use a backend or Cloudflare Worker proxy. See [DEPLOY.md](DEPLOY.md).
 
-## 8.1 Runtime Libraries, Units, And Renderers
+## 8.1 PILOT Store Proxy URL Rules
+
+PILOT admin stores the external Extension base URL, for example:
+
+```text
+Extension name: myapp
+Admin URL: https://somehost.com/blabla/
+```
+
+At runtime, PILOT proxies that URL under the PILOT domain:
+
+```text
+https://pilot-gps.com/store/myapp/              -> https://somehost.com/blabla/
+https://pilot-gps.com/store/myapp/Module.js    -> https://somehost.com/blabla/Module.js
+https://pilot-gps.com/store/myapp/doc/index.html -> https://somehost.com/blabla/doc/index.html
+https://pilot-gps.com/store/myapp/backend/     -> https://somehost.com/blabla/backend/
+```
+
+Rules:
+
+- Verify the external `https://somehost.com/blabla/Module.js` directly in a browser before registration.
+- Register only the external base URL in PILOT admin: `https://somehost.com/blabla/`.
+- Inside the running Extension, prefer same-origin proxied URLs under `/store/<extension>/...` for Extension assets, docs, JSON, and backend calls.
+- Do not hardcode `https://pilot-gps.com`; use a root-relative path such as `/store/myapp/backend/api.php` or derive the current script base from the loaded `Module.js`.
+- For generated code, keep the Extension slug/name stable and URL-safe, because it becomes the `/store/<extension>/` path segment.
+- This proxy path exists for CORS compatibility. Do not call the external host directly from runtime code unless the task explicitly requires it and CORS is known to be safe.
+
+## 8.2 Runtime Libraries, Units, And Renderers
 
 Before adding a third-party library, check whether PILOT already loaded it.
 
@@ -475,11 +502,12 @@ Renderer safety rules:
 - Many renderers return HTML. Escape user/external strings with `Ext.String.htmlEncode`.
 - `makeAddress` and `makeGeoZone` may return placeholder spans and update them asynchronously.
 
-## 8.2 Custom CSS And Colors
+## 8.3 Custom CSS And Colors
 
 When an Extension needs its own CSS:
 
 - load CSS from `Module.js`, not from `doc/index.html`;
+- prefer loading Extension CSS/assets from the proxied `/store/<extension>/...` path or from the current `Module.js` base URL;
 - keep selectors scoped with an Extension-specific class prefix;
 - prefer Tailwind CSS palette colors for custom hex values, for example `slate`, `gray`, `zinc`, `red`, `amber`, `emerald`, `sky`, `blue`, `indigo`, or `violet`;
 - do not load Tailwind CSS as a framework unless the user explicitly asks for that and accepts the extra dependency.
@@ -525,7 +553,7 @@ When the user chooses Cloudflare for a static Extension and does not explicitly 
 - Prefer Cloudflare Pages Direct Upload for static `Module.js`, CSS, docs, JSON, and assets.
 - Do not tell the user to install `npm`, Node.js, Wrangler, Git, or any terminal tool.
 - Tell the user to upload the generated zip archive or its extracted folder through the Cloudflare dashboard.
-- Tell the user to verify the public `https://.../Module.js` URL in a browser before registering it in PILOT.
+- Tell the user to verify the public `https://.../Module.js` URL in a browser, then register the external base URL in PILOT admin, for example `https://.../`. Explain that PILOT will proxy it as `/store/<extension>/...` at runtime for CORS compatibility.
 
 When the user chooses GitHub Pages and does not explicitly ask for CLI:
 
@@ -560,8 +588,9 @@ Before final output, verify:
 - Extension-created map markers/routes can be cleaned up.
 - The deliverable is a zip archive that contains the complete Extension file structure.
 - The zip archive contains `Module.js`, `doc/index.html`, and every referenced JS/CSS/backend/asset file.
-- The chat answer does not print full source code by default; it only summarizes the archive, file tree, upload location, final `Module.js` URL shape, PILOT registration steps, browser verification steps, and basic troubleshooting.
+- The chat answer does not print full source code by default; it only summarizes the archive, file tree, upload location, direct `Module.js` verification URL shape, base URL for PILOT registration, browser verification steps, and basic troubleshooting.
 - Cloudflare/GitHub deployment instructions are browser UI-first for managers and do not require `npm`, `wrangler`, Git, or terminal commands unless explicitly requested.
+- Runtime asset/doc/backend URLs use or document the PILOT `/store/<extension>/...` proxy path instead of direct external-host calls when CORS compatibility matters.
 - The answer does not invent a fake download link for the zip archive.
 - The answer does not replace the zip artifact with Python/Node/PowerShell/Bash code that the user must run locally.
 

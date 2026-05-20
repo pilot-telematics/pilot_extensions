@@ -11,7 +11,7 @@
 1. Откройте [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md).
 2. Добавьте бизнес-идею и ссылку на этот репозиторий.
 3. Попросите AI выдать zip-архив с полной структурой файлов Extension.
-4. Разместите файлы из архива и зарегистрируйте итоговый URL `Module.js` в PILOT.
+4. Разместите файлы из архива, проверьте `/Module.js` в браузере и зарегистрируйте base URL в PILOT.
 
 Если вы разработчик:
 
@@ -23,7 +23,8 @@
    - [examples/nearby-poi](examples/nearby-poi) - пункт контекстного меню в Online и работа с существующей картой.
    - [examples/airports](examples/airports) - список объектов и собственная карта.
    - [examples/communal](examples/communal) - сложный модуль с backend, авторизацией и мнемосхемами.
-5. Разместите файлы расширения на сервере и зарегистрируйте URL `Module.js` в PILOT.
+5. Разместите файлы расширения на сервере, проверьте публичный `/Module.js` и зарегистрируйте публичный base URL в PILOT.
+6. После регистрации используйте proxied URLs `/store/<extension>/...` внутри PILOT для assets/docs/backend-вызовов, когда важна CORS compatibility.
 
 ## Быстрый Старт Для AI
 

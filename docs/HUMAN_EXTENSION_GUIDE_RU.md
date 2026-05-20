@@ -28,12 +28,25 @@ Extensions работают внутри уже загруженного и ск
 
 | Встроенный код PILOT | PILOT Extension |
 |---|---|
-| Компилируется и поставляется в составе PILOT | Хостится отдельно и подключается по URL `Module.js` |
-| Компилируется вместе с основным приложением PILOT | Хостится отдельно и загружается через URL `Module.js` |
+| Компилируется и поставляется в составе PILOT | Хостится отдельно; в PILOT admin указывается base URL, а `Module.js` загружается от него |
+| Компилируется вместе с основным приложением PILOT | Хостится отдельно; `/Module.js` проверяется напрямую, а в PILOT регистрируется base URL |
 | Может быть частью основного backend PILOT | Может иметь сторонний backend: Cloudflare Worker, VPS, PHP, отдельный API |
 | Создает runtime-объекты и utilities | Использует только то, что уже доступно в загруженном app.js |
 
 Практический вывод: Extension должен рассматривать PILOT как host platform. Можно пользоваться `skeleton`, существующими деревьями, картами, `l(...)`, Ext JS и доступными `Pilot.utils.*`, но бизнес-классы расширения нужно держать в `Store.<extension>.*`.
+
+После регистрации Extension PILOT хранит внешний base URL, но отдает его через same-origin proxy:
+
+```text
+Extension name: myapp
+Admin URL: https://somehost.com/blabla/
+
+/store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
+/store/myapp/doc/index.html  -> https://somehost.com/blabla/doc/index.html
+/store/myapp/backend/        -> https://somehost.com/blabla/backend/
+```
+
+Используйте URL `/store/<extension>/...` из runtime-кода Extension для загрузки assets и вызова backend Extension.
 
 Подробнее см. [PILOT_RUNTIME_UTILS_RU.md](PILOT_RUNTIME_UTILS_RU.md).
 
@@ -427,6 +440,8 @@ document.head.appendChild(css);
 ```
 
 Для переносимых расширений лучше вычислять base URL от текущего `Module.js`, особенно при публикации на Cloudflare/GitHub Pages.
+
+Внутри PILOT текущий `Module.js` обычно загружается из `/store/<extension>/Module.js`, поэтому вычисленный base URL обычно становится `/store/<extension>/`.
 
 Если добавляете свои стили, для новых hex-цветов предпочтительно использовать палитру Tailwind CSS. Это помогает держать generated Extensions визуально согласованными и не плодить случайные цвета. Это рекомендация по палитре цветов; сам Tailwind CSS подключать не нужно, если это явно не требуется расширению.
 

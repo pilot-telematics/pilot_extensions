@@ -41,6 +41,7 @@ Use safe Ext JS namespaces such as `Store.my_extension.Module`.
 - `window.skeleton.navigation.online.online_tree` - Online objects tree.
 - `window.skeleton.mapframe` - main content/map frame in repo examples.
 - `window.skeleton.map_frame` - same conceptual frame in some runtime notes; use fallback if needed.
+- PILOT admin stores the external base URL, but runtime files are proxied as `/store/<extension>/...` for CORS compatibility.
 
 Navigation and main content are linked with:
 
@@ -124,7 +125,8 @@ Parse hierarchical groups and nested `children`. Do not assume a flat array.
 - If custom CSS needs colors, prefer Tailwind CSS palette values; do not load Tailwind itself by default.
 - Do not load duplicate Highcharts/jQuery/helper scripts if PILOT already provides them.
 - Deliver the created Extension as a zip archive with the complete file structure.
-- Do not print full source code in the chat by default; summarize the zip, upload path, `Module.js` URL, launch verification, and troubleshooting.
+- Do not print full source code in the chat by default; summarize the zip, upload path, direct `/Module.js` verification URL, base URL for PILOT registration, launch verification, and troubleshooting.
 - For managers, deployment instructions must be browser UI-first. Do not require `npm`, `wrangler`, Git, or terminal commands unless explicitly requested.
 - Do not invent a download link unless an actual zip artifact is attached.
 - Do not replace the zip artifact with Python/Node/PowerShell/Bash code that the user must run locally.
+- Verify external `/Module.js`, register the external base URL, and use/document proxied `/store/<extension>/...` URLs for runtime assets/backend.

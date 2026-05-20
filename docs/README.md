@@ -12,7 +12,8 @@ For a manager using an AI assistant:
 2. Paste the prompt into the AI assistant.
 3. Add the business idea and this repository URL.
 4. Ask for a zip archive with the complete Extension file structure.
-5. Register the final `Module.js` URL in PILOT.
+5. Verify the final `/Module.js` URL in a browser, then register the base URL in PILOT.
+6. Use `/store/<extension>/...` proxied runtime URLs for Extension assets, docs, and backend calls when needed.
 
 For a developer:
 

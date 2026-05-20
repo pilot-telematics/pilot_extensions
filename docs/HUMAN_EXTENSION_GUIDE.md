@@ -26,12 +26,25 @@ Extensions run inside compiled PILOT `app.js`. They can access runtime objects a
 
 | Compiled PILOT code | PILOT Extension |
 |---|---|
-| Shipped as part of PILOT | Hosted separately and loaded by `Module.js` URL |
-| Compiled together with the main PILOT application | Hosted separately and loaded through its `Module.js` URL |
+| Shipped as part of PILOT | Hosted separately; PILOT admin stores the base URL and loads `Module.js` from it |
+| Compiled together with the main PILOT application | Hosted separately; `/Module.js` is verified directly, while the base URL is registered in PILOT |
 | May be tied to the main PILOT backend | May use external backend: Cloudflare Worker, VPS, PHP, separate API |
 | Creates runtime objects and utilities | Uses only what is available in loaded `app.js` |
 
 Practical rule: treat PILOT as the host platform. Use `skeleton`, native trees, maps, `l(...)`, Ext JS, and available `Pilot.utils.*`, but keep Extension-owned business classes under `Store.<extension>.*`.
+
+When an Extension is registered, PILOT stores the external base URL but exposes it through a same-origin proxy:
+
+```text
+Extension name: myapp
+Admin URL: https://somehost.com/blabla/
+
+/store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
+/store/myapp/doc/index.html  -> https://somehost.com/blabla/doc/index.html
+/store/myapp/backend/        -> https://somehost.com/blabla/backend/
+```
+
+Use `/store/<extension>/...` URLs from Extension runtime code when loading assets or calling your Extension backend.
 
 See [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md).
 
@@ -425,6 +438,8 @@ document.head.appendChild(css);
 ```
 
 For portable hosting, compute the base URL from the current `Module.js`, especially for Cloudflare/GitHub Pages.
+
+Inside PILOT, the current `Module.js` is normally loaded from `/store/<extension>/Module.js`, so this computed base URL usually becomes `/store/<extension>/`.
 
 When you add custom styles, prefer colors from the Tailwind CSS palette for new hex values. This keeps generated Extensions visually consistent and avoids random one-off colors. This is a color-palette recommendation only; do not load Tailwind CSS itself unless the Extension explicitly needs that dependency.
 

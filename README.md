@@ -14,7 +14,7 @@ For managers using an AI assistant:
 1. Open [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md).
 2. Add the business idea and this repository URL.
 3. Ask the AI for a zip archive with the complete Extension file structure.
-4. Upload the archive contents and register the final `Module.js` URL in PILOT.
+4. Upload the archive contents, verify `/Module.js` in a browser, and register the base URL in PILOT.
 
 For developers:
 
@@ -22,7 +22,8 @@ For developers:
 2. Read [docs/README.md](docs/README.md).
 3. Read [docs/HUMAN_EXTENSION_GUIDE.md](docs/HUMAN_EXTENSION_GUIDE.md).
 4. Pick the closest example in `examples/`.
-5. Host the extension and register the public `Module.js` URL in PILOT.
+5. Host the extension, verify the public `/Module.js` URL, and register the public base URL in PILOT.
+6. After registration, use `/store/<extension>/...` proxied URLs inside PILOT for assets/docs/backend calls when CORS compatibility matters.
 
 For AI coding agents:
 

@@ -50,6 +50,7 @@ Mandatory rules:
 - Do not load duplicate Highcharts/jQuery/helper scripts if PILOT already provides them.
 - If custom CSS needs colors, prefer Tailwind CSS palette values for hex colors, but do not load Tailwind CSS as a framework unless explicitly needed.
 - If deployment is Cloudflare and I did not explicitly ask for a developer CLI flow, give manager-friendly Cloudflare dashboard/browser UI steps only. Do not require npm, Node.js, Wrangler, Git, terminal, or shell commands.
+- PILOT admin stores the external base URL, but runtime files are proxied under /store/<extension>/ for CORS compatibility. Use/document /store/<extension>/... for Extension assets, docs, JSON, and backend calls.
 - Do not invent a download link. Attach/create a real zip artifact if your environment supports files; otherwise clearly say that you cannot attach files in this chat.
 - Do not replace the zip artifact with Python/Node/PowerShell/Bash code that I must run locally to create the archive.
 
@@ -58,9 +59,11 @@ The result must include:
 2. a zip archive with the complete Extension file structure;
 3. file tree inside the zip;
 4. where to upload the files, with browser UI-first instructions for Cloudflare/GitHub;
-5. final Module.js URL to register in PILOT;
-6. step-by-step launch verification;
-7. troubleshooting for 404, CORS, skeleton undefined, class not found.
+5. direct Module.js URL to verify in a browser;
+6. base URL to register in PILOT admin, for example https://weather-demo.YOUR.workers.dev/;
+7. proxied runtime URLs, for example /store/weather-demo/Module.js, /store/weather-demo/doc/index.html, /store/weather-demo/backend/;
+8. step-by-step launch verification;
+9. troubleshooting for 404, CORS, skeleton undefined, class not found.
 
 Do not print full source code in the chat by default. Put the generated files into the zip archive.
 Do not give me a local script that creates the zip unless I explicitly ask for a developer workaround.

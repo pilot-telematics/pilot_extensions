@@ -354,8 +354,10 @@ function cleanupMap(markerIds) {
     }
 
     Ext.Array.forEach(markerIds || [], function (id) {
-        if (map.removeMarker) {
-            map.removeMarker(id);
+        var marker = map.getMarker && map.getMarker(id);
+
+        if (marker && map.removeMarker) {
+            map.removeMarker(marker);
         }
     });
 }
@@ -423,11 +425,28 @@ extension-upload/
     └── index.html
 ```
 
-The registered PILOT URL must point directly to:
+The direct verification URL must point to:
 
 ```text
 https://HOST/Module.js
 ```
+
+The registered PILOT admin URL must be the base URL:
+
+```text
+https://HOST/
+```
+
+After registration, runtime code should use the PILOT same-origin proxy path:
+
+```text
+/store/<extension>/
+/store/<extension>/Module.js
+/store/<extension>/doc/index.html
+/store/<extension>/backend/
+```
+
+Example: if the Extension name is `myapp` and the admin URL is `https://somehost.com/blabla/`, then `/store/myapp/backend/` proxies to `https://somehost.com/blabla/backend/`.
 
 Use [../DEPLOY.md](../DEPLOY.md) for hosting-specific instructions.
 
@@ -439,9 +458,11 @@ The generated Extension deliverable must be a zip archive with the complete file
 2. file tree inside the zip;
 3. exact upload folder structure;
 4. exact public URLs that must open after upload;
-5. exact `Module.js` URL to register in PILOT;
-6. browser verification steps;
-7. troubleshooting for `404`, HTML instead of JS, CORS, `skeleton is undefined`, and missing Ext classes.
+5. exact direct `Module.js` URL to verify in a browser;
+6. exact base URL to register in PILOT admin;
+7. proxied `/store/<extension>/...` runtime URLs for docs/assets/backend;
+8. browser verification steps;
+9. troubleshooting for `404`, HTML instead of JS, CORS, `skeleton is undefined`, and missing Ext classes.
 
 ## 10. Final Response Checklist for AI
 
@@ -453,7 +474,7 @@ Before final answer:
 - Verify all referenced files exist.
 - Package the Extension into a zip archive with the same structure that must be uploaded.
 - Verify navigation, context menu, and map integration match the selected pattern.
-- Verify deployment instructions include where to upload files and which `Module.js` URL to register.
+- Verify deployment instructions include where to upload files, which direct `Module.js` URL to verify, and which base URL to register in PILOT.
 - Summarize the zip contents and any manual configuration required.
 
 If code cannot be verified in a live PILOT instance, say that clearly and list the static checks that passed.

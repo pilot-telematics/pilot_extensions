@@ -1,6 +1,6 @@
 # From Business Idea To Working Extension
 
-This document is the shortest path from a business idea to a generated PILOT Extension, deployed files, and a registered `Module.js` URL.
+This document is the shortest path from a business idea to a generated PILOT Extension, deployed files, a verified `/Module.js` file, and a registered base URL.
 
 ## 1. What The User Should Tell The AI
 
@@ -13,7 +13,8 @@ Build a PILOT Extension for this business idea:
 Use the pilot-telematics/pilot_extensions repository.
 Read AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, and docs/PILOT_RUNTIME_UTILS.md first.
 If the idea uses maps, map center, coordinates, markers, routes, tracks, or geozones, also read docs/MapContainer.md. PILOT MapContainer is a wrapper over Leaflet, not a Google Maps object.
-Return a zip archive with the complete Extension file structure, plus step-by-step instructions for where to upload the files and which Module.js URL to register in PILOT.
+Return a zip archive with the complete Extension file structure, plus step-by-step instructions for where to upload the files, which `/Module.js` URL to verify in a browser, and which base URL to register in PILOT.
+Also explain that PILOT proxies the registered base URL under `/store/<extension>/...` for CORS-compatible runtime access.
 ```
 
 Better prompt:
@@ -55,7 +56,7 @@ The AI should choose the simplest pattern that satisfies the idea.
 
 For map-related ideas, the AI must read `docs/MapContainer.md`, use PILOT `MapContainer` methods where possible, and treat `map.map` as the underlying Leaflet map if direct center/zoom access is needed. It must not invent Google Maps-style APIs.
 
-For non-technical managers: describe the business result, not the implementation. The AI should choose the pattern and produce a zip archive. You only need to verify that the final `Module.js` URL opens and then register that URL in PILOT.
+For non-technical managers: describe the business result, not the implementation. The AI should choose the pattern and produce a zip archive. You only need to verify that the final `/Module.js` URL opens, then register the base URL in PILOT.
 
 ## 3. What The AI Must Return
 
@@ -67,9 +68,11 @@ The AI response should include:
 4. Confirmation that `Module.js` is the only runtime entry point.
 5. Confirmation that `doc/index.html` has no `<script>`.
 6. Upload/deployment steps.
-7. Final `Module.js` URL to register in PILOT.
-8. Verification checklist.
-9. Troubleshooting notes.
+7. Direct `/Module.js` URL to verify in a browser.
+8. Base URL to register in PILOT admin.
+9. Proxied `/store/<extension>/...` runtime URLs for Module.js, docs, assets, and backend.
+10. Verification checklist.
+11. Troubleshooting notes.
 
 The AI should not print full source code in the chat by default. The generated files belong in the zip archive.
 
@@ -151,10 +154,27 @@ See [../DEPLOY.md](../DEPLOY.md).
 2. Confirm it returns JavaScript source, not an HTML error page.
 3. Open the PILOT admin area for applications/extensions.
 4. Create a new application.
-5. Paste the direct `Module.js` URL.
+5. Paste the base URL, not the direct `Module.js` URL.
 6. Save and enable the Extension for the required account/user.
 7. Wait for configuration/proxy cache if your PILOT installation has a delay.
 8. Reload PILOT.
+
+Example:
+
+```text
+Verify in browser: https://weather-demo.YOUR.workers.dev/Module.js
+Register in PILOT: https://weather-demo.YOUR.workers.dev/
+```
+
+If the Extension slug/name is `weather-demo`, PILOT proxies the registered base URL under:
+
+```text
+/store/weather-demo/Module.js
+/store/weather-demo/doc/index.html
+/store/weather-demo/backend/
+```
+
+Use these proxied paths from runtime code when loading Extension assets or calling the Extension backend.
 
 ## 7. Browser Verification
 
@@ -164,6 +184,7 @@ Check DevTools:
 - Console: no `Ext.define`, `Ext.create`, or missing class errors.
 - Console: no `skeleton is undefined`.
 - CSS returns HTTP 200 if used.
+- Proxied `/store/<extension>/...` URLs return the expected files after registration.
 - Custom CSS uses Tailwind CSS palette values for new colors when practical, without loading Tailwind by default.
 - External API calls have no CORS errors.
 - Backend endpoints return JSON, not HTML/PHP warnings.
@@ -173,7 +194,9 @@ Check DevTools:
 | Symptom | Cause | Fix |
 |---|---|---|
 | `Module.js` 404 | Wrong upload structure | Open direct URL and check hosting folder layout |
-| HTML opens instead of JS | Registered site URL instead of `Module.js` | Register direct `Module.js` URL |
+| `/store/<extension>/Module.js` 404 | PILOT registration name/URL mismatch | Check Extension slug/name and registered base URL |
+| HTML opens instead of JS while checking `Module.js` | Wrong upload URL or hosting fallback | Open the direct `/Module.js` URL and fix hosting structure |
+| Extension does not load in PILOT, but `/Module.js` opens | Registered direct file URL instead of base URL | Register the base URL, for example `https://HOST/` |
 | `skeleton is undefined` | Code is run outside PILOT | Test inside PILOT, not as standalone page |
 | `Ext is undefined` | Built as standalone web app | Extension must run inside PILOT |
 | Class not found | Extra JS file was not loaded | Load it from `Module.js` or keep code in one file |
@@ -207,8 +230,9 @@ Requirements:
 - the Extension must run inside PILOT via Module.js;
 - use PILOT runtime objects: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery if useful and available;
 - if the idea uses maps, read docs/MapContainer.md; PILOT MapContainer wraps Leaflet, so do not invent Google Maps-style APIs;
+- explain that PILOT proxies the registered base URL as /store/<extension>/... and use that path for runtime assets/backend when relevant;
 - do not build a standalone web app;
 - provide a zip archive with the complete Extension file structure instead of printing full source code in chat;
 - do not replace the zip archive with a local script that I must run to create it;
-- provide step-by-step instructions: where to upload files, which Module.js URL to register in PILOT, and how to verify launch.
+- provide step-by-step instructions: where to upload files, which `/Module.js` URL to verify in a browser, which base URL to register in PILOT, and how to verify launch.
 ```
