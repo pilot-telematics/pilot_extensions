@@ -59,6 +59,8 @@ extension-upload/
     └── index.html
 ```
 
+For Cloudflare dashboard/direct upload, always include a root `index.html` next to `Module.js`. It can be empty or duplicate `doc/index.html`. This helps Cloudflare treat the uploaded folder as the assets root, so `/Module.js` resolves from the expected root.
+
 After deployment, these URLs should work:
 
 ```text
@@ -152,6 +154,8 @@ Module.js
 extension.css
 doc/index.html
 ```
+
+The root `index.html` may be empty or may duplicate `doc/index.html`; it is needed so Cloudflare clearly detects the assets root.
 
 6. Deploy.
 7. Verify:
@@ -742,6 +746,7 @@ When asking AI to create a PILOT Extension, include hosting requirements explici
 Deployment target:
 - static files only;
 - upload folder root must contain index.html, Module.js, extension.css, doc/index.html;
+- for Cloudflare, root index.html is required and may be empty or the same content as doc/index.html so Cloudflare marks the uploaded folder as the assets root;
 - PILOT Extension name must be lowercase snake_case, for example weather_demo, and Module.js must define Store.weather_demo.Module exactly;
 - do not use hyphenated PILOT Extension names such as weather-demo; hyphens are acceptable only in the external host/project URL;
 - direct Module.js verification URL must be https://HOST/Module.js;

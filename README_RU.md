@@ -110,6 +110,7 @@ pilot_extensions/
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 ├── doc/
 │   └── index.html
@@ -120,6 +121,8 @@ my_extension/
 Используйте безопасное lowercase `snake_case` имя PILOT Extension, например `my_extension` или `weather_demo`. PILOT создает entry class name как `Store.<extension>.Module`, поэтому имена с дефисом вроде `weather-demo` приводят к ошибке загрузки `Store.weather-demo.Module`.
 
 `Module.js` - единственная точка входа runtime-логики.
+
+Корневой `index.html` может быть пустым или повторять `doc/index.html`; он нужен для Cloudflare upload, чтобы папка считалась assets root.
 
 `doc/index.html` - только документация расширения. В нем не должно быть `<script>` и логики запуска.
 

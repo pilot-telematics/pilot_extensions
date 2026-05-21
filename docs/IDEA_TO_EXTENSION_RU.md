@@ -84,6 +84,7 @@ Frontend-only:
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 ├── style.css
 └── doc/
@@ -94,6 +95,7 @@ my_extension/
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 ├── style.css
 ├── doc/
@@ -120,11 +122,14 @@ my_extension/
 
 ```text
 extension-upload/
+├── index.html
 ├── Module.js
 ├── style.css
 └── doc/
     └── index.html
 ```
+
+Для Cloudflare корневой `index.html` должен лежать рядом с `Module.js`. Он может быть пустым или таким же, как `doc/index.html`; это помогает Cloudflare определить загруженную папку как assets root.
 
 После публикации должны открываться:
 

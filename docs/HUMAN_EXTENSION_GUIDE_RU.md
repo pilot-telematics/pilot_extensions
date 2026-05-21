@@ -54,6 +54,7 @@ Admin URL: https://somehost.com/blabla/
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 └── doc/
     └── index.html
@@ -64,6 +65,8 @@ my_extension/
 Не называйте PILOT Extension `my-extension` или `weather-demo`. PILOT собирает class name из имени в admin, поэтому имя с дефисом заставит его искать `Store.weather-demo.Module`.
 
 `Module.js` - единственная runtime-точка входа.
+
+Корневой `index.html` может быть пустым или повторять `doc/index.html`. Добавляйте его для Cloudflare upload, чтобы загруженная папка считалась assets root.
 
 `doc/index.html` - статическая документация расширения. В ней не должно быть `<script>` и логики запуска.
 

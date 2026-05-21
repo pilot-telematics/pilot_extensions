@@ -84,6 +84,7 @@ Frontend-only:
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 ├── style.css
 └── doc/
@@ -94,6 +95,7 @@ With backend:
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 ├── style.css
 ├── doc/
@@ -120,11 +122,14 @@ Cloudflare Workers static assets:
 
 ```text
 extension-upload/
+├── index.html
 ├── Module.js
 ├── style.css
 └── doc/
     └── index.html
 ```
+
+For Cloudflare, root `index.html` must be next to `Module.js`. It may be empty or the same as `doc/index.html`; it helps Cloudflare mark the uploaded folder as the assets root.
 
 After deployment these URLs should work:
 

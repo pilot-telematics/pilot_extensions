@@ -99,12 +99,15 @@ pilot_extensions/
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 └── doc/
     └── index.html
 ```
 
 `Module.js` is the only runtime entry point.
+
+Root `index.html` can be empty or mirror `doc/index.html`; it is required for Cloudflare uploads so the folder is treated as the assets root.
 
 `doc/index.html` is static documentation only and must not bootstrap extension logic.
 

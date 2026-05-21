@@ -463,11 +463,14 @@ If the user asks for a deliverable extension, mention the final upload structure
 
 ```text
 extension-upload/
+├── index.html
 ├── Module.js
 ├── style.css
 └── doc/
     └── index.html
 ```
+
+For Cloudflare deployment, root `index.html` is required next to `Module.js`. It may be empty or duplicate `doc/index.html`; its purpose is to make Cloudflare treat the uploaded folder as the assets root.
 
 The direct verification URL must point to:
 
@@ -524,6 +527,7 @@ Before final answer:
 - Package the Extension into a zip archive with the same structure that must be uploaded.
 - Verify navigation, context menu, and map integration match the selected pattern.
 - Verify deployment instructions include where to upload files, which direct `Module.js` URL to verify, and which base URL to register in PILOT.
+- For Cloudflare, verify the zip includes root `index.html` next to `Module.js`.
 - Summarize the zip contents and any manual configuration required.
 
 If code cannot be verified in a live PILOT instance, say that clearly and list the static checks that passed.

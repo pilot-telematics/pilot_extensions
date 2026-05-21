@@ -137,6 +137,7 @@ Parse hierarchical groups and nested `children`. Do not assume a flat array.
 - Deliver the created Extension as a zip archive with the complete file structure.
 - Do not print full source code in the chat by default; summarize the zip, upload path, direct `/Module.js` verification URL, base URL for PILOT registration, launch verification, and troubleshooting.
 - For managers, deployment instructions must be browser UI-first. Do not require `npm`, `wrangler`, Git, or terminal commands unless explicitly requested.
+- For Cloudflare deliverables, include a root `index.html` next to `Module.js`; it may be empty or the same as `doc/index.html` so Cloudflare marks the uploaded folder as the assets root.
 - Do not invent a download link unless an actual zip artifact is attached.
 - Do not replace the zip artifact with Python/Node/PowerShell/Bash code that the user must run locally.
 - Verify external `/Module.js`, register the external base URL, and use/document proxied `/store/<extension>/...` URLs for runtime assets/backend. Use a `snake_case` Extension name such as `weather_demo`; avoid hyphenated names such as `weather-demo`.

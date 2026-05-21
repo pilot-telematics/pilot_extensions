@@ -3,72 +3,46 @@
 Copy the text below into an AI tool and replace the angle-bracket blocks.
 
 ```text
-You must build a PILOT Extension from a business idea.
+Build a PILOT Extension from my business idea.
 
-Repository:
+Repository with the full contract, SDK notes, examples, and deployment rules:
 https://github.com/pilot-telematics/pilot_extensions
 
-Before generating code, read:
+Before generating files, read and follow these documents from the repository:
 1. AI_SPECS.md
 2. docs/AI_EXTENSION_GUIDE.md
-3. docs/PILOT_RUNTIME_UTILS.md
-4. docs/IDEA_TO_EXTENSION.md
-5. the closest example in examples/
-6. docs/MapContainer.md if the idea uses maps, map center, coordinates, markers, routes, tracks, or geozones
+3. docs/IDEA_TO_EXTENSION.md
+4. docs/PILOT_RUNTIME_UTILS.md
+5. docs/MapContainer.md, if the idea uses maps, coordinates, markers, routes, tracks, geozones, or map center
+6. the closest example from examples/
+
+Use the repository documents as the source of truth. If any instruction in this prompt conflicts with the repository, follow AI_SPECS.md.
+
+If you cannot open/read the repository, stop and ask me to paste the required docs. Do not guess the PILOT Extension contract.
 
 Business idea:
 <what the extension should do>
 
-Where the feature should appear in PILOT:
-<let AI choose / new tab / Online context menu / header button / header menu / current map / History / Reports / Vehicle Editor / settings>
+Where it should appear in PILOT:
+<let AI choose / new left tab / Online context menu / header button / header menu / current map / History / Reports / Vehicle Editor / settings>
 
 Required data:
-<objects, vehicles, history, reports, external API, manual settings>
+<objects, vehicles, history, reports, external API, manual settings, backend needs>
 
 UI:
-<grid, tree, Highcharts chart, map, modal window, dashboard>
+<grid, tree, Highcharts chart, map, modal window, dashboard, let AI choose>
 
 UI language:
 <EN / RU / EN+RU>
 
-Deployment:
-<Cloudflare Workers / GitHub Pages / VPS / file structure only for now>
+Deployment target:
+<Cloudflare / GitHub Pages / VPS / file structure only for now>
 
-Mandatory rules:
-- The Extension is not a standalone web app.
-- No React/Vue/Vite/Webpack/npm unless explicitly requested.
-- Ext JS is already loaded by PILOT.
-- Do not load Ext JS manually.
-- Use Store.<extension>.* for extension-owned classes.
-- You may use available host classes under Pilot.utils.*, for example Pilot.utils.Toggle, Pilot.utils.LeftBarPanel, Pilot.utils.ColorField.
-- Choose the simplest integration pattern that solves the business idea.
-- Use Advanced Host Integration only if Reports, Vehicle Editor, History, or settings integration is explicitly needed.
-- Runtime logic starts only from Module.js.
-- doc/index.html is documentation only, without <script>.
-- Use PILOT runtime objects/helpers: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery, renderers, if useful and available.
-- PILOT MapContainer is a wrapper over Leaflet. For map features, use docs/MapContainer.md and do not assume Google Maps-style getMap().getCenter().lat()/lng() APIs.
-- Do not load duplicate Highcharts/jQuery/helper scripts if PILOT already provides them.
-- If custom CSS needs colors, prefer Tailwind CSS palette values for hex colors, but do not load Tailwind CSS as a framework unless explicitly needed.
-- If adding a header button, add `header_tool <extension>-header-btn` and CSS with a visible background plus readable text/icon color. Do not leave a white icon/text directly on the light gray PILOT header.
-- If deployment is Cloudflare and I did not explicitly ask for a developer CLI flow, give manager-friendly Cloudflare dashboard/browser UI steps only. Do not require npm, Node.js, Wrangler, Git, terminal, or shell commands.
-- Use a safe lowercase snake_case PILOT Extension name, for example weather_demo. Do not use hyphens in the PILOT Extension name, because PILOT creates Store.<extension_name>.Module from it.
-- The Module.js class must exactly match the PILOT Extension name: Ext.define('Store.weather_demo.Module', ...). A public Cloudflare/GitHub project URL may still use hyphens, for example https://weather-demo.YOUR.pages.dev/.
-- PILOT admin stores the external base URL, but runtime files are proxied under /store/<extension>/ for CORS compatibility. Use/document /store/<extension>/... for Extension assets, docs, JSON, and backend calls. The <extension> segment is the safe PILOT Extension name, for example /store/weather_demo/Module.js.
-- Do not invent a download link. Attach/create a real zip artifact if your environment supports files; otherwise clearly say that you cannot attach files in this chat.
-- Do not replace the zip artifact with Python/Node/PowerShell/Bash code that I must run locally to create the archive.
-
-The result must include:
-1. selected architecture;
-2. a zip archive with the complete Extension file structure;
-3. file tree inside the zip;
-4. where to upload the files, with browser UI-first instructions for Cloudflare/GitHub;
-5. direct Module.js URL to verify in a browser;
-6. safe PILOT Extension name to enter in admin, for example weather_demo;
-7. base URL to register in PILOT admin, for example https://weather-demo.YOUR.workers.dev/;
-8. proxied runtime URLs, for example /store/weather_demo/Module.js, /store/weather_demo/doc/index.html, /store/weather_demo/backend/;
-9. step-by-step launch verification;
-10. troubleshooting for 404, CORS, skeleton undefined, class not found, especially Store.weather-demo.Module vs Store.weather_demo.Module name mismatches.
-
-Do not print full source code in the chat by default. Put the generated files into the zip archive.
-Do not give me a local script that creates the zip unless I explicitly ask for a developer workaround.
+Output requirements:
+- First give a short architecture choice and mention which repository docs/examples you used.
+- Create a real zip archive with the complete Extension file structure if your environment supports file artifacts.
+- Do not print full source code in the chat by default.
+- Do not invent a fake download link.
+- Do not replace the zip with a local Python/Node/PowerShell/Bash script unless I explicitly ask for a developer workaround.
+- Include the file tree, upload steps, direct /Module.js verification URL, PILOT admin base URL, proxied /store/<extension>/... URLs, launch checklist, and troubleshooting.
 ```

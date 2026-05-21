@@ -52,6 +52,7 @@ See [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md).
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 └── doc/
     └── index.html
@@ -62,6 +63,8 @@ Use the same safe lowercase `snake_case` name in PILOT admin and in the Ext JS c
 Do not name a PILOT Extension `my-extension` or `weather-demo`. PILOT builds the class name from the admin name, so a hyphenated name makes it try to create `Store.weather-demo.Module`.
 
 `Module.js` is the only runtime entry point.
+
+Root `index.html` may be empty or duplicate `doc/index.html`. Include it for Cloudflare uploads so the uploaded folder is treated as the assets root.
 
 `doc/index.html` is static Extension documentation. It must not contain `<script>` or startup logic.
 

@@ -551,6 +551,7 @@ For a small frontend-only extension:
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 ├── doc/
 │   └── index.html
@@ -561,6 +562,7 @@ For a backend extension:
 
 ```text
 my_extension/
+├── index.html
 ├── Module.js
 ├── doc/
 │   └── index.html
@@ -584,6 +586,7 @@ When the user chooses Cloudflare for a static Extension and does not explicitly 
 
 - Use Cloudflare dashboard / browser upload instructions.
 - Prefer Cloudflare Pages Direct Upload for static `Module.js`, CSS, docs, JSON, and assets.
+- Include a root `index.html` next to `Module.js`; it may be empty or duplicate `doc/index.html`. This helps Cloudflare mark the uploaded folder as the assets root.
 - Do not tell the user to install `npm`, Node.js, Wrangler, Git, or any terminal tool.
 - Tell the user to upload the generated zip archive or its extracted folder through the Cloudflare dashboard.
 - Tell the user to verify the public `https://.../Module.js` URL in a browser, then register the external base URL in PILOT admin, for example `https://.../`. Explain that PILOT will proxy it as `/store/<extension>/...` at runtime for CORS compatibility.
@@ -622,9 +625,10 @@ Before final output, verify:
 - If the idea uses maps, markers, routes, geozones, map center, or coordinates, [docs/MapContainer.md](docs/MapContainer.md) was used and no Google Maps-style API was invented.
 - Extension-created map markers/routes can be cleaned up.
 - The deliverable is a zip archive that contains the complete Extension file structure.
-- The zip archive contains `Module.js`, `doc/index.html`, and every referenced JS/CSS/backend/asset file.
+- The zip archive contains root `index.html`, `Module.js`, `doc/index.html`, and every referenced JS/CSS/backend/asset file.
 - The chat answer does not print full source code by default; it only summarizes the archive, file tree, upload location, direct `Module.js` verification URL shape, base URL for PILOT registration, browser verification steps, and basic troubleshooting.
 - Cloudflare/GitHub deployment instructions are browser UI-first for managers and do not require `npm`, `wrangler`, Git, or terminal commands unless explicitly requested.
+- For Cloudflare deliverables, root `index.html` exists next to `Module.js`, even if it is empty or a copy of `doc/index.html`.
 - Runtime asset/doc/backend URLs use or document the PILOT `/store/<extension>/...` proxy path instead of direct external-host calls when CORS compatibility matters.
 - The answer does not invent a fake download link for the zip archive.
 - The answer does not replace the zip artifact with Python/Node/PowerShell/Bash code that the user must run locally.
