@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIN Insight User Guide</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: #172554;
+            color: #ffffff;
+            padding: 36px 0;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        main.container {
+            padding-top: 26px;
+            padding-bottom: 48px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            margin: 34px 0 14px;
+            color: #111827;
+            font-size: 24px;
+        }
+
+        h3 {
+            margin: 22px 0 10px;
+            color: #334155;
+        }
+
+        .lead {
+            max-width: 760px;
+            margin: 0;
+            color: #dbeafe;
+            font-size: 17px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 26px;
+            margin-bottom: 18px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .note,
+        .warning {
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin: 16px 0;
+        }
+
+        .note {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+
+        .warning {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+        }
+
+        ol,
+        ul {
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 10px 8px;
+        }
+
+        th {
+            color: #475569;
+            font-weight: 700;
+        }
+
+        code {
+            background: #e5e7eb;
+            border-radius: 4px;
+            padding: 2px 5px;
+        }
+
+        .small {
+            color: #64748b;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>VIN Insight</h1>
+        <p class="lead">
+            Decode vehicle VIN numbers inside PILOT, review the returned vehicle details, and fill selected Vehicle
+            Editor fields before saving.
+        </p>
+    </div>
+</header>
+
+<main class="container">
+    <section class="panel">
+        <h2>What This Module Does</h2>
+        <p>
+            VIN Insight helps users enrich PILOT vehicle records from a VIN. The module sends the VIN to auto.dev,
+            displays the decoded response, and can copy useful values into the PILOT Vehicle Editor.
+        </p>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Decode VINs</h3>
+                <p>Choose a vehicle and decode its VIN from the VIN Insight tab.</p>
+            </div>
+            <div class="card">
+                <h3>Fill Editor Fields</h3>
+                <p>Open a Vehicle Editor window and use <strong>Decode VIN</strong> to fill editable fields.</p>
+            </div>
+            <div class="card">
+                <h3>User API Keys</h3>
+                <p>Each user saves their own auto.dev API key in this browser.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>First-Time Setup</h2>
+        <ol>
+            <li>Open PILOT and select the <strong>VIN Insight</strong> tab.</li>
+            <li>Click <strong>API key</strong>.</li>
+            <li>Paste your auto.dev API key.</li>
+            <li>Click <strong>Save</strong>.</li>
+        </ol>
+
+        <div class="note">
+            The API key is saved only in your browser localStorage. If you use another browser, another computer, or a
+            private session, add the key again.
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Decode a Vehicle from the VIN Insight Tab</h2>
+        <ol>
+            <li>Open the <strong>VIN Insight</strong> tab.</li>
+            <li>Select a vehicle in the left vehicle tree.</li>
+            <li>Click <strong>Decode selected VIN</strong>.</li>
+            <li>Review the decoded summary and raw response.</li>
+        </ol>
+
+        <p>
+            Use <strong>Test proxy</strong> to check that the API key and Cloudflare proxy are working before decoding
+            real vehicle records.
+        </p>
+    </section>
+
+    <section class="panel">
+        <h2>Fill Vehicle Editor Fields</h2>
+        <ol>
+            <li>Open a vehicle in the standard PILOT Vehicle Editor.</li>
+            <li>Confirm the <strong>VIN code</strong> field contains the VIN you want to decode.</li>
+            <li>Click <strong>Decode VIN</strong> at the bottom of the editor.</li>
+            <li>Review the message showing every field that was filled and the value used.</li>
+            <li>Check the form carefully, then click <strong>Save</strong> if the values are correct.</li>
+        </ol>
+
+        <h3>Fields the Module Can Fill</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Vehicle Editor field</th>
+                <th>Source from VIN decode</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>VIN code</td>
+                <td>Decoded VIN</td>
+            </tr>
+            <tr>
+                <td>Prod. year</td>
+                <td>Vehicle year</td>
+            </tr>
+            <tr>
+                <td>Model</td>
+                <td>Make, model, and trim joined into one text value</td>
+            </tr>
+            <tr>
+                <td>Engine # / Engine</td>
+                <td>Engine description, when returned by auto.dev</td>
+            </tr>
+            <tr>
+                <td>Engine capacity</td>
+                <td>Liters parsed from the engine text, when available</td>
+            </tr>
+            <tr>
+                <td>Horsepower</td>
+                <td>Horsepower parsed from the engine text, when available</td>
+            </tr>
+            <tr>
+                <td>Make / Model / Modification selectors</td>
+                <td>Selected only when matching values already exist in PILOT car model lists</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="warning">
+            VIN Insight fills the form only. It does not save changes automatically. Always review decoded data before
+            clicking <strong>Save</strong>.
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Common Messages</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Message</th>
+                <th>What to do</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>API key is required</td>
+                <td>Click <strong>API key</strong>, enter your auto.dev key, and save it.</td>
+            </tr>
+            <tr>
+                <td>VIN must be 17 characters</td>
+                <td>Check the VIN. VINs cannot contain I, O, or Q.</td>
+            </tr>
+            <tr>
+                <td>No vehicles are shown</td>
+                <td>Check that you have permission to view vehicles in PILOT.</td>
+            </tr>
+            <tr>
+                <td>VIN decoded, but no matching editor fields were found</td>
+                <td>Make sure you opened the standard PILOT Vehicle Editor and that the form finished loading.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="panel">
+        <h2>For Admins</h2>
+        <p>
+            The extension folder is ready for Cloudflare upload. Register the hosted base URL in PILOT with extension
+            name <code>vininsight</code>.
+        </p>
+
+        <h3>Important URLs</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>URL</th>
+                <th>Purpose</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><code>/Module.js</code></td>
+                <td>Main PILOT extension file.</td>
+            </tr>
+            <tr>
+                <td><code>/api/health</code></td>
+                <td>Proxy health check.</td>
+            </tr>
+            <tr>
+                <td><code>/api/vin/{VIN}</code></td>
+                <td>Worker route used by the module to decode VINs.</td>
+            </tr>
+            <tr>
+                <td><code>/doc/</code></td>
+                <td>User documentation.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>Files</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>File</th>
+                <th>Purpose</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><code>index.html</code></td>
+                <td>Cloudflare assets-root landing page.</td>
+            </tr>
+            <tr>
+                <td><code>Module.js</code></td>
+                <td>PILOT extension entry point.</td>
+            </tr>
+            <tr>
+                <td><code>_worker.js</code></td>
+                <td>Cloudflare Worker code for the VIN API proxy.</td>
+            </tr>
+            <tr>
+                <td><code>doc/index.html</code></td>
+                <td>This documentation page. Public URL should normally be <code>/doc/</code>.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="note">
+            Cloudflare Pages may redirect <code>/doc/index.html</code> to <code>/doc/</code>. If PILOT or Nginx proxies
+            the extension as <code>/store/vininsight/</code>, rewrite upstream redirects back under that prefix.
+        </div>
+
+        <p class="small">
+            The Worker does not store auto.dev API keys. The browser sends the current user's key as an
+            <code>Authorization: Bearer</code> header during VIN decode requests.
+        </p>
+    </section>
+</main>
+</body>
+</html>
