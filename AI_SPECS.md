@@ -551,26 +551,41 @@ For a small frontend-only extension:
 
 ```text
 my_extension/
-├── index.html
-├── Module.js
-├── doc/
-│   └── index.html
-└── style.css
+|-- index.html
+|-- Module.js
+|-- doc/
+|   `-- index.html
+`-- style.css
 ```
 
 For a backend extension:
 
 ```text
 my_extension/
-├── index.html
-├── Module.js
-├── doc/
-│   └── index.html
-├── style.css
-└── backend/
-    ├── init.php
-    └── api.php
+|-- index.html
+|-- Module.js
+|-- doc/
+|   `-- index.html
+|-- style.css
+`-- backend/
+    |-- init.php
+    `-- api.php
 ```
+
+For a Cloudflare Worker static-assets extension with proxy logic, the Worker source may be named `_worker.js` in the extension root:
+
+```text
+my_extension/
+|-- index.html
+|-- Module.js
+|-- _worker.js
+`-- doc/
+    `-- index.html
+```
+
+Use `_worker.js` in generated Cloudflare examples when the user wants to upload the folder directly and use the same Cloudflare project for both static assets and API proxy routes.
+
+Cloudflare Pages may redirect `doc/index.html` to the clean directory URL `doc/` with HTTP 308. When documenting or linking to hosted docs for Cloudflare Pages, prefer `/doc/` as the public/proxied docs URL. If an Nginx `/store/<extension>/...` proxy is used, tell the user to rewrite upstream relative redirects back under the store prefix, for example `proxy_redirect / /store/<extension>/;`.
 
 Do not create package.json, build config, node_modules, or standalone HTML app files unless the user specifically asks for tooling outside the PILOT extension runtime.
 
