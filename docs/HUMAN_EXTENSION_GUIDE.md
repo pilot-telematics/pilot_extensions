@@ -109,6 +109,21 @@ The left navigation tab and the main content panel are created separately, then 
 
 ## 4. PILOT Runtime
 
+### Extension Settings
+
+Use `Pilot.Extensions.getSettings` to read global settings and settings for the current account:
+
+```js
+async function loadSettings() {
+    const settings = await Pilot.Extensions.getSettings('my_extension');
+    console.log(settings.apiBaseUrl);
+}
+```
+
+The default scope combines global settings with current-account overrides. Pass `global` or `account` as the second argument to read one scope only. PILOT checks Extension access and selects the account from the current session. The API does not accept an account ID.
+
+Values returned by this method are available in browser code. Do not use it to retrieve secrets. Read [the runtime reference](PILOT_RUNTIME_UTILS.md#extension-settings-api) and [API compatibility guide](PILOT_API_COMPATIBILITY.md) for details.
+
 ### Header
 
 `window.skeleton.header` is the top PILOT header.

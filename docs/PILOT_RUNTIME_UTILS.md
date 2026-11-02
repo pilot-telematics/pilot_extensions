@@ -296,6 +296,28 @@ if (typeof base_url !== 'undefined') {
 }
 ```
 
+## Extension Settings API
+
+`Pilot.Extensions.getSettings(name, scope)` returns settings for an Extension that the current account can use. This method is available in PILOT builds that include the `Pilot.Extensions` class.
+
+```js
+const settings = await Pilot.Extensions.getSettings('myapp');
+console.log(settings.apiBaseUrl);
+```
+
+The default scope is `effective`. PILOT combines global settings with settings for the current account. Account values replace global values with the same key. Use `account` to return only current-account settings. Use `global` to return only global settings.
+
+```js
+const globalSettings = await Pilot.Extensions.getSettings('myapp', 'global');
+const accountSettings = await Pilot.Extensions.getSettings('myapp', 'account');
+```
+
+The method returns a `Promise<Object>`. It returns an empty object when the selected scope has no settings. The server uses the current authenticated PILOT session to identify the account and check Extension access. The method does not accept an account ID.
+
+The promise rejects when the session is not authenticated, the account cannot access the Extension, or the request has invalid parameters. Do not use settings returned to browser code for passwords, private keys, or other secrets. Users can inspect these values in the browser.
+
+See [API compatibility and support boundaries](PILOT_API_COMPATIBILITY.md) for the support level and access rules.
+
 ## Extension Store Proxy
 
 PILOT admin stores the external Extension base URL, for example `https://somehost.com/blabla/`. At runtime, PILOT proxies that URL under the current PILOT domain:

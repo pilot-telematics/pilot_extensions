@@ -111,6 +111,21 @@ Ext.define('Store.my_extension.Module', {
 
 ## 4. Runtime PILOT
 
+### Настройки Extension
+
+Используйте `Pilot.Extensions.getSettings`, чтобы получить глобальные настройки и настройки текущего аккаунта:
+
+```js
+async function loadSettings() {
+    const settings = await Pilot.Extensions.getSettings('my_extension');
+    console.log(settings.apiBaseUrl);
+}
+```
+
+По умолчанию метод объединяет глобальные настройки с настройками текущего аккаунта. Передайте `global` или `account` вторым аргументом, чтобы получить одну область. PILOT проверяет доступ к Extension и определяет аккаунт по текущей сессии. API не принимает ID аккаунта.
+
+Значения метода доступны в браузере. Не используйте его для получения секретов. Подробности см. в [справочнике runtime](PILOT_RUNTIME_UTILS_RU.md#api-настроек-extension) и [справочнике совместимости API](PILOT_API_COMPATIBILITY_RU.md).
+
 ### Header
 
 `window.skeleton.header` - верхняя панель PILOT.

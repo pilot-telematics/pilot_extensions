@@ -2,7 +2,7 @@
 
 This guide explains how to select PILOT interfaces for an Extension. It separates documented contracts from runtime observations and installation-specific behavior.
 
-Last reviewed: 2026-10-27.
+Last reviewed: 2026-11-02.
 
 ## Compatibility scope
 
@@ -36,6 +36,18 @@ A successful request or a working sample does not change the support level of an
 4. Record the PILOT version, endpoint, method, authentication method, response fields, and known limits in the Extension documentation.
 
 The API v3 vehicle list may include runtime data that the OpenAPI schema does not define. Treat those extra fields as observations until the API specification includes them.
+
+## PILOT Extension settings
+
+`Pilot.Extensions.getSettings(name, scope)` is a documented host runtime API in PILOT builds that include the `Pilot.Extensions` class.
+
+The method uses the current authenticated PILOT session. PILOT selects the current account and checks Extension access. The method does not accept an account ID.
+
+The default scope, `effective`, combines global settings with current-account settings. Account values replace global values with the same key. The `account` scope returns only current-account settings. The `global` scope returns only global settings. A scope with no values returns an empty object.
+
+Use the JavaScript method. Do not call its legacy `/backend/ax/pilotstore/list.php` endpoint directly. The method rejects its promise when the session is not authenticated, the account cannot access the Extension, or the request has invalid parameters.
+
+Values returned to the browser are visible to its users. Do not store passwords, private keys, or other secrets in these settings. Use a server-side Extension backend for secret values.
 
 ## Authentication and authorization
 

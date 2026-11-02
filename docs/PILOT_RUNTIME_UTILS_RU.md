@@ -296,6 +296,28 @@ if (typeof base_url !== 'undefined') {
 }
 ```
 
+## API настроек Extension
+
+`Pilot.Extensions.getSettings(name, scope)` возвращает настройки Extension, доступного текущему аккаунту. Метод доступен в сборках PILOT, в которых есть класс `Pilot.Extensions`.
+
+```js
+const settings = await Pilot.Extensions.getSettings('myapp');
+console.log(settings.apiBaseUrl);
+```
+
+По умолчанию используется область `effective`. PILOT объединяет глобальные настройки с настройками текущего аккаунта. Значение аккаунта заменяет глобальное значение с тем же ключом. Область `account` возвращает только настройки текущего аккаунта. Область `global` возвращает только глобальные настройки.
+
+```js
+const globalSettings = await Pilot.Extensions.getSettings('myapp', 'global');
+const accountSettings = await Pilot.Extensions.getSettings('myapp', 'account');
+```
+
+Метод возвращает `Promise<Object>`. Если в выбранной области нет настроек, метод возвращает пустой объект. Сервер определяет аккаунт по текущей авторизованной сессии PILOT и проверяет доступ к Extension. Метод не принимает ID аккаунта.
+
+Promise отклоняется, если сессия не авторизована, аккаунт не имеет доступа к Extension или параметры запроса некорректны. Не храните в настройках, возвращаемых в браузер, пароли, приватные ключи и другие секреты. Пользователи могут просмотреть эти значения в браузере.
+
+Уровень поддержки и правила доступа описаны в [справочнике совместимости API](PILOT_API_COMPATIBILITY_RU.md).
+
 ## Store Proxy Для Extension
 
 PILOT admin хранит внешний base URL Extension, например `https://somehost.com/blabla/`. В runtime PILOT проксирует этот URL внутри текущего домена PILOT:
