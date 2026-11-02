@@ -286,6 +286,8 @@ Often useful:
 - `jQuery` / `$` - jQuery, if available.
 - `window.uom` / `UOM` - current user units of measure.
 
+The runtime reference lists observed objects and helpers. It does not make every listed value a stable API. Check [API compatibility and support boundaries](PILOT_API_COMPATIBILITY.md) before you use account, role, module, or authentication data.
+
 Use existence checks for version-sensitive objects:
 
 ```js

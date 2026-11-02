@@ -1,52 +1,47 @@
-# PILOT Extensions Docs
+# PILOT Extensions Documentation
 
-This folder is organized around one goal: turn a business idea into a working PILOT Extension zip archive with as few runtime mistakes as possible.
+Use this page to find the right guide for your task. Start with the section that matches your role.
 
-English files are the default. Russian versions use the `_RU` suffix.
+## I want to build an extension
 
-## Fast Path
+1. Read [the human developer guide](HUMAN_EXTENSION_GUIDE.md).
+2. Choose a pattern from [the architecture guide](AI_EXTENSION_GUIDE.md).
+3. Select one example from `../examples/` that matches the feature.
+4. Read [the PILOT runtime reference](PILOT_RUNTIME_UTILS.md) for host objects and helpers.
+5. Read [API compatibility and support boundaries](PILOT_API_COMPATIBILITY.md) before you use PILOT APIs, account data, roles, or runtime internals.
+6. Read [the map reference](MapContainer.md) if the extension uses a map, marker, route, track, or geofence.
+7. Follow [the deployment guide](../DEPLOY.md) to host and register the extension.
 
-For a manager using an AI assistant:
+## I have a business idea and use an AI assistant
 
-1. Open [ChatGPT_Prompts/Business_Idea.md](ChatGPT_Prompts/Business_Idea.md).
-2. Paste the prompt into the AI assistant.
-3. Add the business idea and this repository URL.
-4. Ask for a zip archive with the complete Extension file structure.
-5. Use a safe `snake_case` PILOT Extension name, for example `weather_demo`, not `weather-demo`.
-6. Verify the final `/Module.js` URL in a browser, then register the base URL in PILOT.
-7. Use `/store/<extension>/...` proxied runtime URLs for Extension assets, docs, and backend calls when needed.
+1. Use [the business-idea prompt](ChatGPT_Prompts/Business_Idea.md).
+2. Give the assistant this repository and the [AI coding contract](../AI_SPECS.md).
+3. Describe the required result, users, data, and hosting constraints.
+4. Ask for a complete extension archive and deployment steps.
 
-For a developer:
+The AI coding contract defines generation rules. The human guide explains the development workflow. The runtime reference describes PILOT objects. Use each document for its stated purpose.
 
-1. Start with [IDEA_TO_EXTENSION.md](IDEA_TO_EXTENSION.md).
-2. Read [HUMAN_EXTENSION_GUIDE.md](HUMAN_EXTENSION_GUIDE.md).
-3. Use [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md) for host objects, `Pilot.utils.*`, Highcharts, jQuery, UOM, and renderers.
-4. Use [../DEPLOY.md](../DEPLOY.md) for hosting.
+## I need a specific reference
 
-For an AI coding agent:
+| Topic | Start here |
+|---|---|
+| Which PILOT APIs and runtime details are safe to depend on | [API compatibility and support boundaries](PILOT_API_COMPATIBILITY.md) |
+| Extension architecture and integration patterns | [AI extension guide](AI_EXTENSION_GUIDE.md) |
+| PILOT host objects, helpers, and utilities | [PILOT runtime reference](PILOT_RUNTIME_UTILS.md) |
+| MapContainer, markers, routes, and map behavior | [MapContainer reference](MapContainer.md) |
+| Hosting, base URLs, and the `/store/<extension>/` proxy | [Deployment guide](../DEPLOY.md) |
+| SVG marker icons | [Marker icon API](MarkerIconApi.md) |
+| A larger extension with a backend | [Communal example notes](communal.md) |
 
-1. Read [../AI_SPECS.md](../AI_SPECS.md).
-2. Read [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md).
-3. Read [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md).
-4. Inspect one closest example from `../examples/`.
-5. Return a zip archive, not full source code in chat.
+## Examples
 
-## Architecture Patterns
+| Need | Example |
+|---|---|
+| Minimal tab and panel | `../examples/hello_world/` |
+| Starter file structure | `../examples/template_app/` |
+| Table and custom map | `../examples/airports/` |
+| Data screen without a map | `../examples/planets/` |
+| Context action on an Online vehicle | `../examples/nearby_poi/` |
+| Backend, authentication, and CRUD | `../examples/communal/` |
 
-| Need | Pattern | Example |
-|---|---|---|
-| Minimal tab + main panel | Full UI Extension | `examples/hello_world` |
-| Starter module structure | Full UI Extension | `examples/template_app` |
-| List/grid + own map | Custom Map Panel | `examples/airports` |
-| Data UI without map | Full UI Extension | `examples/planets` |
-| Action on selected Online object | Context Menu Extension | `examples/nearby_poi` |
-| Backend, auth, CRUD, mnemonic diagrams | Extension + backend | `examples/communal` |
-| Global action | Header Button / Header Menu Item | see [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |
-| Reports/settings/editor integration | Advanced Host Integration | see [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |
-
-## References
-
-- [MapContainer.md](MapContainer.md) - map API details.
-- [MarkerIconApi.md](MarkerIconApi.md) - SVG marker icons.
-- [communal.md](communal.md) - complex Extension architecture review.
-- [ChatGPT_Prompts/Business_Idea_RU.md](ChatGPT_Prompts/Business_Idea_RU.md) - Russian prompt template.
+Check the API compatibility guide before you rely on undocumented host behavior or legacy endpoints. A working example does not make an internal PILOT detail a supported API.

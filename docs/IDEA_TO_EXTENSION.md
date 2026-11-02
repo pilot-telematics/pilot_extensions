@@ -11,8 +11,9 @@ Build a PILOT Extension for this business idea:
 <idea>
 
 Use the pilot-telematics/pilot_extensions repository.
-Read AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, and docs/PILOT_RUNTIME_UTILS.md first.
+Read AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, docs/PILOT_RUNTIME_UTILS.md, and docs/PILOT_API_COMPATIBILITY.md first.
 If the idea uses maps, map center, coordinates, markers, routes, tracks, or geozones, also read docs/MapContainer.md. PILOT MapContainer is a wrapper over Leaflet, not a Google Maps object.
+Use documented PILOT APIs. Treat legacy endpoints, role data, account settings, and private WebSocket messages as unsupported unless PILOT confirms support.
 Return a zip archive with the complete Extension file structure, plus step-by-step instructions for where to upload the files, which `/Module.js` URL to verify in a browser, and which base URL to register in PILOT.
 Also explain that PILOT proxies the registered base URL under `/store/<extension>/...` for CORS-compatible runtime access.
 ```

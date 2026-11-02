@@ -444,6 +444,8 @@ It must not:
 
 External services may enrich PILOT data, but PILOT remains the source of truth.
 
+Before an Extension uses a PILOT endpoint, account field, role, or internal runtime behavior, follow [PILOT API Compatibility and Support Boundaries](docs/PILOT_API_COMPATIBILITY.md). Do not assume that a legacy endpoint or a field seen in one response is a supported contract.
+
 Rules:
 
 - API keys must be configurable.

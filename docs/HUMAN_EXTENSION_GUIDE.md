@@ -20,6 +20,8 @@ PILOT already provides:
 
 The Extension adds its own functionality into this host shell.
 
+Before you choose an endpoint, role field, account setting, or runtime hook, read [API compatibility and support boundaries](PILOT_API_COMPATIBILITY.md). A working interface in one PILOT build does not confirm a stable Extension API.
+
 ## 1.1 Extensions Vs Compiled PILOT Code
 
 Extensions run inside compiled PILOT `app.js`. They can access runtime objects and utilities already loaded by PILOT, including useful `Pilot.utils.*` host classes.

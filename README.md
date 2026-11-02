@@ -21,9 +21,10 @@ For developers:
 1. If you only have a business idea, start with [docs/IDEA_TO_EXTENSION.md](docs/IDEA_TO_EXTENSION.md).
 2. Read [docs/README.md](docs/README.md).
 3. Read [docs/HUMAN_EXTENSION_GUIDE.md](docs/HUMAN_EXTENSION_GUIDE.md).
-4. Pick the closest example in `examples/`.
-5. Host the extension, verify the public `/Module.js` URL, and register the public base URL in PILOT.
-6. After registration, use `/store/<extension>/...` proxied URLs inside PILOT for assets/docs/backend calls when CORS compatibility matters.
+4. Read [docs/PILOT_API_COMPATIBILITY.md](docs/PILOT_API_COMPATIBILITY.md) before selecting PILOT APIs or runtime details.
+5. Pick the closest example in `examples/`.
+6. Host the extension, verify the public `/Module.js` URL, and register the public base URL in PILOT.
+7. After registration, use `/store/<extension>/...` proxied URLs inside PILOT for assets/docs/backend calls when CORS compatibility matters.
 
 For AI coding agents:
 
@@ -35,8 +36,9 @@ For AI coding agents:
    - `examples/airports` for a list plus custom map.
    - `examples/communal` for a complex module with backend, auth, and business UI.
 4. Use [docs/PILOT_RUNTIME_UTILS.md](docs/PILOT_RUNTIME_UTILS.md) for PILOT runtime objects and utilities available to Extensions.
-5. Return a zip archive, not full source code in chat.
-6. For prompt templates, use [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md) or [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md).
+5. Use [docs/PILOT_API_COMPATIBILITY.md](docs/PILOT_API_COMPATIBILITY.md) before using an API, role, account setting, or runtime behavior.
+6. Return a zip archive, not full source code in chat.
+7. For prompt templates, use [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md) or [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md).
 
 ## PILOT Runtime Facts
 
@@ -80,6 +82,8 @@ pilot_extensions/
 │   ├── HUMAN_EXTENSION_GUIDE.md
 │   ├── HUMAN_EXTENSION_GUIDE_RU.md
 │   ├── AI_EXTENSION_GUIDE.md
+│   ├── PILOT_API_COMPATIBILITY.md
+│   ├── PILOT_API_COMPATIBILITY_RU.md
 │   ├── PILOT_RUNTIME_UTILS.md
 │   ├── PILOT_RUNTIME_UTILS_RU.md
 │   ├── MapContainer.md

@@ -18,13 +18,14 @@
 1. Если у вас есть только бизнес-идея, начните с [docs/IDEA_TO_EXTENSION_RU.md](docs/IDEA_TO_EXTENSION_RU.md).
 2. Прочитайте [карту документации](docs/README_RU.md).
 3. Пройдите [руководство разработчика](docs/HUMAN_EXTENSION_GUIDE_RU.md).
-4. Выберите ближайший пример:
+4. Перед выбором API или runtime-объектов прочитайте [справочник совместимости](docs/PILOT_API_COMPATIBILITY_RU.md).
+5. Выберите ближайший пример:
    - [examples/hello_world](examples/hello_world) - минимальное расширение с вкладкой и панелью.
    - [examples/nearby_poi](examples/nearby_poi) - пункт контекстного меню в Online и работа с существующей картой.
    - [examples/airports](examples/airports) - список объектов и собственная карта.
    - [examples/communal](examples/communal) - сложный модуль с backend, авторизацией и мнемосхемами.
-5. Разместите файлы расширения на сервере, проверьте публичный `/Module.js` и зарегистрируйте публичный base URL в PILOT.
-6. После регистрации используйте proxied URLs `/store/<extension>/...` внутри PILOT для assets/docs/backend-вызовов, когда важна CORS compatibility.
+6. Разместите файлы расширения на сервере, проверьте публичный `/Module.js` и зарегистрируйте публичный base URL в PILOT.
+7. После регистрации используйте proxied URLs `/store/<extension>/...` внутри PILOT для assets/docs/backend-вызовов, когда важна CORS compatibility.
 
 ## Быстрый Старт Для AI
 
@@ -35,6 +36,7 @@
    - [AI_SPECS.md](AI_SPECS.md)
    - [docs/AI_EXTENSION_GUIDE.md](docs/AI_EXTENSION_GUIDE.md)
    - [docs/PILOT_RUNTIME_UTILS_RU.md](docs/PILOT_RUNTIME_UTILS_RU.md)
+   - [docs/PILOT_API_COMPATIBILITY_RU.md](docs/PILOT_API_COMPATIBILITY_RU.md), если используются API PILOT, роли, настройки аккаунта или runtime-объекты
    - подходящий пример из `examples/`
 3. Используйте готовый шаблон запроса:
    - [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md)
@@ -93,6 +95,8 @@ pilot_extensions/
 │   ├── AI_EXTENSION_GUIDE.md
 │   ├── PILOT_RUNTIME_UTILS.md
 │   ├── PILOT_RUNTIME_UTILS_RU.md
+│   ├── PILOT_API_COMPATIBILITY.md
+│   ├── PILOT_API_COMPATIBILITY_RU.md
 │   ├── MapContainer.md
 │   ├── MapContainer_RU.md
 │   ├── MarkerIconApi.md
@@ -136,6 +140,7 @@ my_extension/
 - [docs/HUMAN_EXTENSION_GUIDE_RU.md](docs/HUMAN_EXTENSION_GUIDE_RU.md) - практическое руководство для разработчиков.
 - [docs/PILOT_RUNTIME_UTILS.md](docs/PILOT_RUNTIME_UTILS.md) - English guide to built-in PILOT runtime objects and utilities.
 - [docs/PILOT_RUNTIME_UTILS_RU.md](docs/PILOT_RUNTIME_UTILS_RU.md) - встроенные runtime-объекты и утилиты PILOT, доступные Extensions.
+- [docs/PILOT_API_COMPATIBILITY_RU.md](docs/PILOT_API_COMPATIBILITY_RU.md) - документированные API и границы поддержки.
 - [DEPLOY.md](DEPLOY.md) - Cloudflare Workers, GitHub Pages, AWS EC2/Nginx/PHP-FPM.
 - [docs/MapContainer_RU.md](docs/MapContainer_RU.md) - работа с картой.
 - [docs/MarkerIconApi.md](docs/MarkerIconApi.md) - генерация SVG-иконок маркеров.

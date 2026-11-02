@@ -1,52 +1,47 @@
 # Документация PILOT Extensions
 
-Эта папка организована вокруг одной цели: превратить бизнес-идею в рабочий zip-архив PILOT Extension с минимальным количеством runtime-ошибок.
+Выберите задачу, чтобы найти подходящее руководство.
 
-Английские файлы идут без суффикса. Русские версии имеют суффикс `_RU`.
+## Я разрабатываю расширение
 
-## Быстрый Путь
+1. Прочитайте [руководство разработчика](HUMAN_EXTENSION_GUIDE_RU.md).
+2. Выберите архитектуру в [руководстве по шаблонам интеграции](AI_EXTENSION_GUIDE.md).
+3. Найдите подходящий пример в `../examples/`.
+4. Используйте [справочник runtime PILOT](PILOT_RUNTIME_UTILS_RU.md), чтобы проверить host-объекты и функции.
+5. Перед использованием API PILOT, данных аккаунта, ролей или внутренних runtime-объектов прочитайте [справочник совместимости](PILOT_API_COMPATIBILITY_RU.md).
+6. Прочитайте [справочник MapContainer](MapContainer_RU.md), если расширение использует карту, маркер, маршрут, трек или геозону.
+7. Следуйте [руководству по публикации](../DEPLOY.md), чтобы разместить и зарегистрировать расширение.
 
-Для менеджера, который использует AI-помощника:
+## У меня есть бизнес-идея, и я использую AI-помощника
 
-1. Откройте [ChatGPT_Prompts/Business_Idea_RU.md](ChatGPT_Prompts/Business_Idea_RU.md).
-2. Вставьте prompt в AI-помощника.
-3. Добавьте бизнес-идею и ссылку на этот репозиторий.
-4. Попросите zip-архив с полной структурой файлов Extension.
-5. Используйте безопасное `snake_case` имя PILOT Extension, например `weather_demo`, а не `weather-demo`.
-6. Проверьте итоговый `/Module.js` в браузере, затем зарегистрируйте base URL в PILOT.
-7. Используйте proxied runtime URLs `/store/<extension>/...` для assets, docs и backend-вызовов Extension, когда это нужно.
+1. Используйте [шаблон бизнес-идеи](ChatGPT_Prompts/Business_Idea_RU.md).
+2. Передайте AI ссылку на этот репозиторий и [контракт генерации кода](../AI_SPECS.md).
+3. Опишите результат, пользователей, данные и ограничения хостинга.
+4. Попросите полный архив расширения и инструкции по публикации.
 
-Для разработчика:
+Контракт генерации задаёт правила для AI. Руководство разработчика описывает рабочий процесс. Справочник runtime описывает объекты PILOT. Используйте каждый документ по его назначению.
 
-1. Начните с [IDEA_TO_EXTENSION_RU.md](IDEA_TO_EXTENSION_RU.md).
-2. Прочитайте [HUMAN_EXTENSION_GUIDE_RU.md](HUMAN_EXTENSION_GUIDE_RU.md).
-3. Используйте [PILOT_RUNTIME_UTILS_RU.md](PILOT_RUNTIME_UTILS_RU.md) для host-объектов, `Pilot.utils.*`, Highcharts, jQuery, UOM и renderers.
-4. Для публикации используйте [../DEPLOY.md](../DEPLOY.md).
+## Мне нужен справочник по теме
 
-Для AI coding agent:
+| Тема | Начните здесь |
+|---|---|
+| Какие API и runtime-детали PILOT безопасно использовать | [Совместимость API и границы поддержки](PILOT_API_COMPATIBILITY_RU.md) |
+| Архитектура расширения и шаблоны интеграции | [Руководство по созданию расширения для AI](AI_EXTENSION_GUIDE.md) |
+| Host-объекты, функции и утилиты PILOT | [Справочник runtime PILOT](PILOT_RUNTIME_UTILS_RU.md) |
+| MapContainer, маркеры, маршруты и карта | [Справочник MapContainer](MapContainer_RU.md) |
+| Хостинг, base URL и proxy `/store/<extension>/` | [Руководство по публикации](../DEPLOY.md) |
+| SVG-иконки маркеров | [API иконок маркеров](MarkerIconApi.md) |
+| Большое расширение с backend | [Заметки к примеру communal](communal_RU.md) |
 
-1. Прочитать [../AI_SPECS.md](../AI_SPECS.md).
-2. Прочитать [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md).
-3. Прочитать [PILOT_RUNTIME_UTILS_RU.md](PILOT_RUNTIME_UTILS_RU.md) или [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md).
-4. Посмотреть один ближайший пример из `../examples/`.
-5. Вернуть zip-архив, а не полный исходный код в чате.
+## Примеры
 
-## Архитектурные Паттерны
+| Задача | Пример |
+|---|---|
+| Минимальная вкладка и панель | `../examples/hello_world/` |
+| Стартовая структура файлов | `../examples/template_app/` |
+| Таблица и собственная карта | `../examples/airports/` |
+| Экран с данными без карты | `../examples/planets/` |
+| Действие для объекта в Online | `../examples/nearby_poi/` |
+| Backend, авторизация и CRUD | `../examples/communal/` |
 
-| Нужно сделать | Паттерн | Пример |
-|---|---|---|
-| Минимальная вкладка + основная панель | Full UI Extension | `examples/hello_world` |
-| Стартовая структура модуля | Full UI Extension | `examples/template_app` |
-| Таблица/список + собственная карта | Custom Map Panel | `examples/airports` |
-| UI с данными без карты | Full UI Extension | `examples/planets` |
-| Действие по выбранному объекту Online | Context Menu Extension | `examples/nearby_poi` |
-| Backend, auth, CRUD, мнемосхемы | Extension + backend | `examples/communal` |
-| Глобальное действие | Header Button / Header Menu Item | см. [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |
-| Reports/settings/editor integration | Advanced Host Integration | см. [AI_EXTENSION_GUIDE.md](AI_EXTENSION_GUIDE.md) |
-
-## Справочники
-
-- [MapContainer_RU.md](MapContainer_RU.md) - работа с картой.
-- [MarkerIconApi.md](MarkerIconApi.md) - SVG-иконки маркеров.
-- [communal_RU.md](communal_RU.md) - разбор сложного Extension.
-- [ChatGPT_Prompts/Business_Idea.md](ChatGPT_Prompts/Business_Idea.md) - английский prompt-шаблон.
+Перед использованием недокументированного поведения PILOT или legacy endpoint прочитайте справочник совместимости API. Работающий пример сам по себе не превращает внутреннюю деталь PILOT в поддерживаемый API.

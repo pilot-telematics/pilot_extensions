@@ -11,8 +11,9 @@
 <описание идеи>
 
 Используй репозиторий pilot-telematics/pilot_extensions.
-Сначала прочитай AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md и docs/PILOT_RUNTIME_UTILS_RU.md.
+Сначала прочитай AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, docs/PILOT_RUNTIME_UTILS_RU.md и docs/PILOT_API_COMPATIBILITY_RU.md.
 Если идея использует карту, центр карты, координаты, маркеры, маршруты, треки или геозоны, также прочитай docs/MapContainer_RU.md. PILOT MapContainer - это обертка над Leaflet, а не объект Google Maps.
+Используй документированные API PILOT. Считай legacy endpoint'ы, данные о ролях, настройки аккаунта и внутренние WebSocket-сообщения неподдерживаемыми, пока PILOT не подтвердит поддержку.
 В результате дай zip-архив с полной структурой файлов Extension и пошаговую инструкцию куда их положить, какой `/Module.js` URL проверить в браузере и какой base URL зарегистрировать в PILOT.
 Также объясни, что PILOT проксирует зарегистрированный base URL через `/store/<extension>/...` для CORS-compatible runtime access.
 ```

@@ -50,9 +50,10 @@ Always inspect:
 
 1. `AI_SPECS.md`
 2. `docs/AI_EXTENSION_GUIDE.md`
-3. one closest example
-4. `docs/PILOT_RUNTIME_UTILS.md`
-5. `docs/IDEA_TO_EXTENSION.md` or `docs/IDEA_TO_EXTENSION_RU.md` for the expected delivery shape
+3. `docs/PILOT_API_COMPATIBILITY.md` when the extension uses PILOT APIs, account data, roles, or runtime internals
+4. one closest example
+5. `docs/PILOT_RUNTIME_UTILS.md`
+6. `docs/IDEA_TO_EXTENSION.md` or `docs/IDEA_TO_EXTENSION_RU.md` for the expected delivery shape
 
 Example mapping:
 
@@ -64,6 +65,7 @@ Example mapping:
 - Map API details: `docs/MapContainer.md` or `docs/MapContainer_RU.md` when the idea uses maps, markers, routes, geozones, map center, or coordinates
 - Marker icons: `docs/MarkerIconApi.md`
 - Deployment: `DEPLOY.md`
+- API support status and version boundaries: `docs/PILOT_API_COMPATIBILITY.md`
 - PILOT runtime utilities, Highcharts, jQuery, UOM, renderers: `docs/PILOT_RUNTIME_UTILS.md` or `docs/PILOT_RUNTIME_UTILS_RU.md`
 
 Do not blindly copy legacy patterns that conflict with `AI_SPECS.md`.
