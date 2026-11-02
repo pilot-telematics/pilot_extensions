@@ -11,10 +11,11 @@ Build a PILOT Extension for this business idea:
 <idea>
 
 Use the pilot-telematics/pilot_extensions repository.
-Read AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, docs/PILOT_RUNTIME_UTILS.md, and docs/PILOT_API_COMPATIBILITY.md first.
+Read AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, docs/PILOT_RUNTIME_UTILS.md, and docs/PILOT_API_COMPATIBILITY.md first. Read docs/REGISTER_EXTENSION.md before you guide registration.
 If the idea uses maps, map center, coordinates, markers, routes, tracks, or geozones, also read docs/MapContainer.md. PILOT MapContainer is a wrapper over Leaflet, not a Google Maps object.
 Use documented PILOT APIs. Treat legacy endpoints, role data, account settings, and private WebSocket messages as unsupported unless PILOT confirms support.
-Return a zip archive with the complete Extension file structure, plus step-by-step instructions for where to upload the files, which `/Module.js` URL to verify in a browser, and which base URL to register in PILOT.
+Propose a unique lowercase `snake_case` Extension name. Ask me to check that name in Admin Panel → Extensions and confirm it is available. Wait for my confirmation before generating files. Use the confirmed name in the folder, `Store.<name>.Module`, and `/store/<name>/` path.
+Return a zip archive with the complete Extension file structure, plus step-by-step instructions for where to upload the files, which `/Module.js` URL to verify in a browser, and which base URL to register in the PILOT Admin Panel.
 Also explain that PILOT proxies the registered base URL under `/store/<extension>/...` for CORS-compatible runtime access.
 ```
 
@@ -38,7 +39,8 @@ UI:
 - UI language: English / Russian / both
 
 Deployment:
-- Cloudflare Workers / GitHub Pages / VPS / local folder for now
+- Cloudflare Workers static-file upload (`Upload your static files`) / GitHub Pages / VPS / local folder for now
+- For Cloudflare, use only Workers and `Upload your static files`. Do not suggest another Cloudflare upload flow. If the option is missing, stop and ask me for a screenshot.
 ```
 
 ## 2. How The AI Should Choose Architecture
@@ -70,10 +72,11 @@ The AI response should include:
 5. Confirmation that `doc/index.html` has no `<script>`.
 6. Upload/deployment steps.
 7. Direct `/Module.js` URL to verify in a browser.
-8. Base URL to register in PILOT admin.
-9. Proxied `/store/<extension>/...` runtime URLs for Module.js, docs, assets, and backend.
-10. Verification checklist.
-11. Troubleshooting notes.
+8. Base URL to register in the separate PILOT Admin Panel.
+9. Admin Panel registration field values: unique name/slug, full name, description, base URL, published state, icon class, and author. The default icon is a star. Explain that changing it is optional.
+10. Proxied `/store/<extension>/...` runtime URLs for Module.js, docs, assets, and backend.
+11. Verification checklist.
+12. Troubleshooting notes.
 
 The AI should not print full source code in the chat by default. The generated files belong in the zip archive.
 
@@ -154,25 +157,37 @@ https://ext.example.com/my_extension/Module.js
 
 See [../DEPLOY.md](../DEPLOY.md).
 
-## 6. How To Register In PILOT
+## 6. How To Register In The PILOT Admin Panel
 
 1. Open the direct `Module.js` URL in a browser.
 2. Confirm it returns JavaScript source, not an HTML error page.
-3. In PILOT Admin, open **Extensions**.
-4. Register a new Extension.
-5. Paste the base URL, not the direct `Module.js` URL.
-6. Save and enable the Extension for the required account/user.
-7. Wait for configuration/proxy cache if your PILOT installation has a delay.
-8. Reload PILOT.
+3. Open the separate PILOT Admin Panel. Registration does not take place in the PILOT user interface. Ask me for the Admin Panel URL if I have not provided it.
+4. Open **Extensions** and add a new Extension.
+5. Enter every field:
+
+| Field | Value |
+|---|---|
+| **Name** | The unique lowercase `snake_case` slug confirmed by me. It must match `Store.<name>.Module`. |
+| **Name Pretty** | The display name shown to PILOT users. |
+| **Description** | A short description of the Extension. |
+| **URL** | The hosted folder base URL, not the direct `Module.js` URL. A trailing slash is recommended. The current PILOT generator adds it if it is missing. The URL must still point to the folder that contains `Module.js`. |
+| **Is Published** | Enable it so users can see and activate the Extension. |
+| **Icon class** | The star icon is selected by default. Keep it or choose another icon from the available list. Changing it is optional. |
+| **Author** | The author name shown to users. |
+
+6. Review the fields, then select **Update** to save the Extension. Do not skip the description or the icon field.
+7. In the separate Admin Panel, grant account access.
+8. Sign in to PILOT, open **Extensions**, and enable the Extension.
+9. In the current PILOT deployment, the store proxy configuration refreshes every 10 minutes. Allow up to 10 minutes after you add an Extension or change its URL. Then reload PILOT.
 
 Example:
 
 ```text
 Verify in browser: https://weather-demo.YOUR.workers.dev/Module.js
-Register in PILOT: https://weather-demo.YOUR.workers.dev/
+Register in the Admin Panel: https://weather-demo.YOUR.workers.dev/
 ```
 
-Use a safe `snake_case` Extension name in PILOT admin, for example `weather_demo`. Do not use `weather-demo` as the PILOT Extension name, because PILOT creates the runtime class as `Store.weather-demo.Module`.
+Use a unique safe `snake_case` Extension name in the PILOT Admin Panel, for example `weather_demo`. Check that the name is not already in the Extensions list. Do not use `weather-demo` as the PILOT Extension name, because PILOT creates the runtime class as `Store.weather-demo.Module`.
 
 If the Extension name is `weather_demo`, PILOT proxies the registered base URL under:
 
@@ -209,7 +224,7 @@ Check DevTools:
 | `skeleton is undefined` | Code is run outside PILOT | Test inside PILOT, not as standalone page |
 | `Ext is undefined` | Built as standalone web app | Extension must run inside PILOT |
 | `Store.weather-demo.Module` class not found | Hyphenated PILOT Extension name | Rename the PILOT Extension to `weather_demo`, define `Store.weather_demo.Module`, and use `/store/weather_demo/...` |
-| Class not found | Extra JS file was not loaded or class name does not match the PILOT Extension name | Load it from `Module.js`, keep code in one file, and make `Ext.define('Store.<extension_name>.Module', ...)` match the admin name exactly |
+| Class not found | Extra JS file was not loaded or class name does not match the PILOT Extension name | Load it from `Module.js`, keep code in one file, and make `Ext.define('Store.<extension_name>.Module', ...)` match the Admin Panel name exactly |
 | CORS error | External API blocks browser calls | Add backend/proxy |
 | Map not found | Wrong map target or wrong map API | Online: `getActiveTabMapContainer()` or `window.mapContainer`; History: `window.historyMapContainer`; read `docs/MapContainer.md` because PILOT maps wrap Leaflet |
 
@@ -217,7 +232,7 @@ Check DevTools:
 
 - [ ] `Module.js` opens by direct URL.
 - [ ] PILOT Extension name is safe `snake_case`, for example `weather_demo`.
-- [ ] `Module.js` contains `Ext.define('Store.<name>.Module', ...)` with the exact same `<name>` as in PILOT admin.
+- [ ] `Module.js` contains `Ext.define('Store.<name>.Module', ...)` with the exact same `<name>` as in the PILOT Admin Panel.
 - [ ] `initModule` is a class method.
 - [ ] No standalone HTML/React/Vue/Vite.
 - [ ] Navigation tab is added to `skeleton.navigation` if used.

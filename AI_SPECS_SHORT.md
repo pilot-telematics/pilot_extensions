@@ -28,7 +28,7 @@ Ext.define('Store.my_extension.Module', {
 });
 ```
 
-Use a safe `snake_case` PILOT Extension name, for example `my_extension`. PILOT creates the runtime class as `Store.<extension_name>.Module`, so the `Module.js` class must match it exactly:
+Use a unique safe `snake_case` PILOT Extension name, for example `my_extension`. Ask the user to check that it is not already registered. PILOT creates the runtime class as `Store.<extension_name>.Module`, so the `Module.js` class must match it exactly:
 
 ```js
 Ext.define('Store.my_extension.Module', {
@@ -50,7 +50,7 @@ Do not use hyphens in the PILOT Extension name. A public host may be `https://we
 - `window.skeleton.navigation.online.online_tree` - Online objects tree.
 - `window.skeleton.mapframe` - main content/map frame in repo examples.
 - `window.skeleton.map_frame` - same conceptual frame in some runtime notes; use fallback if needed.
-- PILOT admin stores the external base URL, but runtime files are proxied as `/store/<extension>/...` for CORS compatibility. The `<extension>` segment is the safe PILOT Extension name, not necessarily the external host/project name.
+- The separate PILOT Admin Panel stores the external base URL. When guiding registration, list the unique slug, full name, description, base URL, published state, icon class, and author. The star icon is selected by default, and the user can keep it or choose another. Runtime files are proxied as `/store/<extension>/...` for CORS compatibility. The `<extension>` segment is the safe PILOT Extension name, not necessarily the external host/project name.
 
 Navigation and main content are linked with:
 

@@ -13,12 +13,13 @@ Before generating files, read and follow these documents from the repository:
 2. docs/AI_EXTENSION_GUIDE.md
 3. docs/IDEA_TO_EXTENSION.md
 4. docs/PILOT_RUNTIME_UTILS.md
-5. docs/MapContainer.md, if the idea uses maps, coordinates, markers, routes, tracks, geozones, or map center
-6. the closest example from examples/
+5. docs/REGISTER_EXTENSION.md, when you guide me through Admin Panel registration
+6. docs/MapContainer.md, if the idea uses maps, coordinates, markers, routes, tracks, geozones, or map center
+7. the closest example from examples/
 
 Use the repository documents as the source of truth. If any instruction in this prompt conflicts with the repository, follow AI_SPECS.md.
 
-If you cannot open/read the repository, stop and ask me to paste the required docs. Do not guess the PILOT Extension contract.
+If you cannot open/read the repository, stop and ask me to paste only the required file. Do not claim that you read files that you could not access. Do not guess the PILOT Extension contract.
 
 Business idea:
 <what the extension should do>
@@ -36,7 +37,7 @@ UI language:
 <EN / RU / EN+RU>
 
 Deployment target:
-<Cloudflare / GitHub Pages / VPS / file structure only for now>
+<Cloudflare Workers static-file upload / GitHub Pages / VPS / file structure only for now>
 
 Output requirements:
 - First give a short architecture choice and mention which repository docs/examples you used.
@@ -44,5 +45,8 @@ Output requirements:
 - Do not print full source code in the chat by default.
 - Do not invent a fake download link.
 - Do not replace the zip with a local Python/Node/PowerShell/Bash script unless I explicitly ask for a developer workaround.
-- Include the file tree, upload steps, direct /Module.js verification URL, PILOT admin base URL, proxied /store/<extension>/... URLs, launch checklist, and troubleshooting.
+- For Cloudflare, use only Workers and the dashboard option Upload your static files. If it is not visible, stop and ask me for a screenshot. Do not suggest another Cloudflare upload flow.
+- Propose a unique lowercase snake_case slug. Ask me to check it in Admin Panel → Extensions and wait for confirmation before generating files.
+- Include the file tree, upload steps, direct /Module.js verification URL, base URL for the separate PILOT Admin Panel, proxied /store/<extension>/... URLs, launch checklist, and troubleshooting.
+- When you guide registration, list every field: unique slug, full name, description, base URL, published state, icon class, and author. The star icon is selected by default. I can keep it or choose another icon. Do not skip the description or icon field.
 ```

@@ -133,9 +133,9 @@ The same convention is exposed in the runtime: a navigation component can keep a
 
 ## 3.1 Extension Name And Class Name
 
-The PILOT Extension name entered in admin must be safe for Ext JS class names. Use lowercase `snake_case`, for example `weather_demo`.
+The PILOT Extension name entered in the Admin Panel must be safe for Ext JS class names. Use lowercase `snake_case`, for example `weather_demo`.
 
-PILOT creates the entry class name from that admin name:
+PILOT creates the entry class name from that Admin Panel name:
 
 ```text
 Store.<extension_name>.Module
@@ -283,6 +283,8 @@ Ext.define('Store.my_extension.Module', {
 ```
 
 Add a CSS rule for every header button class. The PILOT header can be light gray, so a white icon or white text without a button background has poor contrast.
+
+The JavaScript example assigns `my_extension-header-btn`. Ext JS creates `.x-btn-inner` and `.x-btn-icon-el` at runtime. A static IDE inspection may report these CSS selectors as unused.
 
 ```css
 .my_extension-header-btn {
@@ -480,7 +482,7 @@ The direct verification URL must point to:
 https://HOST/Module.js
 ```
 
-The registered PILOT admin URL must be the base URL:
+The registered PILOT Admin Panel URL must be the base URL:
 
 ```text
 https://HOST/
@@ -495,7 +497,7 @@ After registration, runtime code should use the PILOT same-origin proxy path:
 /store/<extension>/backend/
 ```
 
-Example: if the Extension name is `myapp` and the admin URL is `https://somehost.com/blabla/`, then `/store/myapp/backend/` proxies to `https://somehost.com/blabla/backend/`.
+Example: if the Extension name is `myapp` and the base URL entered in the Admin Panel is `https://somehost.com/blabla/`, then `/store/myapp/backend/` proxies to `https://somehost.com/blabla/backend/`.
 
 If the external host is `https://weather-demo.YOUR.workers.dev/`, still prefer `weather_demo` as the PILOT Extension name. The runtime path then becomes `/store/weather_demo/Module.js`, not `/store/weather-demo/Module.js`.
 
@@ -510,8 +512,8 @@ The generated Extension deliverable must be a zip archive with the complete file
 3. exact upload folder structure;
 4. exact public URLs that must open after upload;
 5. exact direct `Module.js` URL to verify in a browser;
-6. safe `snake_case` PILOT Extension name to enter in admin;
-7. exact base URL to register in PILOT admin;
+6. safe `snake_case` PILOT Extension name to enter in the Admin Panel;
+7. exact base URL to register in the PILOT Admin Panel;
 8. proxied `/store/<extension>/...` runtime URLs for docs/assets/backend;
 9. browser verification steps;
 10. troubleshooting for `404`, HTML instead of JS, CORS, `skeleton is undefined`, `Store.weather-demo.Module` name mismatches, and missing Ext classes.

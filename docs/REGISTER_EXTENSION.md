@@ -1,6 +1,6 @@
 # Register and Enable a PILOT Extension
 
-This guide explains how to register a hosted Extension in Admin, grant account access, set Extension settings, and enable the Extension in PILOT.
+This guide explains how to register a hosted Extension in the separate PILOT Admin Panel, grant account access, set Extension settings, and enable the Extension in PILOT.
 
 For hosting instructions, see [the deployment guide](../DEPLOY.md). For Extension development, see [the developer guide](HUMAN_EXTENSION_GUIDE.md).
 
@@ -8,34 +8,38 @@ For hosting instructions, see [the deployment guide](../DEPLOY.md). For Extensio
 
 1. Host the Extension files at a public base URL.
 2. Open the Extension entry file directly at `<base-url>/Module.js`. Confirm that the browser shows JavaScript source and not an error page.
-3. Use the same lowercase `snake_case` name in Admin and in the Ext JS class name. For example, the name `weather_demo` requires `Store.weather_demo.Module`.
-4. Use the base URL in Admin. Do not enter the `Module.js` URL as the base URL. A trailing slash is recommended.
+3. Use a unique lowercase `snake_case` name in the Admin Panel and in the Ext JS class name. Check that no Extension already uses that name. For example, the name `weather_demo` requires `Store.weather_demo.Module`.
+4. Use the base URL in the Admin Panel. Do not enter the `Module.js` URL as the base URL. A trailing slash is recommended. The current PILOT configuration generator adds it if it is missing. The URL must still point to the folder that contains `Module.js`.
 
 Example:
 
 | Purpose | URL |
 |---|---|
 | Verify the entry file | `https://example.com/weather_demo/Module.js` |
-| Register in Admin | `https://example.com/weather_demo/` |
+| Register in the Admin Panel | `https://example.com/weather_demo/` |
 
-## Register the Extension in Admin
+## Register the Extension in the Admin Panel
 
-1. Sign in to Admin.
+The PILOT Admin Panel is a separate web interface. Do not look for Extension registration in the PILOT user interface.
+
+1. Open the Admin Panel URL and sign in.
 2. Open **Extensions** in the left menu. This opens the **Extensions** list.
 3. Select **Add**.
 4. Edit the new row and enter these fields:
 
 | Field | Value |
 |---|---|
-| **Name** | Technical Extension name in lowercase `snake_case`, such as `weather_demo`. It must match the class name in `Module.js`. |
+| **Name** | Unique technical Extension name in lowercase `snake_case`, such as `weather_demo`. It must match the class name in `Module.js`. Check that no Extension already uses it. |
 | **Name Pretty** | Name shown to PILOT users. |
 | **Description** | Short description shown in PILOT. |
 | **URL** | Hosted base URL, such as `https://example.com/weather_demo/`. |
 | **Is Published** | Select this when users can see and enable the Extension. |
-| **Icon class** | Select an icon for the Extension. |
+| **Icon class** | The star icon is selected by default. Keep it or choose another icon from the list. Changing it is optional. |
 | **Author** | Name shown as the Extension author. |
 
-5. Select **Update** to save the row. Admin checks the URL. Confirm that the URL is accepted and that the entry appears in the Extensions list.
+5. Select **Update** to save the row. The Admin Panel checks the URL. Confirm that the URL is accepted and that the entry appears in the Extensions list.
+
+In the current PILOT deployment, the store proxy configuration refreshes every 10 minutes. Allow up to 10 minutes after you add an Extension or change its URL. Then reload PILOT.
 
 **Note:** **Add** creates a record before row editing is complete. If you abandon a new entry, check the list and remove the unused record with its delete action.
 
@@ -93,7 +97,7 @@ The Extensions list shows the Extensions available to the current account. The a
 | Problem | Check |
 |---|---|
 | Extension is missing from the PILOT list | Confirm that **Is Published** is selected and that the current account has access. |
-| Extension appears but does not load | Confirm that the Admin name matches `Store.<name>.Module` in `Module.js`. Check the base URL and confirm that `Module.js` opens directly. |
+| Extension appears but does not load | Confirm that the Admin Panel name matches `Store.<name>.Module` in `Module.js`. Check the base URL and confirm that `Module.js` opens directly. |
 | Changes do not appear | Reload PILOT, then reopen **Extensions**. |
 | Account setting cannot be added | Link the account in the **Access** tab first. |
 | Extension cannot reach its backend | Use the same-origin `/store/<extension>/backend/` proxy path. See [the deployment guide](../DEPLOY.md). |

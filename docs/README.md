@@ -2,6 +2,12 @@
 
 Use this page to find the right guide for your task. Start with the section that matches your role.
 
+## I am new to PILOT Extensions
+
+Start with [From Business Idea To Working Extension](IDEA_TO_EXTENSION.md). It explains how to create and host an Extension, register it in the separate Admin Panel, grant access, and enable it in PILOT.
+
+For a static Extension, use Cloudflare Workers with **Upload your static files** or use GitHub Pages. The Cloudflare guide uses only the Workers static-file upload flow.
+
 ## I want to build an extension
 
 1. Read [the human developer guide](HUMAN_EXTENSION_GUIDE.md).
@@ -14,7 +20,7 @@ Use this page to find the right guide for your task. Start with the section that
 
 ## I want to register an extension in PILOT
 
-Follow [the registration and account-access guide](REGISTER_EXTENSION.md) to register an Extension in Admin, grant account access, set global or account-specific values, and enable it in PILOT.
+Follow [the registration and account-access guide](REGISTER_EXTENSION.md) to register an Extension in the separate Admin Panel, grant account access, set global or account-specific values, and enable it in PILOT.
 
 ## I have a business idea and use an AI assistant
 

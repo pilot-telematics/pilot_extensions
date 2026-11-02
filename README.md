@@ -9,12 +9,19 @@ The repository is organized for two audiences:
 
 ## Start Here
 
+For your first Extension, read [From Business Idea To Working Extension](docs/IDEA_TO_EXTENSION.md). It explains how to ask an AI assistant to create an Extension, host the files, register the Extension in the separate Admin Panel, and enable it in PILOT.
+
+For static hosting, choose one of these options:
+
+- **Cloudflare Workers:** upload the files through **Upload your static files**.
+- **GitHub Pages:** store the files in a public repository and publish them from GitHub.
+
 For managers using an AI assistant:
 
 1. Open [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md).
 2. Add the business idea and this repository URL.
 3. Ask the AI for a zip archive with the complete Extension file structure.
-4. Upload the archive contents, verify `/Module.js` in a browser, and register the base URL in PILOT.
+4. Upload the archive contents, verify `/Module.js` in a browser, and register the base URL in the separate PILOT Admin Panel.
 
 For developers:
 

@@ -28,8 +28,8 @@ Extensions run inside compiled PILOT `app.js`. They can access runtime objects a
 
 | Compiled PILOT code | PILOT Extension |
 |---|---|
-| Shipped as part of PILOT | Hosted separately; PILOT admin stores the base URL and loads `Module.js` from it |
-| Compiled together with the main PILOT application | Hosted separately; `/Module.js` is verified directly, while the base URL is registered in PILOT |
+| Shipped as part of PILOT | Hosted separately; the PILOT Admin Panel stores the base URL and loads `Module.js` from it |
+| Compiled together with the main PILOT application | Hosted separately; `/Module.js` is verified directly, while the base URL is registered in the Admin Panel |
 | May be tied to the main PILOT backend | May use external backend: Cloudflare Worker, VPS, PHP, separate API |
 | Creates runtime objects and utilities | Uses only what is available in loaded `app.js` |
 
@@ -39,7 +39,7 @@ When an Extension is registered, PILOT stores the external base URL but exposes 
 
 ```text
 Extension name: myapp
-Admin URL: https://somehost.com/blabla/
+Base URL entered in the Admin Panel: https://somehost.com/blabla/
 
 /store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
 /store/myapp/doc/index.html  -> https://somehost.com/blabla/doc/index.html
@@ -60,9 +60,9 @@ my_extension/
     └── index.html
 ```
 
-Use the same safe lowercase `snake_case` name in PILOT admin and in the Ext JS class name. For example, an Extension named `my_extension` must define `Store.my_extension.Module`.
+Use the same safe lowercase `snake_case` name in the PILOT Admin Panel and in the Ext JS class name. For example, an Extension named `my_extension` must define `Store.my_extension.Module`.
 
-Do not name a PILOT Extension `my-extension` or `weather-demo`. PILOT builds the class name from the admin name, so a hyphenated name makes it try to create `Store.weather-demo.Module`.
+Do not name a PILOT Extension `my-extension` or `weather-demo`. PILOT builds the class name from the Admin Panel name, so a hyphenated name makes it try to create `Store.weather-demo.Module`.
 
 `Module.js` is the only runtime entry point.
 
@@ -298,6 +298,8 @@ if (window.skeleton && skeleton.header && skeleton.header.insert) {
 
 CSS:
 
+The JavaScript example assigns `my_extension-header-btn`. Ext JS creates `.x-btn-inner` and `.x-btn-icon-el` at runtime. A static IDE inspection may report these CSS selectors as unused.
+
 ```css
 .my_extension-header-btn {
     background: #2563eb !important;
@@ -439,13 +441,13 @@ Before writing custom formatters, check PILOT runtime helpers:
 Example:
 
 ```js
-{
+var mileageColumn = {
     text: l('Mileage'),
     dataIndex: 'mileage',
     renderer: function (value) {
         return typeof mileageSS === 'function' ? mileageSS(value, 1) : value;
     }
-}
+};
 ```
 
 See [PILOT_RUNTIME_UTILS.md](PILOT_RUNTIME_UTILS.md).

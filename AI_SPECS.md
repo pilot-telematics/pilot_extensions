@@ -313,6 +313,8 @@ if (window.skeleton && skeleton.header && skeleton.header.insert) {
 
 Header buttons must include an Extension-specific CSS class with a visible background. Do not rely on white text or a white icon directly on the light gray PILOT header.
 
+The JavaScript example assigns `my_extension-header-btn`. Ext JS creates `.x-btn-inner` and `.x-btn-icon-el` at runtime. A static IDE inspection may report these CSS selectors as unused.
+
 ```css
 .my_extension-header-btn {
     background: #2563eb !important;
@@ -458,11 +460,11 @@ Rules:
 
 ## 8.1 PILOT Store Proxy URL Rules
 
-PILOT admin stores the external Extension base URL, for example:
+The PILOT Admin Panel stores the external Extension base URL, for example:
 
 ```text
 Extension name: myapp
-Admin URL: https://somehost.com/blabla/
+Base URL entered in the Admin Panel: https://somehost.com/blabla/
 ```
 
 At runtime, PILOT proxies that URL under the PILOT domain:
@@ -477,7 +479,7 @@ https://pilot-gps.com/store/myapp/backend/     -> https://somehost.com/blabla/ba
 Rules:
 
 - Verify the external `https://somehost.com/blabla/Module.js` directly in a browser before registration.
-- Register only the external base URL in PILOT admin: `https://somehost.com/blabla/`.
+- Register only the external base URL in the PILOT Admin Panel: `https://somehost.com/blabla/`.
 - Show the base URL with a trailing slash. The current PILOT store configuration generator adds the slash when it is missing, but the URL must still point to the folder that contains `Module.js`.
 - Inside the running Extension, prefer same-origin proxied URLs under `/store/<extension>/...` for Extension assets, docs, JSON, and backend calls.
 - Do not hardcode `https://pilot-gps.com`; use a root-relative path such as `/store/myapp/backend/api.php` or derive the current script base from the loaded `Module.js`.
@@ -604,11 +606,13 @@ Default deployment instructions must be manager-friendly.
 When the user chooses Cloudflare for a static Extension and does not explicitly ask for CLI:
 
 - Use Cloudflare dashboard / browser upload instructions.
-- Use the Cloudflare Workers static-file upload flow for static `Module.js`, CSS, docs, JSON, and assets.
+- Use only the Cloudflare Workers static-file upload flow for static `Module.js`, CSS, docs, JSON, and assets. Use the dashboard option **Upload your static files**. Do not suggest another Cloudflare hosting flow. If the option is not visible, stop and ask the user for a screenshot.
 - Include a root `index.html` next to `Module.js`; it may be empty or duplicate `doc/index.html`. This helps Cloudflare mark the uploaded folder as the assets root.
 - Do not tell the user to install `npm`, Node.js, Wrangler, Git, or any terminal tool.
 - Tell the user to upload the generated zip archive or its extracted folder through the Cloudflare dashboard.
-- Tell the user to verify the public `https://.../Module.js` URL in a browser, then register the external base URL in PILOT admin, for example `https://.../`. Explain that PILOT will proxy it as `/store/<extension>/...` at runtime for CORS compatibility.
+- Tell the user to verify the public `https://.../Module.js` URL in a browser, then register the external base URL in the PILOT Admin Panel, for example `https://.../`. Explain that PILOT will proxy it as `/store/<extension>/...` at runtime for CORS compatibility.
+- When guiding the user through registration in the separate PILOT Admin Panel, list every field: unique Extension name/slug, full name, description, base URL, published state, icon class, and author. The default icon is a star. Explain that changing the icon is optional. Do not skip the description or icon field.
+- For the current PILOT deployment, explain that the store proxy configuration refreshes every 10 minutes. Tell the user to allow up to 10 minutes after registration or a URL change before they troubleshoot the proxy.
 
 When the user chooses GitHub Pages and does not explicitly ask for CLI:
 

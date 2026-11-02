@@ -10,7 +10,7 @@ Treat PILOT as the host platform:
 
 - PILOT provides the shell, Ext JS, maps, trees, header, translations, and some utility classes.
 - The Extension ships its own `Module.js`, JS/CSS/assets, and optional external backend.
-- Extension-owned classes should live under `Store.<extension>.*`, where `<extension>` is the exact safe lowercase `snake_case` PILOT Extension name from admin, for example `weather_demo`.
+- Extension-owned classes should live under `Store.<extension>.*`, where `<extension>` is the exact safe lowercase `snake_case` PILOT Extension name from the Admin Panel, for example `weather_demo`.
 - Do not use hyphens in the PILOT Extension name. PILOT creates `Store.<extension>.Module` from that name.
 - Do not require local PILOT source files.
 - Do not depend on internal business classes unless they are documented as runtime API.
@@ -64,6 +64,8 @@ if (skeleton.header.menu_btn && skeleton.header.menu_btn.menu) {
 Do not remove or replace native header items.
 
 For custom header buttons, add an Extension-specific class with a visible background. White text or icons on the light gray PILOT header are hard to read.
+
+The JavaScript example assigns `my_extension-header-btn`. Ext JS creates `.x-btn-inner` and `.x-btn-icon-el` at runtime. A static IDE inspection may report these CSS selectors as unused.
 
 ```js
 skeleton.header.insert(5, {
@@ -320,7 +322,7 @@ See [API compatibility and support boundaries](PILOT_API_COMPATIBILITY.md) for t
 
 ## Extension Store Proxy
 
-PILOT admin stores the external Extension base URL, for example `https://somehost.com/blabla/`. At runtime, PILOT proxies that URL under the current PILOT domain:
+The PILOT Admin Panel stores the external Extension base URL, for example `https://somehost.com/blabla/`. At runtime, PILOT proxies that URL under the current PILOT domain:
 
 ```text
 /store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
@@ -492,13 +494,13 @@ if (window.uom) {
 Grid column example:
 
 ```js
-{
+var speedColumn = {
     text: l('Speed'),
     dataIndex: 'speed',
     renderer: function (value) {
         return typeof speedSS === 'function' ? speedSS(value) : value;
     }
-}
+};
 ```
 
 Rule: source values usually should be in PILOT base units, and `uom` converts them to user/account settings.
@@ -524,13 +526,13 @@ PILOT runtime includes global renderer/helper functions for formatting data in g
 | `timeAgo(ts)` | relative time with `ago` |
 
 ```js
-{
+var lastMessageColumn = {
     text: l('Last message'),
     dataIndex: 'ts',
     renderer: function (value) {
         return typeof dateTimeStr === 'function' ? dateTimeStr(value) : value;
     }
-}
+};
 ```
 
 ### Numbers And Indicators
@@ -562,7 +564,7 @@ If a renderer returns HTML, never inject untrusted user/external text without `E
 `makeAddress(...)` and `makeGeoZone(...)` may work asynchronously and return a temporary `<span>` that runtime logic and jQuery fill later.
 
 ```js
-{
+var addressColumn = {
     text: l('Address'),
     dataIndex: 'address',
     renderer: function (value) {
@@ -574,7 +576,7 @@ If a renderer returns HTML, never inject untrusted user/external text without `E
             Ext.String.htmlEncode(value.lat + ', ' + value.lon) :
             '';
     }
-}
+};
 ```
 
 ### Events And Media

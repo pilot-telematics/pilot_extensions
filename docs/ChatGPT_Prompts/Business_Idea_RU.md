@@ -13,8 +13,9 @@ https://github.com/pilot-telematics/pilot_extensions
 2. docs/AI_EXTENSION_GUIDE.md
 3. docs/IDEA_TO_EXTENSION_RU.md
 4. docs/PILOT_RUNTIME_UTILS_RU.md
-5. docs/MapContainer_RU.md, если идея использует карту, координаты, маркеры, маршруты, треки, геозоны или центр карты
-6. ближайший пример из examples/
+5. docs/REGISTER_EXTENSION_RU.md, если ты помогаешь зарегистрировать расширение в панели Администратора
+6. docs/MapContainer_RU.md, если идея использует карту, координаты, маркеры, маршруты, треки, геозоны или центр карты
+7. ближайший пример из examples/
 
 Документы репозитория являются источником истины. Если этот prompt конфликтует с документацией, выполняй AI_SPECS.md.
 
@@ -46,4 +47,6 @@ https://github.com/pilot-telematics/pilot_extensions
 - Не придумывай фейковую ссылку на скачивание.
 - Не заменяй zip локальным Python/Node/PowerShell/Bash скриптом, если я явно не попросил developer workaround.
 - Включи дерево файлов, шаги загрузки, прямой URL проверки /Module.js, base URL для панели Администратора PILOT, proxied URLs /store/<extension>/..., launch checklist и troubleshooting.
+- При регистрации перечисли все поля: уникальный технический slug, полное название, описание, URL-адрес, признак публикации, класс значков и автор.
+- Укажи поле «Класс значков» и объясни, что по умолчанию выбрана звезда. Её можно оставить или выбрать другой значок. Не пропускай описание или поле значка.
 ```

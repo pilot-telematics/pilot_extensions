@@ -2,7 +2,7 @@
 
 This document explains where and how to host `Module.js` files for PILOT Extensions.
 
-A PILOT Extension is hosted as a folder/base URL. PILOT admin should usually store the base URL with a trailing slash:
+A PILOT Extension is hosted as a folder/base URL. The PILOT Admin Panel should usually store the base URL with a trailing slash:
 
 ```text
 https://YOUR-HOST/
@@ -19,7 +19,7 @@ The Extension name configured in PILOT must be safe for both URLs and Ext JS cla
 At runtime, PILOT also exposes the Extension through a same-origin store proxy:
 
 ```text
-Admin URL: https://somehost.com/blabla/
+Base URL entered in the Admin Panel: https://somehost.com/blabla/
 Extension name: myapp
 
 https://pilot-gps.com/store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
@@ -97,7 +97,7 @@ If you upload a parent folder that contains `weather/Module.js`, then the `Modul
 https://YOUR-HOST/weather/Module.js
 ```
 
-and the PILOT admin registration URL should be:
+and the PILOT Admin Panel registration URL should be:
 
 ```text
 https://YOUR-HOST/weather/
@@ -145,7 +145,7 @@ Workers & Pages
 Create application
 ```
 
-4. Choose static assets upload / upload assets.
+4. Choose **Upload your static files** for a Cloudflare Workers project. If this option is not visible, stop and ask the user for a screenshot. Do not guess another Cloudflare workflow.
 5. Upload a folder or ZIP with this structure:
 
 ```text
@@ -311,25 +311,27 @@ upload the contents of `weather/`, not the folder itself.
 In `Module.js`, load CSS from the same directory as `Module.js`:
 
 ```js
-getModuleBaseUrl: function () {
-    var scripts = document.getElementsByTagName('script');
+var extension = {
+    getModuleBaseUrl: function () {
+        var scripts = document.getElementsByTagName('script');
 
-    for (var i = 0; i < scripts.length; i++) {
-        var src = scripts[i].src || '';
+        for (var i = 0; i < scripts.length; i++) {
+            var src = scripts[i].src || '';
 
-        if (src.indexOf('/Module.js') !== -1) {
-            return src.replace('Module.js', '');
+            if (src.indexOf('/Module.js') !== -1) {
+                return src.replace('Module.js', '');
+            }
         }
-    }
 
-    return './';
-}
+        return './';
+    }
+};
 ```
 
 Then:
 
 ```js
-var href = this.getModuleBaseUrl() + 'extension.css';
+var href = extension.getModuleBaseUrl() + 'extension.css';
 ```
 
 ### External API has CORS error
@@ -626,7 +628,7 @@ https://USERNAME.github.io/pilot-weather/Module.js
 https://ext.example.com/weather/Module.js
 ```
 
-PILOT admin registration URLs:
+PILOT Admin Panel registration URLs:
 
 ```text
 https://weather-demo.YOUR.workers.dev/
@@ -665,7 +667,7 @@ Examples:
 
 ## Browser verification
 
-Before registering in PILOT, always open `Module.js` directly in a browser, but paste the base URL into the PILOT admin panel.
+Before registering in PILOT, always open `Module.js` directly in a browser, but paste the base URL into the separate PILOT Admin Panel.
 
 The browser must show JavaScript source code, not:
 
@@ -750,7 +752,7 @@ Deployment target:
 - PILOT Extension name must be lowercase snake_case, for example weather_demo, and Module.js must define Store.weather_demo.Module exactly;
 - do not use hyphenated PILOT Extension names such as weather-demo; hyphens are acceptable only in the external host/project URL;
 - direct Module.js verification URL must be https://HOST/Module.js;
-- PILOT admin registration URL must be the base URL, for example https://HOST/;
+- PILOT Admin Panel registration URL must be the base URL, for example https://HOST/;
 - after registration, runtime URLs are proxied as /store/<extension>/Module.js, /store/<extension>/doc/index.html, /store/<extension>/backend/;
 - provide Cloudflare upload instructions;
 - provide GitHub Pages instructions if backend is not needed;
