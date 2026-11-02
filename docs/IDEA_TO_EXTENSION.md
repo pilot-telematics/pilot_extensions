@@ -4,7 +4,25 @@ This document is the shortest path from a business idea to a generated PILOT Ext
 
 ## 1. What The User Should Tell The AI
 
-Minimum prompt:
+### First Extension: Hello World
+
+Use this short prompt if you are new to PILOT Extensions:
+
+```text
+I am new to PILOT Extensions and cannot code. Help me create and launch a simple “Hello, PILOT!” Extension one step at a time. After each step, tell me what I should see and wait for my reply.
+
+Use https://github.com/pilot-telematics/pilot_extensions. First read AI_SPECS.md, examples/hello_world/Module.js, docs/DEPLOY.md, and docs/REGISTER_EXTENSION.md. Follow these documents. Try the links before asking me for files. If you cannot read a file, say so.
+
+First suggest a unique lowercase snake_case slug. Ask me to check it in the separate PILOT Admin Panel → Extensions. Wait for my confirmation before creating files.
+
+Then create a minimal Extension with one left navigation tab and a panel that says “Hello, PILOT!”. Help me publish it, register it in the Admin Panel, grant my account access, enable it in PILOT, and verify it.
+```
+
+Use the detailed guides below when you need the upload or registration steps.
+
+### Business Idea Prompt
+
+For a business Extension, use this minimum prompt:
 
 ```text
 Build a PILOT Extension for this business idea:
