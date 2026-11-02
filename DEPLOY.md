@@ -29,7 +29,7 @@ https://pilot-gps.com/store/myapp/backend/        -> https://somehost.com/blabla
 
 Use this `/store/<extension>/...` path from Extension runtime code for assets, docs, JSON, and backend endpoints when you need CORS-compatible same-origin requests.
 
-The `<extension>` segment is the safe PILOT Extension name. The external hosting project can still have a hyphenated URL such as `https://weather-demo.YOUR.pages.dev/`, but if the PILOT Extension name is `weather_demo`, runtime URLs are `/store/weather_demo/Module.js`, `/store/weather_demo/doc/index.html`, and `/store/weather_demo/backend/`.
+The `<extension>` segment is the safe PILOT Extension name. The external hosting project can still have a hyphenated URL such as `https://weather-demo.YOUR.workers.dev/`, but if the PILOT Extension name is `weather_demo`, runtime URLs are `/store/weather_demo/Module.js`, `/store/weather_demo/doc/index.html`, and `/store/weather_demo/backend/`.
 
 or, if you prefer grouping several extensions:
 

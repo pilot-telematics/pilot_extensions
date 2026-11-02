@@ -155,7 +155,7 @@ This is not a safe PILOT Extension name:
 weather-demo
 ```
 
-It makes PILOT try to create `Store.weather-demo.Module`, which will not match `Store.weather_demo.Module`. Public hosting project names may still use hyphens, for example `https://weather-demo.YOUR.pages.dev/`, but the PILOT Extension name and `/store/...` path should be `weather_demo`.
+It makes PILOT try to create `Store.weather-demo.Module`, which will not match `Store.weather_demo.Module`. Public hosting project names may still use hyphens, for example `https://weather-demo.YOUR.workers.dev/`, but the PILOT Extension name and `/store/...` path should be `weather_demo`.
 
 ## 4. Recommended Full UI Skeleton
 
@@ -497,7 +497,7 @@ After registration, runtime code should use the PILOT same-origin proxy path:
 
 Example: if the Extension name is `myapp` and the admin URL is `https://somehost.com/blabla/`, then `/store/myapp/backend/` proxies to `https://somehost.com/blabla/backend/`.
 
-If the external host is `https://weather-demo.YOUR.pages.dev/`, still prefer `weather_demo` as the PILOT Extension name. The runtime path then becomes `/store/weather_demo/Module.js`, not `/store/weather-demo/Module.js`.
+If the external host is `https://weather-demo.YOUR.workers.dev/`, still prefer `weather_demo` as the PILOT Extension name. The runtime path then becomes `/store/weather_demo/Module.js`, not `/store/weather-demo/Module.js`.
 
 Use [../DEPLOY.md](../DEPLOY.md) for hosting-specific instructions.
 

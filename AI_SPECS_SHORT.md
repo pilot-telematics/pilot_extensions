@@ -37,7 +37,7 @@ Ext.define('Store.my_extension.Module', {
 });
 ```
 
-Do not use hyphens in the PILOT Extension name. A public host may be `https://weather-demo.YOUR.pages.dev/`, but the PILOT Extension name should be `weather_demo`, producing `/store/weather_demo/Module.js`.
+Do not use hyphens in the PILOT Extension name. A public host may be `https://weather-demo.YOUR.workers.dev/`, but the PILOT Extension name should be `weather_demo`, producing `/store/weather_demo/Module.js`.
 
 ## Important PILOT Globals
 

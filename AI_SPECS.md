@@ -33,6 +33,7 @@ Mandatory:
 - Put runtime logic in class methods, not in `doc/index.html`.
 - Integrate with existing PILOT containers and maps.
 - Keep generated code simple enough to run without a bundler.
+- Save generated text files as UTF-8 without a byte order mark (BOM).
 
 Forbidden:
 
@@ -82,7 +83,7 @@ Ext.define('Store.weather_demo.Module', {
 });
 ```
 
-- External host/project names may use hyphens, for example `https://weather-demo.YOUR.pages.dev/`, but the PILOT Extension name and proxied store path should still use the safe name: `/store/weather_demo/Module.js`.
+- External host/project names may use hyphens, for example `https://weather-demo.YOUR.workers.dev/`, but the PILOT Extension name and proxied store path should still use the safe name: `/store/weather_demo/Module.js`.
 
 ## 3. PILOT Runtime Object Catalog
 
@@ -477,6 +478,7 @@ Rules:
 
 - Verify the external `https://somehost.com/blabla/Module.js` directly in a browser before registration.
 - Register only the external base URL in PILOT admin: `https://somehost.com/blabla/`.
+- Show the base URL with a trailing slash. The current PILOT store configuration generator adds the slash when it is missing, but the URL must still point to the folder that contains `Module.js`.
 - Inside the running Extension, prefer same-origin proxied URLs under `/store/<extension>/...` for Extension assets, docs, JSON, and backend calls.
 - Do not hardcode `https://pilot-gps.com`; use a root-relative path such as `/store/myapp/backend/api.php` or derive the current script base from the loaded `Module.js`.
 - For generated code, keep the PILOT Extension slug/name stable, URL-safe, and Ext JS-safe (`snake_case`), because it becomes both the `/store/<extension>/` path segment and the `Store.<extension>.Module` class segment.
@@ -587,7 +589,7 @@ my_extension/
 
 Use `_worker.js` in generated Cloudflare examples when the user wants to upload the folder directly and use the same Cloudflare project for both static assets and API proxy routes.
 
-Cloudflare Pages may redirect `doc/index.html` to the clean directory URL `doc/` with HTTP 308. When documenting or linking to hosted docs for Cloudflare Pages, prefer `/doc/` as the public/proxied docs URL. If an Nginx `/store/<extension>/...` proxy is used, tell the user to rewrite upstream relative redirects back under the store prefix, for example `proxy_redirect / /store/<extension>/;`.
+
 
 Do not create package.json, build config, node_modules, or standalone HTML app files unless the user specifically asks for tooling outside the PILOT extension runtime.
 
@@ -602,7 +604,7 @@ Default deployment instructions must be manager-friendly.
 When the user chooses Cloudflare for a static Extension and does not explicitly ask for CLI:
 
 - Use Cloudflare dashboard / browser upload instructions.
-- Prefer Cloudflare Pages Direct Upload for static `Module.js`, CSS, docs, JSON, and assets.
+- Use the Cloudflare Workers static-file upload flow for static `Module.js`, CSS, docs, JSON, and assets.
 - Include a root `index.html` next to `Module.js`; it may be empty or duplicate `doc/index.html`. This helps Cloudflare mark the uploaded folder as the assets root.
 - Do not tell the user to install `npm`, Node.js, Wrangler, Git, or any terminal tool.
 - Tell the user to upload the generated zip archive or its extracted folder through the Cloudflare dashboard.
@@ -618,7 +620,7 @@ When a backend/proxy is required:
 - Explain that a technical person may be needed.
 - If Cloudflare Worker code is needed, provide browser-dashboard steps first and CLI steps only as an optional developer path.
 
-Never claim that a zip file is downloadable unless an actual file attachment/artifact is created. If the current AI environment cannot attach files, say so clearly and do not invent a download link or ask the user to run a local script to build the archive.
+Never claim that a zip file is downloadable unless an actual file attachment/artifact is created. If the current AI environment cannot attach files, say so clearly and do not invent a download link or ask the user to run a local script to build the archive. If the user still needs the files, offer to provide each file separately with its exact path and contents.
 
 ## 10. Mandatory Acceptance Checklist
 
@@ -626,7 +628,7 @@ Before final output, verify:
 
 - `Module.js` exists.
 - `Module.js` uses `Ext.define('Store.<extension_name>.Module', ...)`, where `<extension_name>` exactly matches the safe `snake_case` Extension name configured in PILOT.
-- The Extension name/slug contains no hyphens. If the public host is `weather-demo.YOUR.pages.dev`, register the PILOT Extension as `weather_demo` and use `/store/weather_demo/...` inside runtime URLs.
+- The Extension name/slug contains no hyphens. If the public host is `weather-demo.YOUR.workers.dev`, register the PILOT Extension as `weather_demo` and use `/store/weather_demo/...` inside runtime URLs.
 - The class extends `Ext.Component`.
 - `initModule` is a class method.
 - No forbidden bootstrap pattern exists.

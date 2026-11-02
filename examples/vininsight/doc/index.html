@@ -351,11 +351,6 @@
             </tbody>
         </table>
 
-        <div class="note">
-            Cloudflare Pages may redirect <code>/doc/index.html</code> to <code>/doc/</code>. If PILOT or Nginx proxies
-            the extension as <code>/store/vininsight/</code>, rewrite upstream redirects back under that prefix.
-        </div>
-
         <p class="small">
             The Worker does not store auto.dev API keys. The browser sends the current user's key as an
             <code>Authorization: Bearer</code> header during VIN decode requests.
