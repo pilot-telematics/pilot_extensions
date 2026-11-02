@@ -1,4 +1,4 @@
-# PILOT Extensions
+# Расширения PILOT
 
 Репозиторий с примерами, документацией и AI-контрактами для разработки расширений PILOT.
 
@@ -10,7 +10,7 @@
 
 1. Откройте [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md).
 2. Добавьте бизнес-идею и ссылку на этот репозиторий.
-3. Попросите AI выдать zip-архив с полной структурой файлов Extension.
+3. Попросите AI выдать zip-архив с полной структурой файлов расширения.
 4. Разместите файлы из архива, проверьте `/Module.js` в браузере и зарегистрируйте base URL в PILOT.
 
 Если вы разработчик:
@@ -48,7 +48,7 @@
 ```text
 Используй репозиторий pilot-telematics/pilot_extensions.
 Сначала прочитай AI_SPECS.md и docs/AI_EXTENSION_GUIDE.md.
-Сделай PILOT Extension по бизнес-идее ниже.
+Создай расширение PILOT по бизнес-идее ниже.
 Не создавай standalone web app. Расширение должно запускаться через Module.js внутри PILOT.
 Результат дай zip-архивом с полной структурой файлов.
 ```
@@ -122,7 +122,7 @@ my_extension/
 └── backend/        # опционально, если нужен PHP/backend
 ```
 
-Используйте безопасное lowercase `snake_case` имя PILOT Extension, например `my_extension` или `weather_demo`. PILOT создает entry class name как `Store.<extension>.Module`, поэтому имена с дефисом вроде `weather-demo` приводят к ошибке загрузки `Store.weather-demo.Module`.
+Используйте безопасное lowercase `snake_case` имя расширения PILOT, например `my_extension` или `weather_demo`. PILOT создает entry class name как `Store.<extension>.Module`, поэтому имена с дефисом вроде `weather-demo` приводят к ошибке загрузки `Store.weather-demo.Module`.
 
 `Module.js` - единственная точка входа runtime-логики.
 
@@ -134,12 +134,12 @@ my_extension/
 
 - [AI_SPECS.md](AI_SPECS.md) - обязательные правила для AI.
 - [docs/IDEA_TO_EXTENSION.md](docs/IDEA_TO_EXTENSION.md) - English version.
-- [docs/IDEA_TO_EXTENSION_RU.md](docs/IDEA_TO_EXTENSION_RU.md) - путь от бизнес-идеи до работающего Extension.
+- [docs/IDEA_TO_EXTENSION_RU.md](docs/IDEA_TO_EXTENSION_RU.md) - путь от бизнес-идеи до работающего расширения.
 - [docs/AI_EXTENSION_GUIDE.md](docs/AI_EXTENSION_GUIDE.md) - как AI должен читать репозиторий и проектировать расширение.
 - [docs/HUMAN_EXTENSION_GUIDE.md](docs/HUMAN_EXTENSION_GUIDE.md) - English developer guide.
 - [docs/HUMAN_EXTENSION_GUIDE_RU.md](docs/HUMAN_EXTENSION_GUIDE_RU.md) - практическое руководство для разработчиков.
 - [docs/PILOT_RUNTIME_UTILS.md](docs/PILOT_RUNTIME_UTILS.md) - English guide to built-in PILOT runtime objects and utilities.
-- [docs/PILOT_RUNTIME_UTILS_RU.md](docs/PILOT_RUNTIME_UTILS_RU.md) - встроенные runtime-объекты и утилиты PILOT, доступные Extensions.
+- [docs/PILOT_RUNTIME_UTILS_RU.md](docs/PILOT_RUNTIME_UTILS_RU.md) - встроенные runtime-объекты и утилиты PILOT, доступные расширениям.
 - [docs/PILOT_API_COMPATIBILITY_RU.md](docs/PILOT_API_COMPATIBILITY_RU.md) - документированные API и границы поддержки.
 - [DEPLOY.md](DEPLOY.md) - Cloudflare Workers, GitHub Pages, AWS EC2/Nginx/PHP-FPM.
 - [docs/MapContainer_RU.md](docs/MapContainer_RU.md) - работа с картой.

@@ -1,10 +1,10 @@
-# Руководство По MapContainer Для PILOT Extensions
+# Руководство по MapContainer для расширений PILOT
 
 `MapContainer` - картографическая обертка PILOT, которая используется в разделах Online и History.
 
-Она построена поверх Leaflet. В Extensions не считайте ее объектом Google Maps, даже если выбран базовый слой `Google Map` или `Google Sat`.
+Она построена поверх Leaflet. В расширениях не считайте ее объектом Google Maps, даже если выбран базовый слой `Google Map` или `Google Sat`.
 
-В большинстве Extensions нужно использовать уже существующие карты:
+В большинстве расширений нужно использовать уже существующие карты:
 
 ```js
 var onlineMap = window.mapContainer;
@@ -23,16 +23,16 @@ function getPilotMap() {
 }
 ```
 
-## Правила Безопасности Для Extensions
+## Правила безопасности для расширений
 
 - Сначала используйте методы `MapContainer`: `addMarker`, `removeMarker`, `setMapCenter`, `setMapZoom`, `addPolyline`, `removePolyline`, `setPolygon`, `addCircle`.
 - К нижележащей Leaflet-карте обращайтесь только через `mapContainer.map` или `mapContainer.getMap()` и только после проверки существования.
 - Leaflet использует `{ lat, lng }`; многие PILOT-хелперы и marker options используют `lat` и `lon`.
 - Не используйте Google Maps-style код вроде `mapContainer.getMap().getCenter().lat()`; у Leaflet поля центра являются свойствами, а не функциями.
-- Запоминайте все ID маркеров, линий, полигонов и кругов, которые создает Extension, чтобы потом удалить только свои слои.
-- Не вызывайте `clearAllMarkers`, `removeAllTracks`, `removeAllHistoryTracks` и похожие широкие методы очистки из Extension, если Extension не владеет всеми этими слоями.
+- Запоминайте все ID маркеров, линий, полигонов и кругов, которые создает расширение, чтобы потом удалить только свои слои.
+- Не вызывайте `clearAllMarkers`, `removeAllTracks`, `removeAllHistoryTracks` и похожие широкие методы очистки из расширения, если расширение не владеет всеми этими слоями.
 
-## Получить Текущий Центр Карты
+## Получить текущий центр карты
 
 ```js
 function getMapCenter(mapContainer) {
@@ -53,9 +53,9 @@ function getMapCenter(mapContainer) {
 }
 ```
 
-## Создать Новую Карту
+## Создать новую карту
 
-Создавайте новую карту только для собственного map panel внутри Extension. Если бизнес-идея говорит использовать текущую карту PILOT, новую карту создавать не нужно.
+Создавайте новую карту только для собственного map panel внутри расширения. Если бизнес-идея говорит использовать текущую карту PILOT, новую карту создавать не нужно.
 
 ```js
 var mapContainer = new MapContainer('my_extension_map');
@@ -207,7 +207,7 @@ var marker = mapContainer.addMarker({
 | `dragend` | Включает dragging и вызывается как `dragend(marker, event)`. |
 | `contextmenu` | Пункты context menu маркера. |
 | `notBindToMap` | Создает marker object, но не добавляет его на карту. |
-| `customOptions.type` | Удобно для группировки маркеров Extension. |
+| `customOptions.type` | Удобно для группировки маркеров расширения. |
 
 PILOT добавляет к marker helper-методы:
 
@@ -217,7 +217,7 @@ PILOT добавляет к marker helper-методы:
 | `marker.getLatLng()` | Возвращает Leaflet lat/lng. |
 | `marker.showPopup()` | Открывает popup после пересборки content. |
 | `marker.focus(zoom, duration)` | Фокусирует маркер. |
-| `marker.getStorage(key)` / `marker.setStorage(key, value)` | Хранит данные Extension на marker. |
+| `marker.getStorage(key)` / `marker.setStorage(key, value)` | Хранит данные расширения на marker. |
 | `marker.updateTooltip(options)` | Обновляет постоянный tooltip/label. |
 | `marker.clearListeners()` | Удаляет listeners, которые использует PILOT. |
 
@@ -239,8 +239,8 @@ if (marker) {
 | `deleteMarker(id)` | ID-based helper удаления. |
 | `removeMarker(marker)` | Удаляет marker object с карты и из внутреннего storage. |
 | `removeMarkers(markers)` | Удаляет список. |
-| `removeAllMarkers(type)` | Широкая очистка. Избегайте в Extensions, если не владеете scope. |
-| `clearAllMarkers()` | Удаляет все tracked markers. Избегайте в Extensions. |
+| `removeAllMarkers(type)` | Широкая очистка. Избегайте в расширениях, если не владеете scope. |
+| `clearAllMarkers()` | Удаляет все tracked markers. Избегайте в расширениях. |
 | `showMarkers(markersIDs)` / `hideMarkers(markersIDs)` | Показать/скрыть по ID. |
 | `fitBoundsToMarkers()` | Подогнать карту под текущие markers. |
 | `flyToMarker(marker)` | Анимированный фокус. |
@@ -337,7 +337,7 @@ var polygon = mapContainer.setPolygon([
 | `removeCircles(circles)` / `removeAllCircles(type)` | Удаление групп. |
 | `setPolygon(points, options)` | Добавляет polygon в `geofences`; поддерживает `label`, `tooltip`, `popup`, `color`, `fillOpacity`. |
 | `getPolygon(id)` / `removePolygon(id)` | Управление polygons. |
-| `clearAllPolygons()` | Широкая очистка. Избегайте, если Extension не владеет всеми polygons. |
+| `clearAllPolygons()` | Широкая очистка. Избегайте, если расширение не владеет всеми полигонами. |
 | `getPointsZoneData(data)` | Парсит строки вида `lat,lng\|lat,lng\|...`. |
 | `updateGeofenceVisibility()` | Обновляет видимость labels/layers по zoom и pixel size. |
 | `setMinimalSizeNameGeozone(fontSize)` / `getMinimalSizeNameGeozone()` | Helpers размера labels. |
@@ -418,7 +418,7 @@ mapContainer.removeHeatMap(heat.id);
 | `getAzimuth(firstPoint, secondPoint)` | Bearing helper. |
 | `toRadians(degrees)` / `toDegrees(angle)` | Conversion helpers. |
 
-## Cleanup Pattern Для Extensions
+## Шаблон очистки для расширений
 
 ```js
 Ext.define('Store.my_extension.MapLayerStore', {
@@ -455,5 +455,5 @@ Ext.define('Store.my_extension.MapLayerStore', {
 | `mapContainer.getMap().getCenter().lat()` | `mapContainer.getMap().getCenter().lat` |
 | Использовать `lon` внутри Leaflet | В Leaflet используйте `lng`, для PILOT marker helpers переводите в `lon`. |
 | `removeMarker('id')` | Используйте `getMarker(id)` и передайте marker object или `deleteMarker(id)`, если доступен. |
-| Вызвать `clearAllMarkers()` из Extension | Запоминайте и удаляйте только маркеры своего Extension. |
+| Вызвать `clearAllMarkers()` из расширения | Запоминайте и удаляйте только маркеры своего расширения. |
 | Создать новый `MapContainer` для работы с текущей картой | Используйте `window.mapContainer`, `window.historyMapContainer` или `getActiveTabMapContainer()`. |

@@ -1,20 +1,20 @@
-# От Бизнес-Идеи До Работающего Extension
+# От бизнес-идеи до работающего расширения
 
-Этот документ нужен для самого короткого пути: человек описывает бизнес-идею, AI генерирует код, а пользователь быстро размещает файлы и запускает Extension в PILOT.
+Этот документ нужен для самого короткого пути: человек описывает бизнес-идею, AI генерирует код, а пользователь быстро размещает файлы и запускает расширение в PILOT.
 
 ## 1. Что Должен Сказать Пользователь AI
 
 Минимально:
 
 ```text
-Сделай PILOT Extension по этой бизнес-идее:
+Создай расширение PILOT по этой бизнес-идее:
 <описание идеи>
 
 Используй репозиторий pilot-telematics/pilot_extensions.
 Сначала прочитай AI_SPECS.md, docs/AI_EXTENSION_GUIDE.md, docs/PILOT_RUNTIME_UTILS_RU.md и docs/PILOT_API_COMPATIBILITY_RU.md.
 Если идея использует карту, центр карты, координаты, маркеры, маршруты, треки или геозоны, также прочитай docs/MapContainer_RU.md. PILOT MapContainer - это обертка над Leaflet, а не объект Google Maps.
 Используй документированные API PILOT. Считай legacy endpoint'ы, данные о ролях, настройки аккаунта и внутренние WebSocket-сообщения неподдерживаемыми, пока PILOT не подтвердит поддержку.
-В результате дай zip-архив с полной структурой файлов Extension и пошаговую инструкцию куда их положить, какой `/Module.js` URL проверить в браузере и какой base URL зарегистрировать в PILOT.
+В результате дай zip-архив с полной структурой файлов расширения и пошаговую инструкцию куда их положить, какой `/Module.js` URL проверить в браузере и какой base URL зарегистрировать в PILOT.
 Также объясни, что PILOT проксирует зарегистрированный base URL через `/store/<extension>/...` для CORS-compatible runtime access.
 ```
 
@@ -45,13 +45,13 @@
 
 | Идея | Вероятный паттерн |
 |---|---|
-| Нужен отдельный рабочий экран, dashboard, таблица, редактор | Full UI Extension |
-| Действие по выбранной машине Online | Context Menu Extension |
+| Нужен отдельный рабочий экран, dashboard, таблица, редактор | Полноценное UI-расширение |
+| Действие по выбранной машине Online | Расширение с контекстным меню |
 | Показать маркеры/маршруты на текущей карте | Existing Map Interaction |
 | Нужна отдельная карта в модуле | Custom Map Panel |
 | Глобальное действие для всего аккаунта | Header Button или Header Menu Item |
 | Панель в Reports, Vehicle Editor, History или settings | Advanced Host Integration |
-| Нужны секреты, CORS proxy, БД | Extension + backend |
+| Нужны секреты, CORS proxy, БД | Расширение с backend |
 
 AI должен выбрать самый простой паттерн, который закрывает задачу.
 
@@ -64,7 +64,7 @@ AI должен выбрать самый простой паттерн, кот�
 Ответ AI должен содержать:
 
 1. Краткое описание выбранной архитектуры.
-2. Zip-архив с полной структурой файлов Extension.
+2. Zip-архив с полной структурой файлов расширения.
 3. Дерево файлов внутри zip.
 4. Подтверждение, что `Module.js` является единственной runtime-точкой входа.
 5. Подтверждение, что `doc/index.html` не содержит `<script>`.
@@ -158,10 +158,10 @@ https://ext.example.com/my_extension/Module.js
 
 1. Откройте прямой URL `Module.js` в браузере.
 2. Убедитесь, что браузер показывает JavaScript-код, а не HTML-страницу ошибки.
-3. В PILOT откройте админку приложений/Extensions.
-4. Создайте новое приложение.
+3. В PILOT Admin откройте «Расширения».
+4. Зарегистрируйте новое расширение.
 5. Укажите base URL, а не прямой URL `Module.js`.
-6. Сохраните и включите Extension для нужного договора/пользователя.
+6. Сохраните и включите расширение для нужного договора/пользователя.
 7. Подождите время применения настроек, если в вашей установке есть delay/proxy-cache.
 8. Перезагрузите PILOT.
 
@@ -172,9 +172,9 @@ https://ext.example.com/my_extension/Module.js
 Зарегистрировать в PILOT: https://weather-demo.YOUR.workers.dev/
 ```
 
-В PILOT admin используйте безопасное `snake_case` имя Extension, например `weather_demo`. Не используйте `weather-demo` как имя Extension в PILOT, потому что PILOT создает runtime-класс `Store.weather-demo.Module`.
+В PILOT admin используйте безопасное `snake_case` имя расширения, например `weather_demo`. Не используйте `weather-demo` как имя расширения в PILOT, потому что PILOT создает runtime-класс `Store.weather-demo.Module`.
 
-Если имя Extension — `weather_demo`, PILOT проксирует зарегистрированный base URL так:
+Если имя расширения — `weather_demo`, PILOT проксирует зарегистрированный base URL так:
 
 ```text
 /store/weather_demo/Module.js
@@ -182,7 +182,7 @@ https://ext.example.com/my_extension/Module.js
 /store/weather_demo/backend/
 ```
 
-Используйте эти proxied paths из runtime-кода для загрузки assets Extension и вызова backend Extension.
+Используйте эти proxied paths из runtime-кода для загрузки ресурсов расширения и вызова backend расширения.
 
 ## 7. Проверка В Браузере
 
@@ -203,20 +203,20 @@ https://ext.example.com/my_extension/Module.js
 | Симптом | Причина | Что сделать |
 |---|---|---|
 | `Module.js` 404 | Неправильно загружена папка | Откройте прямой URL и проверьте структуру hosting |
-| `/store/<extension>/Module.js` 404 | Несовпадение name/slug Extension или зарегистрированного URL | Проверьте slug/name Extension и зарегистрированный base URL |
+| `/store/<extension>/Module.js` 404 | Несовпадение name/slug расширения или зарегистрированного URL | Проверьте имя расширения и зарегистрированный base URL |
 | При проверке `Module.js` открывается HTML вместо JS | Неверный upload URL или hosting fallback | Откройте прямой `/Module.js` URL и исправьте структуру hosting |
-| Extension не загружается в PILOT, но `/Module.js` открывается | Зарегистрирован прямой URL файла вместо base URL | Зарегистрируйте base URL, например `https://HOST/` |
-| `skeleton is undefined` | Код запущен вне PILOT | Проверять Extension нужно внутри PILOT, а не как standalone page |
-| `Ext is undefined` | Extension сделали как отдельный сайт | Не загружайте вне PILOT, не делайте SPA |
-| `Store.weather-demo.Module` class not found | Имя Extension в PILOT содержит дефис | Переименуйте Extension в `weather_demo`, определите `Store.weather_demo.Module` и используйте `/store/weather_demo/...` |
-| Класс не найден | Не загружен дополнительный JS-файл или имя класса не совпадает с именем Extension в PILOT | В `Module.js` нужно загрузить файл через `Ext.Loader.loadScript` или держать код в одном файле; `Ext.define('Store.<extension_name>.Module', ...)` должен точно совпадать с именем в admin |
+| Расширение не загружается в PILOT, но `/Module.js` открывается | Зарегистрирован прямой URL файла вместо base URL | Зарегистрируйте base URL, например `https://HOST/` |
+| `skeleton is undefined` | Код запущен вне PILOT | Проверять расширение нужно внутри PILOT, а не как standalone page |
+| `Ext is undefined` | Расширение сделали как отдельный сайт | Не загружайте вне PILOT, не делайте SPA |
+| `Store.weather-demo.Module` class not found | Имя расширения в PILOT содержит дефис | Переименуйте расширение в `weather_demo`, определите `Store.weather_demo.Module` и используйте `/store/weather_demo/...` |
+| Класс не найден | Не загружен дополнительный JS-файл или имя класса не совпадает с именем расширения в PILOT | В `Module.js` нужно загрузить файл через `Ext.Loader.loadScript` или держать код в одном файле; `Ext.define('Store.<extension_name>.Module', ...)` должен точно совпадать с именем в admin |
 | CORS error | Внешний API не разрешает browser-call | Нужен backend/proxy |
 | Карта не найдена | Использована не та карта или неверный API карты | Для Online: `getActiveTabMapContainer()` или `window.mapContainer`; для History: `window.historyMapContainer`; прочитайте `docs/MapContainer_RU.md`, потому что PILOT-карты оборачивают Leaflet |
 
 ## 9. Чеклист Для Быстрого Релиза
 
 - [ ] `Module.js` доступен по прямому URL.
-- [ ] Имя Extension в PILOT безопасное `snake_case`, например `weather_demo`.
+- [ ] Имя расширения в PILOT безопасное `snake_case`, например `weather_demo`.
 - [ ] `Module.js` содержит `Ext.define('Store.<name>.Module', ...)`, где `<name>` точно совпадает с именем в PILOT admin.
 - [ ] `initModule` является методом класса.
 - [ ] Нет standalone HTML/React/Vue/Vite.
@@ -230,7 +230,7 @@ https://ext.example.com/my_extension/Module.js
 ## 10. Готовый Короткий Prompt
 
 ```text
-Сделай PILOT Extension.
+Создай расширение PILOT.
 
 Бизнес-идея:
 <описание>
@@ -238,12 +238,12 @@ https://ext.example.com/my_extension/Module.js
 Требования:
 - используй pilot-telematics/pilot_extensions;
 - соблюдай AI_SPECS.md;
-- Extension должен работать внутри PILOT через Module.js;
+- Расширение должно работать внутри PILOT через Module.js;
 - используй runtime-объекты PILOT: skeleton, mapContainer/historyMapContainer, l(...), window.uom, Highcharts/jQuery если нужны и доступны;
 - если идея использует карту, прочитай docs/MapContainer_RU.md; PILOT MapContainer оборачивает Leaflet, поэтому не придумывай Google Maps-style API;
 - объясни, что PILOT проксирует зарегистрированный base URL как /store/<extension>/..., и используй этот путь для runtime assets/backend, если нужно;
 - не делай standalone web app;
-- дай zip-архив с полной структурой файлов Extension вместо печати полного исходного кода в чате;
+- дай zip-архив с полной структурой файлов расширения вместо печати полного исходного кода в чате;
 - не заменяй zip-архив локальным script, который я должен запустить для его создания;
 - дай пошаговую инструкцию: куда положить файлы, какой `/Module.js` URL проверить в браузере, какой base URL зарегистрировать в PILOT, как проверить запуск.
 ```

@@ -1,17 +1,17 @@
-# Runtime-Объекты И Утилиты PILOT Для Extensions
+# Runtime-объекты и утилиты PILOT для расширений
 
-Этот документ описывает, чем Extension может пользоваться внутри уже загруженного PILOT.
+Этот документ описывает, чем может пользоваться расширение внутри уже загруженного PILOT.
 
-Важно: сторонние разработчики работают с runtime скомпилированного PILOT app.js, а не с локальными исходными файлами PILOT. Extension может использовать глобальные объекты, классы и функции, которые уже доступны в этом runtime.
+Важно: сторонние разработчики работают с runtime скомпилированного PILOT app.js, а не с локальными исходными файлами PILOT. Расширение может использовать глобальные объекты, классы и функции, которые уже доступны в этом runtime.
 
 ## Главный Принцип
 
-Extension должен относиться к PILOT как к host platform:
+Расширение должно относиться к PILOT как к host platform:
 
 - PILOT предоставляет оболочку, Ext JS, карты, деревья, header, переводы и часть utility-классов.
-- Extension поставляет свои `Module.js`, JS/CSS/assets и при необходимости внешний backend.
-- Extension-owned классы должны жить в namespace `Store.<extension>.*`, где `<extension>` - точное безопасное lowercase `snake_case` имя Extension из PILOT admin, например `weather_demo`.
-- Не используйте дефисы в имени Extension в PILOT. PILOT создает `Store.<extension>.Module` из этого имени.
+- Расширение поставляет свои `Module.js`, JS/CSS/assets и при необходимости внешний backend.
+- Классы расширения должны жить в namespace `Store.<extension>.*`, где `<extension>` - точное безопасное lowercase `snake_case` имя расширения из PILOT admin, например `weather_demo`.
+- Не используйте дефисы в имени расширения в PILOT. PILOT создает `Store.<extension>.Module` из этого имени.
 - Не нужно требовать локальные исходные файлы PILOT.
 - Не следует зависеть от внутренних business-классов основного приложения, если они не описаны как runtime API.
 
@@ -22,7 +22,7 @@ Extension должен относиться к PILOT как к host platform:
 - `window.skeleton` - главный контейнер UI.
 - `window.skeleton.header` - верхний header.
 - `window.skeleton.navigation` - левая навигация.
-- `window.skeleton.mapframe` - основной контейнер карт/панелей в примерах Extensions.
+- `window.skeleton.mapframe` - основной контейнер карт/панелей в примерах расширений.
 - `window.skeleton.map_frame` - альтернативное имя того же смыслового места в некоторых описаниях runtime.
 
 Для совместимости:
@@ -63,7 +63,7 @@ if (skeleton.header.menu_btn && skeleton.header.menu_btn.menu) {
 
 Не удаляйте и не заменяйте штатные элементы header.
 
-Для custom header buttons добавляйте Extension-specific class с заметным фоном. Белый текст или иконки на светло-сером header PILOT плохо читаются.
+Для custom header buttons добавляйте класс расширения с заметным фоном. Белый текст или иконки на светло-сером header PILOT плохо читаются.
 
 ```js
 skeleton.header.insert(5, {
@@ -100,14 +100,14 @@ skeleton.header.insert(5, {
 - `skeleton.navigation.reports.objects`
 - `skeleton.navigation.reports.reports_store`
 
-Extension может:
+Расширение может:
 
 - добавить свою вкладку в `skeleton.navigation`;
 - добавить дочернюю панель в существующий раздел, если это соответствует задаче;
 - читать selection/record из существующих деревьев;
 - добавлять пункты в существующие context menu.
 
-Extension не должен:
+Расширение не должно:
 
 - удалять штатные вкладки;
 - заменять Online/History/Reports;
@@ -127,7 +127,7 @@ navTab.map_frame = mainPanel;
 - `skeleton.mapframe` - host-контейнер основной рабочей области.
 - `navTab.map_frame` - ссылка компонента навигации на его основную панель.
 
-Пример для Extension:
+Пример для расширения:
 
 ```js
 var navTab = Ext.create('Pilot.utils.LeftBarPanel', {
@@ -241,7 +241,7 @@ if (map.setMapZoom) {
 }
 ```
 
-Перед новой отрисовкой удаляйте следы работы своего Extension:
+Перед новой отрисовкой удаляйте следы работы своего расширения:
 
 ```js
 function cleanupMap(markerIds) {
@@ -274,7 +274,7 @@ function cleanupMap(markerIds) {
 Часто полезны:
 
 - `l('Text')` - перевод строки.
-- `base_url` - базовый URL текущего PILOT, не base URL хостинга Extension.
+- `base_url` - базовый URL текущего PILOT, не base URL хостинга расширения.
 - `global_conf` - глобальная конфигурация текущей установки.
 - `language` - текущий язык, если доступен в сборке.
 - `lang` - словарь переводов, если доступен в сборке.
@@ -296,9 +296,9 @@ if (typeof base_url !== 'undefined') {
 }
 ```
 
-## API настроек Extension
+## API настроек расширения
 
-`Pilot.Extensions.getSettings(name, scope)` возвращает настройки Extension, доступного текущему аккаунту. Метод доступен в сборках PILOT, в которых есть класс `Pilot.Extensions`.
+`Pilot.Extensions.getSettings(name, scope)` возвращает настройки расширения, доступного текущему аккаунту. Метод доступен в сборках PILOT, в которых есть класс `Pilot.Extensions`.
 
 ```js
 const settings = await Pilot.Extensions.getSettings('myapp');
@@ -312,15 +312,15 @@ const globalSettings = await Pilot.Extensions.getSettings('myapp', 'global');
 const accountSettings = await Pilot.Extensions.getSettings('myapp', 'account');
 ```
 
-Метод возвращает `Promise<Object>`. Если в выбранной области нет настроек, метод возвращает пустой объект. Сервер определяет аккаунт по текущей авторизованной сессии PILOT и проверяет доступ к Extension. Метод не принимает ID аккаунта.
+Метод возвращает `Promise<Object>`. Если в выбранной области нет настроек, метод возвращает пустой объект. Сервер определяет аккаунт по текущей авторизованной сессии PILOT и проверяет доступ к расширению. Метод не принимает ID аккаунта.
 
-Promise отклоняется, если сессия не авторизована, аккаунт не имеет доступа к Extension или параметры запроса некорректны. Не храните в настройках, возвращаемых в браузер, пароли, приватные ключи и другие секреты. Пользователи могут просмотреть эти значения в браузере.
+Promise отклоняется, если сессия не авторизована, аккаунт не имеет доступа к расширению или параметры запроса некорректны. Не храните в настройках, возвращаемых в браузер, пароли, приватные ключи и другие секреты. Пользователи могут просмотреть эти значения в браузере.
 
 Уровень поддержки и правила доступа описаны в [справочнике совместимости API](PILOT_API_COMPATIBILITY_RU.md).
 
-## Store Proxy Для Extension
+## Прокси store для расширения
 
-PILOT admin хранит внешний base URL Extension, например `https://somehost.com/blabla/`. В runtime PILOT проксирует этот URL внутри текущего домена PILOT:
+Admin хранит внешний базовый URL расширения, например `https://somehost.com/blabla/`. В runtime PILOT проксирует этот URL внутри текущего домена PILOT:
 
 ```text
 /store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
@@ -328,7 +328,7 @@ PILOT admin хранит внешний base URL Extension, например `ht
 /store/myapp/backend/        -> https://somehost.com/blabla/backend/
 ```
 
-Используйте root-relative URLs `/store/<extension>/...` для assets, docs, JSON и backend endpoints Extension, когда нужны same-origin CORS-compatible запросы.
+Используйте root-relative URLs `/store/<extension>/...` для assets, docs, JSON и конечных точек backend расширения, когда нужны same-origin CORS-compatible запросы.
 
 ```js
 var extensionSlug = 'myapp';
@@ -342,11 +342,11 @@ Ext.Ajax.request({
 });
 ```
 
-Для переносимой загрузки assets от текущего `Module.js` можно также вычислять директорию текущего script. В PILOT это обычно будет `/store/<extension>/`.
+Для переносимой загрузки ресурсов текущего `Module.js` можно также вычислять директорию текущего script. В PILOT это обычно будет `/store/<extension>/`.
 
 ## Сторонние Библиотеки, Загружаемые PILOT
 
-PILOT обычно уже загружает ряд сторонних библиотек. Extension может использовать их без повторной загрузки, если они есть в текущем runtime.
+PILOT обычно уже загружает ряд сторонних библиотек. Расширение может использовать их без повторной загрузки, если они есть в текущем runtime.
 
 ### Highcharts
 
@@ -436,7 +436,7 @@ var localUom = new UOM({
 }, 2);
 ```
 
-В Extension чаще всего нужно использовать уже настроенный глобальный экземпляр:
+В расширении чаще всего нужно использовать уже настроенный глобальный экземпляр:
 
 ```js
 if (window.uom) {
@@ -591,13 +591,13 @@ PILOT runtime содержит набор глобальных renderer/helper-�
 
 ## Доступные `Pilot.utils.*`
 
-PILOT предоставляет полезные Ext JS host-классы в namespace `Pilot.utils.*`. Extensions могут использовать эти классы, если они уже загружены в runtime целевой версии PILOT. Не копируйте исходники этих классов в Extension; создавайте их как runtime-классы.
+PILOT предоставляет полезные Ext JS host-классы в namespace `Pilot.utils.*`. Расширения могут использовать эти классы, если они уже загружены в runtime целевой версии PILOT. Не копируйте исходники этих классов в расширении; создавайте их как runtime-классы.
 
 Полезные классы:
 
 | Класс / xtype | Назначение | Примечания |
 |---|---|---|
-| `Pilot.utils.LeftBarPanel` / `pilot-leftbarpanel` | Нативно выглядящая левая панель навигации с вертикальными вкладками и кнопкой сворачивания. | Хороший вариант по умолчанию для вкладок Extension. |
+| `Pilot.utils.LeftBarPanel` / `pilot-leftbarpanel` | Нативно выглядящая левая панель навигации с вертикальными вкладками и кнопкой сворачивания. | Хороший вариант по умолчанию для вкладок расширения. |
 | `Pilot.utils.Toggle` / `toggle` | Checkbox, отображаемый как переключатель. | Удобно для boolean-настроек. |
 | `Pilot.utils.ColorField` / `pilotcolorfield` | HTML color input, который может отправлять значение как `rrggbb`. | Для простых цветовых настроек. |
 | `Pilot.utils.ColorComboBox` / `colorcombobox` | ComboBox на основе палитры цветов PILOT. | Поддерживает группы палитры `light`, `medium`, `dark`, `status`, если они есть в runtime. |
@@ -605,7 +605,7 @@ PILOT предоставляет полезные Ext JS host-классы в na
 | `Pilot.utils.IntegerField` / `intfield` | NumberField, который отправляет integer. | Для счетчиков, лимитов, интервалов. |
 | `Pilot.utils.SearchField` / `pilot-utils-search-field` | Поле поиска с кнопкой очистки и стилем PILOT. | Универсальный search input. |
 | `Pilot.utils.TreeSearchField` / `pilot-utils-tree-search-field` | Поле поиска, связанное с поведением поиска по деревьям PILOT. | Используйте с совместимыми деревьями PILOT. |
-| `Pilot.utils.TreeFilterByNameField` / `pilot-utils-tree-filter-by-name-field` | Фильтрует store родительского treepanel по `name` или заданному свойству. | Удобно для деревьев, созданных Extension. |
+| `Pilot.utils.TreeFilterByNameField` / `pilot-utils-tree-filter-by-name-field` | Фильтрует store родительского treepanel по `name` или заданному свойству. | Удобно для деревьев, созданных расширением. |
 | `Pilot.utils.TreeList` / `pilot-tree-list` | Навигация tree-list со встроенной tab panel. | Для инструментов с несколькими разделами. |
 | `Pilot.utils.TabBarEditor` / `pilot-tabbareditor` | Вертикальный tab editor layout. | Для экранов настроек и редактирования. |
 | `Pilot.utils.MapContainer` / `leaflet-map` | Ext panel wrapper, который создает Leaflet `MapContainer`. | Если задача работает с картой Online, обычно лучше использовать существующий `mapContainer`. |
@@ -626,8 +626,8 @@ PILOT предоставляет полезные Ext JS host-классы в na
 Правило:
 
 - можно использовать `Pilot.utils.*`, если класс есть в runtime нужной версии PILOT и подходит под бизнес-задачу;
-- для необязательных utilities проверяйте `Ext.ClassManager.get(...)`, если Extension должен работать в нескольких сборках PILOT;
-- бизнес-классы самого Extension держите в namespace `Store.<extension>.*`;
+- для необязательных utilities проверяйте `Ext.ClassManager.get(...)`, если расширение должно работать в нескольких сборках PILOT;
+- бизнес-классы самого расширения держите в namespace `Store.<extension>.*`;
 - для критичных мест лучше иметь простой fallback, если доступность utility не гарантирована.
 
 Пример fallback для левой вкладки:
@@ -653,29 +653,29 @@ var navTab = Ext.create(LeftTabClass, {
 - локальные пути разработки;
 - внутренние классы конкретных встроенных модулей;
 - глобальные переменные, созданные разовой внутренней реализацией, а не платформой;
-- файлы, которые не доступны вашему Extension по URL;
+- файлы, которые не доступны вашему расширению по URL;
 - side effects от внутренних модулей, если они не описаны как runtime API.
 
 ## Optional Host Hooks
 
-В некоторых сборках PILOT доступны host hooks, которые используют встроенные модули, например `MODULE_OVERRIDER`. Extensions могут использовать такие hooks только для advanced integrations и только с проверками:
+В некоторых сборках PILOT доступны host hooks, которые используют встроенные модули, например `MODULE_OVERRIDER`. Расширения могут использовать такие hooks только для advanced integrations и только с проверками:
 
 ```js
 if (window.MODULE_OVERRIDER && MODULE_OVERRIDER.append) {
     MODULE_OVERRIDER.append('Pilot.view.online.VehicleEditor', function (win) {
-        // Добавляйте UI Extension только после проверки методов host-окна.
+        // Добавляйте интерфейс расширения только после проверки методов host-окна.
     });
 }
 ```
 
-Если hook отсутствует, Extension все равно должен загрузиться без поломки PILOT и должен описать недоступную advanced integration в `doc/index.html`.
+Если hook отсутствует, расширение всё равно должно загрузиться без поломки PILOT и должно описать недоступную advanced integration в `doc/index.html`.
 
 ## Правило Для AI
 
-AI должен генерировать Extension так, будто у него есть только:
+AI должен создавать расширение так, будто у него есть только:
 
 - этот репозиторий;
-- публичные примеры Extensions;
+- публичные примеры расширений;
 - runtime-объекты скомпилированного PILOT;
 - бизнес-идея пользователя.
 
@@ -684,6 +684,6 @@ AI не должен ссылаться на локальные пути к ис
 Коротко:
 
 ```text
-PILOT app.js provides runtime objects.
-Extension ships its own code and backend.
+PILOT app.js предоставляет runtime-объекты.
+Расширение содержит собственный код и backend.
 ```

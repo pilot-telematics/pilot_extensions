@@ -1,8 +1,8 @@
-# Руководство Разработчика PILOT Extensions
+# Руководство разработчика расширений PILOT
 
 Это практическое руководство для людей, которые делают расширения PILOT вручную или проверяют код, созданный AI.
 
-## 1. Что Такое Расширение PILOT
+## 1. Что такое расширение PILOT
 
 Расширение PILOT - это не отдельный сайт и не standalone SPA. Это набор файлов, который загружается внутрь уже работающего PILOT UI.
 
@@ -20,27 +20,27 @@ PILOT уже предоставляет:
 
 Расширение добавляет свою функциональность в эту оболочку.
 
-Перед выбором endpoint, поля роли, настройки аккаунта или runtime hook прочитайте [справочник совместимости API](PILOT_API_COMPATIBILITY_RU.md). Работа интерфейса в одной сборке PILOT не подтверждает стабильность API для Extensions.
+Перед выбором endpoint, поля роли, настройки аккаунта или runtime hook прочитайте [справочник совместимости API](PILOT_API_COMPATIBILITY_RU.md). Работа интерфейса в одной сборке PILOT не подтверждает стабильность API для расширений.
 
-## 1.1 Чем Extensions Отличаются От Встроенного Кода PILOT
+## 1.1 Чем расширения отличаются от встроенного кода PILOT
 
-Extensions работают внутри уже загруженного и скомпилированного PILOT app.js. Поэтому они могут обращаться к runtime-объектам и утилитам PILOT, включая полезные host-классы `Pilot.utils.*`.
+Расширения работают внутри уже загруженного и скомпилированного PILOT app.js. Поэтому они могут обращаться к runtime-объектам и утилитам PILOT, включая полезные host-классы `Pilot.utils.*`.
 
 Главные отличия:
 
-| Встроенный код PILOT | PILOT Extension |
+| Встроенный код PILOT | Расширение PILOT |
 |---|---|
-| Компилируется и поставляется в составе PILOT | Хостится отдельно; в PILOT admin указывается base URL, а `Module.js` загружается от него |
+| Компилируется и поставляется в составе PILOT | Хостится отдельно; в Admin указывается base URL, а `Module.js` загружается от него |
 | Компилируется вместе с основным приложением PILOT | Хостится отдельно; `/Module.js` проверяется напрямую, а в PILOT регистрируется base URL |
 | Может быть частью основного backend PILOT | Может иметь сторонний backend: Cloudflare Worker, VPS, PHP, отдельный API |
 | Создает runtime-объекты и utilities | Использует только то, что уже доступно в загруженном app.js |
 
-Практический вывод: Extension должен рассматривать PILOT как host platform. Можно пользоваться `skeleton`, существующими деревьями, картами, `l(...)`, Ext JS и доступными `Pilot.utils.*`, но бизнес-классы расширения нужно держать в `Store.<extension>.*`.
+Практический вывод: расширение должно рассматривать PILOT как host platform. Можно пользоваться `skeleton`, существующими деревьями, картами, `l(...)`, Ext JS и доступными `Pilot.utils.*`, но бизнес-классы расширения нужно держать в `Store.<extension>.*`.
 
-После регистрации Extension PILOT хранит внешний base URL, но отдает его через same-origin proxy:
+После регистрации расширения PILOT хранит внешний base URL, но отдает его через same-origin proxy:
 
 ```text
-Extension name: myapp
+Имя расширения: myapp
 Admin URL: https://somehost.com/blabla/
 
 /store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
@@ -48,7 +48,7 @@ Admin URL: https://somehost.com/blabla/
 /store/myapp/backend/        -> https://somehost.com/blabla/backend/
 ```
 
-Используйте URL `/store/<extension>/...` из runtime-кода Extension для загрузки assets и вызова backend Extension.
+Используйте URL `/store/<extension>/...` из runtime-кода расширения для загрузки assets и вызова backend расширения.
 
 Подробнее см. [PILOT_RUNTIME_UTILS_RU.md](PILOT_RUNTIME_UTILS_RU.md).
 
@@ -62,9 +62,9 @@ my_extension/
     └── index.html
 ```
 
-Используйте одно и то же безопасное lowercase `snake_case` имя в PILOT admin и в Ext JS class name. Например, Extension с именем `my_extension` должен определять `Store.my_extension.Module`.
+Используйте одно и то же безопасное lowercase `snake_case` имя в Admin и в Ext JS class name. Например, расширение с именем `my_extension` должно определять `Store.my_extension.Module`.
 
-Не называйте PILOT Extension `my-extension` или `weather-demo`. PILOT собирает class name из имени в admin, поэтому имя с дефисом заставит его искать `Store.weather-demo.Module`.
+Не называйте расширение PILOT `my-extension` или `weather-demo`. PILOT формирует имя класса по значению в Admin, поэтому имя с дефисом заставит его искать `Store.weather-demo.Module`.
 
 `Module.js` - единственная runtime-точка входа.
 
@@ -111,7 +111,7 @@ Ext.define('Store.my_extension.Module', {
 
 ## 4. Runtime PILOT
 
-### Настройки Extension
+### Настройки расширения
 
 Используйте `Pilot.Extensions.getSettings`, чтобы получить глобальные настройки и настройки текущего аккаунта:
 
@@ -122,9 +122,9 @@ async function loadSettings() {
 }
 ```
 
-По умолчанию метод объединяет глобальные настройки с настройками текущего аккаунта. Передайте `global` или `account` вторым аргументом, чтобы получить одну область. PILOT проверяет доступ к Extension и определяет аккаунт по текущей сессии. API не принимает ID аккаунта.
+По умолчанию метод объединяет глобальные настройки с настройками текущего аккаунта. Передайте `global` или `account` вторым аргументом, чтобы получить одну область. PILOT проверяет доступ к расширению и определяет аккаунт по текущей сессии. API не принимает ID аккаунта.
 
-Значения метода доступны в браузере. Не используйте его для получения секретов. Подробности см. в [справочнике runtime](PILOT_RUNTIME_UTILS_RU.md#api-настроек-extension) и [справочнике совместимости API](PILOT_API_COMPATIBILITY_RU.md).
+Значения метода доступны в браузере. Не используйте его для получения секретов. Подробности см. в [справочнике runtime](PILOT_RUNTIME_UTILS_RU.md#api-настроек-расширения) и [справочнике совместимости API](PILOT_API_COMPATIBILITY_RU.md).
 
 ### Header
 
@@ -202,7 +202,7 @@ function getMainFrame() {
 
 Встроенные модули PILOT показывают полезное правило: выбирайте самый маленький способ интеграции, который решает бизнес-задачу. Простое действие по выбранной машине не должно превращаться в большой dashboard; глобальная команда не должна прятаться в контекстном меню объекта.
 
-Паттерны модулей, которые полезно переиспользовать в Extensions:
+Примеры модулей, которые можно повторно использовать в расширениях:
 
 - создавайте вкладку навигации и связанную `map_frame` только для настоящих рабочих областей;
 - добавляйте пункт контекстного меню для действий над выбранным объектом Online;
@@ -340,12 +340,12 @@ if (menu && menu.add) {
 ```js
 if (window.MODULE_OVERRIDER && MODULE_OVERRIDER.append) {
     MODULE_OVERRIDER.append('Pilot.view.online.VehicleEditor', function (win) {
-        // Добавляйте UI Extension только после проверки методов host-окна.
+        // Добавляйте интерфейс расширения только после проверки методов host-окна.
     });
 }
 ```
 
-Весь код самого Extension держите в `Store.<extension>.*`; не завязывайтесь на namespace встроенных модулей `Pilot.modules.*`.
+Весь код самого расширения держите в `Store.<extension>.*`; не завязывайтесь на namespace встроенных модулей `Pilot.modules.*`.
 
 ## 6. Работа С Картой
 
@@ -454,7 +454,7 @@ title: l('My Extension')
 
 ## 8.2 Highcharts И jQuery
 
-PILOT обычно уже загружает Highcharts, модуль sunburst и jQuery. Не подключайте их повторно в Extension.
+PILOT обычно уже загружает Highcharts, модуль sunburst и jQuery. Не подключайте их повторно в расширении.
 
 Проверяйте наличие:
 
@@ -488,7 +488,7 @@ document.head.appendChild(css);
 
 Внутри PILOT текущий `Module.js` обычно загружается из `/store/<extension>/Module.js`, поэтому вычисленный base URL обычно становится `/store/<extension>/`.
 
-Если добавляете свои стили, для новых hex-цветов предпочтительно использовать палитру Tailwind CSS. Это помогает держать generated Extensions визуально согласованными и не плодить случайные цвета. Это рекомендация по палитре цветов; сам Tailwind CSS подключать не нужно, если это явно не требуется расширению.
+Если добавляете свои стили, для новых hex-цветов предпочтительно использовать палитру Tailwind CSS. Это помогает держать создаваемые расширения визуально согласованными и не плодить случайные цвета. Это рекомендация по палитре цветов; сам Tailwind CSS подключать не нужно, если это явно не требуется расширению.
 
 ## 10. Backend
 
@@ -525,7 +525,7 @@ Backend нужен, если:
 
 Частые ошибки AI:
 
-- делает standalone HTML/React app вместо PILOT extension;
+- делает standalone HTML/React app вместо расширения PILOT;
 - вызывает `Ext.onReady`;
 - пишет глобальную `initModule`;
 - добавляет `<script>` в `doc/index.html`;

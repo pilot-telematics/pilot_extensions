@@ -21,7 +21,7 @@ Example:
 ## Register the Extension in Admin
 
 1. Sign in to Admin.
-2. Open **Extensions** in the left menu. This opens the **Applications** list.
+2. Open **Extensions** in the left menu. This opens the **Extensions** list.
 3. Select **Add**.
 4. Edit the new row and enter these fields:
 
@@ -35,17 +35,17 @@ Example:
 | **Icon class** | Select an icon for the Extension. |
 | **Author** | Name shown as the Extension author. |
 
-5. Select **Update** to save the row. Admin checks the URL. Confirm that the URL is accepted and that the entry appears in the Applications list.
+5. Select **Update** to save the row. Admin checks the URL. Confirm that the URL is accepted and that the entry appears in the Extensions list.
 
 **Note:** **Add** creates a record before row editing is complete. If you abandon a new entry, check the list and remove the unused record with its delete action.
 
-![Applications list with the Add control and Extension fields](images/01-applications-list.png)
+![Extensions list with the Add control and Extension fields](images/01-extensions-list.png)
 
 ![Example Extension registration row](images/02-extension-registration.png)
 
 ## Grant access to accounts
 
-1. In the **Applications** list, select the gear icon on the Extension row.
+1. In the **Extensions** list, select the gear icon on the Extension row.
 2. Open the **Access** tab.
 3. Choose one access mode:
    - Leave **Available to all accounts** selected to grant access to all accounts.
@@ -54,7 +54,7 @@ Example:
 
 Access controls whether an account can see and use an Extension. An Extension appears in PILOT only when it is published and available to the current account.
 
-To set account-specific values while keeping the Extension available to all accounts, leave **Available to all accounts** selected. Then select **Choose accounts for individual settings** and link the accounts that need their own values. This list does not limit application access.
+To set account-specific values while keeping the Extension available to all accounts, leave **Available to all accounts** selected. Then select **Choose accounts for individual settings** and link the accounts that need their own values. This list does not change who can access the Extension.
 
 ![Access tab with account availability controls](images/03-extension-access.png)
 
@@ -82,7 +82,7 @@ Values returned to Extension JavaScript are available in the browser. Do not sto
 5. Turn on its active switch.
 6. Close the window or select the Extension from the PILOT menu. Reload PILOT if the Extension does not appear.
 
-The Extensions list shows the applications available to the current account. The active switch controls whether the Extension is loaded for the current PILOT user.
+The Extensions list shows the Extensions available to the current account. The active switch controls whether the Extension is loaded for the current PILOT user.
 
 ![Open Extensions from the PILOT menu](images/06-pilot-extensions-menu.png)
 

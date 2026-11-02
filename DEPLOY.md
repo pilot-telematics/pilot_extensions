@@ -637,7 +637,7 @@ https://ext.example.com/weather/
 In PILOT:
 
 ```text
-Admin Panel → Applications → Add
+Admin Panel → Extensions → Add
 ```
 
 Use:
@@ -649,7 +649,7 @@ URL: https://YOUR-HOST/
 
 Save, enable the extension for the user, and reload PILOT.
 
-If the application name/slug is `myapp`, PILOT will proxy the registered base URL under:
+If the Extension name/slug is `myapp`, PILOT will proxy the registered base URL under:
 
 ```text
 /store/myapp/

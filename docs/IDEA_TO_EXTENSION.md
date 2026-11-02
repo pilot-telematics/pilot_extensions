@@ -158,8 +158,8 @@ See [../DEPLOY.md](../DEPLOY.md).
 
 1. Open the direct `Module.js` URL in a browser.
 2. Confirm it returns JavaScript source, not an HTML error page.
-3. Open the PILOT admin area for applications/extensions.
-4. Create a new application.
+3. In PILOT Admin, open **Extensions**.
+4. Register a new Extension.
 5. Paste the base URL, not the direct `Module.js` URL.
 6. Save and enable the Extension for the required account/user.
 7. Wait for configuration/proxy cache if your PILOT installation has a delay.
