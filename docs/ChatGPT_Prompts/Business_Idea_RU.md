@@ -44,5 +44,5 @@ https://github.com/pilot-telematics/pilot_extensions
 - Не печатай полный исходный код в чате по умолчанию.
 - Не придумывай фейковую ссылку на скачивание.
 - Не заменяй zip локальным Python/Node/PowerShell/Bash скриптом, если я явно не попросил developer workaround.
-- Включи дерево файлов, шаги загрузки, прямой URL проверки /Module.js, base URL для PILOT admin, proxied URLs /store/<extension>/..., launch checklist и troubleshooting.
+- Включи дерево файлов, шаги загрузки, прямой URL проверки /Module.js, base URL для панели Администратора PILOT, proxied URLs /store/<extension>/..., launch checklist и troubleshooting.
 ```

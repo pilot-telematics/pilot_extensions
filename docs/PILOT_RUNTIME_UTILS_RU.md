@@ -10,7 +10,7 @@
 
 - PILOT предоставляет оболочку, Ext JS, карты, деревья, header, переводы и часть utility-классов.
 - Расширение поставляет свои `Module.js`, JS/CSS/assets и при необходимости внешний backend.
-- Классы расширения должны жить в namespace `Store.<extension>.*`, где `<extension>` - точное безопасное lowercase `snake_case` имя расширения из PILOT admin, например `weather_demo`.
+- Классы расширения должны жить в namespace `Store.<extension>.*`, где `<extension>` - точное безопасное lowercase `snake_case` имя расширения из панели Администратора PILOT, например `weather_demo`.
 - Не используйте дефисы в имени расширения в PILOT. PILOT создает `Store.<extension>.Module` из этого имени.
 - Не нужно требовать локальные исходные файлы PILOT.
 - Не следует зависеть от внутренних business-классов основного приложения, если они не описаны как runtime API.
@@ -320,7 +320,7 @@ Promise отклоняется, если сессия не авторизова�
 
 ## Прокси store для расширения
 
-Admin хранит внешний базовый URL расширения, например `https://somehost.com/blabla/`. В runtime PILOT проксирует этот URL внутри текущего домена PILOT:
+Панель Администратора PILOT хранит внешний базовый URL расширения, например `https://somehost.com/blabla/`. В runtime PILOT проксирует этот URL внутри текущего домена PILOT:
 
 ```text
 /store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
@@ -492,13 +492,15 @@ if (window.uom) {
 Пример в grid column:
 
 ```js
-{
-    text: l('Speed'),
-    dataIndex: 'speed',
-    renderer: function (value) {
-        return typeof speedSS === 'function' ? speedSS(value) : value;
-    }
-}
+Ext.create('Ext.grid.Panel', {
+    columns: [{
+        text: l('Speed'),
+        dataIndex: 'speed',
+        renderer: function (value) {
+            return typeof speedSS === 'function' ? speedSS(value) : value;
+        }
+    }]
+});
 ```
 
 Правило: исходные значения обычно должны быть в базовых единицах PILOT, а `uom` конвертирует их в настройки пользователя.
@@ -524,13 +526,15 @@ PILOT runtime содержит набор глобальных renderer/helper-�
 | `timeAgo(ts)` | относительное время с `ago` |
 
 ```js
-{
-    text: l('Last message'),
-    dataIndex: 'ts',
-    renderer: function (value) {
-        return typeof dateTimeStr === 'function' ? dateTimeStr(value) : value;
-    }
-}
+Ext.create('Ext.grid.Panel', {
+    columns: [{
+        text: l('Last message'),
+        dataIndex: 'ts',
+        renderer: function (value) {
+            return typeof dateTimeStr === 'function' ? dateTimeStr(value) : value;
+        }
+    }]
+});
 ```
 
 ### Числа И Индикаторы
@@ -562,19 +566,21 @@ PILOT runtime содержит набор глобальных renderer/helper-�
 `makeAddress(...)` и `makeGeoZone(...)` могут работать асинхронно и возвращать временный `<span>`, который потом заполняется runtime-логикой и jQuery.
 
 ```js
-{
-    text: l('Address'),
-    dataIndex: 'address',
-    renderer: function (value) {
-        if (typeof makeAddress === 'function') {
-            return makeAddress(value, true);
-        }
+Ext.create('Ext.grid.Panel', {
+    columns: [{
+        text: l('Address'),
+        dataIndex: 'address',
+        renderer: function (value) {
+            if (typeof makeAddress === 'function') {
+                return makeAddress(value, true);
+            }
 
-        return value && value.lat && value.lon ?
-            Ext.String.htmlEncode(value.lat + ', ' + value.lon) :
-            '';
-    }
-}
+            return value && value.lat && value.lon ?
+                Ext.String.htmlEncode(value.lat + ', ' + value.lon) :
+                '';
+        }
+    }]
+});
 ```
 
 ### События И Медиа

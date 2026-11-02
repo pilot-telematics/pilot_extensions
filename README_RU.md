@@ -1,151 +1,84 @@
 # Расширения PILOT
 
-Репозиторий с примерами, документацией и AI-контрактами для разработки расширений PILOT.
+Этот репозиторий помогает создавать и публиковать расширения PILOT.
 
-Главная цель репозитория: дать человеку или AI достаточно контекста, чтобы по бизнес-идее быстро собрать рабочее расширение PILOT без типовых ошибок: без отдельного SPA, без ручной загрузки Ext JS, без моков `skeleton`, с правильным встраиванием в существующий интерфейс PILOT.
+## Начните с первого расширения
 
-## Быстрый Старт Для Людей
+Если вы знаете PILOT как пользователь, но ещё не создавали расширения, откройте [пошаговое руководство: от Hello World до запуска](docs/IDEA_TO_EXTENSION_RU.md).
 
-Если вы менеджер и используете AI-помощника:
+В нём AI помогает вам:
 
-1. Откройте [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md).
-2. Добавьте бизнес-идею и ссылку на этот репозиторий.
-3. Попросите AI выдать zip-архив с полной структурой файлов расширения.
-4. Разместите файлы из архива, проверьте `/Module.js` в браузере и зарегистрируйте base URL в PILOT.
+1. создать минимальное расширение «Привет, PILOT!»;
+2. выбрать бесплатный статический хостинг;
+3. пройти регистрацию на GitHub или Cloudflare, если у вас ещё нет аккаунта;
+4. загрузить файлы и проверить публичный URL;
+5. зарегистрировать расширение в панели Администратора;
+6. включить расширение в PILOT.
 
-Если вы разработчик:
+Начните с этого одного расширения. Не добавляйте карту, backend, API и настройки, пока приветственная панель не появится в PILOT.
 
-1. Если у вас есть только бизнес-идея, начните с [docs/IDEA_TO_EXTENSION_RU.md](docs/IDEA_TO_EXTENSION_RU.md).
-2. Прочитайте [карту документации](docs/README_RU.md).
-3. Пройдите [руководство разработчика](docs/HUMAN_EXTENSION_GUIDE_RU.md).
-4. Перед выбором API или runtime-объектов прочитайте [справочник совместимости](docs/PILOT_API_COMPATIBILITY_RU.md).
-5. Выберите ближайший пример:
-   - [examples/hello_world](examples/hello_world) - минимальное расширение с вкладкой и панелью.
-   - [examples/nearby_poi](examples/nearby_poi) - пункт контекстного меню в Online и работа с существующей картой.
-   - [examples/airports](examples/airports) - список объектов и собственная карта.
-   - [examples/communal](examples/communal) - сложный модуль с backend, авторизацией и мнемосхемами.
-6. Разместите файлы расширения на сервере, проверьте публичный `/Module.js` и зарегистрируйте публичный base URL в PILOT.
-7. После регистрации используйте proxied URLs `/store/<extension>/...` внутри PILOT для assets/docs/backend-вызовов, когда важна CORS compatibility.
+## Какой хостинг выбрать
 
-## Быстрый Старт Для AI
+- **Cloudflare Pages Direct Upload** — простой вариант, если вы хотите загрузить папку через браузер и пока не используете Git.
+- **GitHub Pages** — удобен, если вы хотите хранить исходный код в GitHub и публиковать изменения из репозитория. Бесплатный GitHub Pages доступен для публичных репозиториев.
 
-Если вы хотите попросить AI сделать расширение по бизнес-идее:
+Код расширения будет публичным. Не помещайте в него пароли, приватные ключи или секретные API-токены.
 
-1. Дайте AI ссылку на этот репозиторий.
-2. Попросите прочитать в таком порядке:
-   - [AI_SPECS.md](AI_SPECS.md)
-   - [docs/AI_EXTENSION_GUIDE.md](docs/AI_EXTENSION_GUIDE.md)
-   - [docs/PILOT_RUNTIME_UTILS_RU.md](docs/PILOT_RUNTIME_UTILS_RU.md)
-   - [docs/PILOT_API_COMPATIBILITY_RU.md](docs/PILOT_API_COMPATIBILITY_RU.md), если используются API PILOT, роли, настройки аккаунта или runtime-объекты
-   - подходящий пример из `examples/`
-3. Используйте готовый шаблон запроса:
-   - [docs/ChatGPT_Prompts/Business_Idea_RU.md](docs/ChatGPT_Prompts/Business_Idea_RU.md)
-   - [docs/ChatGPT_Prompts/Business_Idea.md](docs/ChatGPT_Prompts/Business_Idea.md)
-4. Требуйте результат в виде zip-архива, а не полного исходного кода в чате.
+## После Hello World
 
-Минимальная формулировка:
+Добавляйте возможности по одной. Для каждого следующего шага используйте подходящий справочник:
 
-```text
-Используй репозиторий pilot-telematics/pilot_extensions.
-Сначала прочитай AI_SPECS.md и docs/AI_EXTENSION_GUIDE.md.
-Создай расширение PILOT по бизнес-идее ниже.
-Не создавай standalone web app. Расширение должно запускаться через Module.js внутри PILOT.
-Результат дай zip-архивом с полной структурой файлов.
-```
+| Следующий шаг | Документ |
+|---|---|
+| Добавить действие для объекта Online | [пример nearby_poi](examples/nearby_poi/Module.js) |
+| Показать данные и карту | [пример airports](examples/airports/Module.js) и [справочник MapContainer](docs/MapContainer_RU.md) |
+| Получить настройки расширения | [API настроек PILOT](docs/PILOT_RUNTIME_UTILS_RU.md#api-настроек-расширения) |
+| Выбрать поддерживаемые API PILOT | [совместимость API](docs/PILOT_API_COMPATIBILITY_RU.md) |
+| Добавить backend или хранить секреты | [руководство по размещению](DEPLOY.md) и [пример communal](docs/communal_RU.md) |
 
-## Runtime PILOT, Который Должен Знать Разработчик
+## Основные документы
 
-Расширения запускаются внутри уже загруженного PILOT UI.
+- [Пошаговое руководство для первого расширения](docs/IDEA_TO_EXTENSION_RU.md)
+- [Регистрация расширения и доступ аккаунтов](docs/REGISTER_EXTENSION_RU.md)
+- [Карта документации](docs/README_RU.md)
+- [Руководство разработчика](docs/HUMAN_EXTENSION_GUIDE_RU.md)
+- [Контракт кода для AI](AI_SPECS.md)
+- [Руководство по размещению](DEPLOY.md)
 
-Ключевые глобальные объекты:
+## Примеры
 
-- `window.skeleton` - главный контейнер интерфейса.
-- `window.skeleton.header` - верхний header.
-- `window.skeleton.navigation` - левая навигация.
-- `window.skeleton.mapframe` - основной контейнер карт/панелей в существующих примерах.
-- `window.skeleton.map_frame` - имя того же смыслового контейнера в некоторых описаниях runtime; перед использованием проверяйте фактическую сборку.
-- `window.mapContainer` - карта раздела Online.
-- `window.historyMapContainer` - карта раздела History.
-- `window.Highcharts` - графики, если доступны в текущей сборке PILOT.
-- `window.jQuery` / `window.$` - jQuery, если доступен в текущей сборке PILOT.
-- `window.uom` - единицы измерения текущего пользователя, если доступны.
+Примеры идут от простого к сложному:
 
-Связь между вкладкой навигации и основной панелью обычно хранится в свойстве компонента:
+1. [hello_world](examples/hello_world/Module.js) — вкладка и основная панель.
+2. [nearby_poi](examples/nearby_poi/Module.js) — действие для объекта Online.
+3. [airports](examples/airports/Module.js) — список и карта.
+4. [communal](examples/communal/Module.js) — большой модуль с backend и авторизацией.
+
+## Структура расширения
+
+PILOT загружает runtime-код из `Module.js`. Имя расширения должно быть в нижнем регистре и формате `snake_case`, например `hello_world`. Класс входа должен совпадать с именем:
 
 ```js
-navTab.map_frame = mainPanel;
+Ext.define('Store.hello_world.Module', {
+    extend: 'Ext.Component',
+    initModule: function () {}
+});
 ```
 
-## Структура Репозитория
+Минимальная структура файлов:
 
 ```text
-pilot_extensions/
-├── AI_SPECS.md                 # строгий контракт для AI-generated code
-├── AI_SPECS_SHORT.md           # короткая версия контракта
-├── DEPLOY.md                   # варианты хостинга и публикации
-├── README.md                   # English overview
-├── README_RU.md                # этот файл
-├── docs/
-│   ├── README.md               # documentation map in English
-│   ├── README_RU.md            # карта документации
-│   ├── IDEA_TO_EXTENSION.md
-│   ├── IDEA_TO_EXTENSION_RU.md
-│   ├── HUMAN_EXTENSION_GUIDE.md
-│   ├── HUMAN_EXTENSION_GUIDE_RU.md
-│   ├── AI_EXTENSION_GUIDE.md
-│   ├── PILOT_RUNTIME_UTILS.md
-│   ├── PILOT_RUNTIME_UTILS_RU.md
-│   ├── PILOT_API_COMPATIBILITY.md
-│   ├── PILOT_API_COMPATIBILITY_RU.md
-│   ├── MapContainer.md
-│   ├── MapContainer_RU.md
-│   ├── MarkerIconApi.md
-│   └── ChatGPT_Prompts/
-└── examples/
-    ├── hello_world/
-    ├── nearby_poi/
-    ├── airports/
-    ├── planets/
-    ├── template_app/
-    └── communal/
-```
-
-## Минимальная Структура Расширения
-
-```text
-my_extension/
+hello_world/
 ├── index.html
 ├── Module.js
-├── doc/
-│   └── index.html
-├── style.css       # опционально
-└── backend/        # опционально, если нужен PHP/backend
+└── doc/
+    └── index.html
 ```
 
-Используйте безопасное lowercase `snake_case` имя расширения PILOT, например `my_extension` или `weather_demo`. PILOT создает entry class name как `Store.<extension>.Module`, поэтому имена с дефисом вроде `weather-demo` приводят к ошибке загрузки `Store.weather-demo.Module`.
+`doc/index.html` содержит только документацию. Не запускайте в нём код расширения.
 
-`Module.js` - единственная точка входа runtime-логики.
+## О репозитории
 
-Корневой `index.html` может быть пустым или повторять `doc/index.html`; он нужен для Cloudflare upload, чтобы папка считалась assets root.
+Здесь находятся примеры, документация для разработчиков и правила, которые AI должен соблюдать при создании кода.
 
-`doc/index.html` - только документация расширения. В нем не должно быть `<script>` и логики запуска.
-
-## Полезные Документы
-
-- [AI_SPECS.md](AI_SPECS.md) - обязательные правила для AI.
-- [docs/IDEA_TO_EXTENSION.md](docs/IDEA_TO_EXTENSION.md) - English version.
-- [docs/IDEA_TO_EXTENSION_RU.md](docs/IDEA_TO_EXTENSION_RU.md) - путь от бизнес-идеи до работающего расширения.
-- [docs/AI_EXTENSION_GUIDE.md](docs/AI_EXTENSION_GUIDE.md) - как AI должен читать репозиторий и проектировать расширение.
-- [docs/HUMAN_EXTENSION_GUIDE.md](docs/HUMAN_EXTENSION_GUIDE.md) - English developer guide.
-- [docs/HUMAN_EXTENSION_GUIDE_RU.md](docs/HUMAN_EXTENSION_GUIDE_RU.md) - практическое руководство для разработчиков.
-- [docs/PILOT_RUNTIME_UTILS.md](docs/PILOT_RUNTIME_UTILS.md) - English guide to built-in PILOT runtime objects and utilities.
-- [docs/PILOT_RUNTIME_UTILS_RU.md](docs/PILOT_RUNTIME_UTILS_RU.md) - встроенные runtime-объекты и утилиты PILOT, доступные расширениям.
-- [docs/PILOT_API_COMPATIBILITY_RU.md](docs/PILOT_API_COMPATIBILITY_RU.md) - документированные API и границы поддержки.
-- [DEPLOY.md](DEPLOY.md) - Cloudflare Workers, GitHub Pages, AWS EC2/Nginx/PHP-FPM.
-- [docs/MapContainer_RU.md](docs/MapContainer_RU.md) - работа с картой.
-- [docs/MarkerIconApi.md](docs/MarkerIconApi.md) - генерация SVG-иконок маркеров.
-- [docs/communal_RU.md](docs/communal_RU.md) - разбор сложного модуля `communal`.
-
-## Лицензия
-
-Apache License. См. [LICENSE](LICENSE).
+Лицензия: [Apache License](LICENSE).

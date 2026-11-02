@@ -30,7 +30,7 @@ PILOT уже предоставляет:
 
 | Встроенный код PILOT | Расширение PILOT |
 |---|---|
-| Компилируется и поставляется в составе PILOT | Хостится отдельно; в Admin указывается base URL, а `Module.js` загружается от него |
+| Компилируется и поставляется в составе PILOT | Хостится отдельно; в панели Администратора указывается base URL, а `Module.js` загружается от него |
 | Компилируется вместе с основным приложением PILOT | Хостится отдельно; `/Module.js` проверяется напрямую, а в PILOT регистрируется base URL |
 | Может быть частью основного backend PILOT | Может иметь сторонний backend: Cloudflare Worker, VPS, PHP, отдельный API |
 | Создает runtime-объекты и utilities | Использует только то, что уже доступно в загруженном app.js |
@@ -41,7 +41,7 @@ PILOT уже предоставляет:
 
 ```text
 Имя расширения: myapp
-Admin URL: https://somehost.com/blabla/
+URL панели Администратора: https://somehost.com/blabla/
 
 /store/myapp/Module.js       -> https://somehost.com/blabla/Module.js
 /store/myapp/doc/index.html  -> https://somehost.com/blabla/doc/index.html
@@ -62,9 +62,9 @@ my_extension/
     └── index.html
 ```
 
-Используйте одно и то же безопасное lowercase `snake_case` имя в Admin и в Ext JS class name. Например, расширение с именем `my_extension` должно определять `Store.my_extension.Module`.
+Используйте одно и то же безопасное lowercase `snake_case` имя в панели Администратора и в Ext JS class name. Например, расширение с именем `my_extension` должно определять `Store.my_extension.Module`.
 
-Не называйте расширение PILOT `my-extension` или `weather-demo`. PILOT формирует имя класса по значению в Admin, поэтому имя с дефисом заставит его искать `Store.weather-demo.Module`.
+Не называйте расширение PILOT `my-extension` или `weather-demo`. PILOT формирует имя класса по значению в панели Администратора, поэтому имя с дефисом заставит его искать `Store.weather-demo.Module`.
 
 `Module.js` - единственная runtime-точка входа.
 
@@ -441,13 +441,15 @@ title: l('My Extension')
 Пример:
 
 ```js
-{
-    text: l('Mileage'),
-    dataIndex: 'mileage',
-    renderer: function (value) {
-        return typeof mileageSS === 'function' ? mileageSS(value, 1) : value;
-    }
-}
+Ext.create('Ext.grid.Panel', {
+    columns: [{
+        text: l('Mileage'),
+        dataIndex: 'mileage',
+        renderer: function (value) {
+            return typeof mileageSS === 'function' ? mileageSS(value, 1) : value;
+        }
+    }]
+});
 ```
 
 Подробно см. [PILOT_RUNTIME_UTILS_RU.md](PILOT_RUNTIME_UTILS_RU.md).
