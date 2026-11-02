@@ -10,7 +10,11 @@ Use this page to find the right guide for your task. Start with the section that
 4. Read [the PILOT runtime reference](PILOT_RUNTIME_UTILS.md) for host objects and helpers.
 5. Read [API compatibility and support boundaries](PILOT_API_COMPATIBILITY.md) before you use PILOT APIs, account data, roles, or runtime internals.
 6. Read [the map reference](MapContainer.md) if the extension uses a map, marker, route, track, or geofence.
-7. Follow [the deployment guide](../DEPLOY.md) to host and register the extension.
+7. Follow [the deployment guide](../DEPLOY.md) to host the extension.
+
+## I want to register an extension in PILOT
+
+Follow [the registration and account-access guide](REGISTER_EXTENSION.md) to register an Extension in Admin, grant account access, set global or account-specific values, and enable it in PILOT.
 
 ## I have a business idea and use an AI assistant
 
@@ -25,6 +29,7 @@ The AI coding contract defines generation rules. The human guide explains the de
 
 | Topic | Start here |
 |---|---|
+| Register an Extension, set access, and enable it in PILOT | [Registration and account access](REGISTER_EXTENSION.md) |
 | Which PILOT APIs and runtime details are safe to depend on | [API compatibility and support boundaries](PILOT_API_COMPATIBILITY.md) |
 | Extension architecture and integration patterns | [AI extension guide](AI_EXTENSION_GUIDE.md) |
 | PILOT host objects, helpers, and utilities | [PILOT runtime reference](PILOT_RUNTIME_UTILS.md) |
