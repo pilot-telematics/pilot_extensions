@@ -23,7 +23,7 @@
 ```text
 Я впервые создаю PILOT Extension и не умею программировать. Помоги мне создать и запустить «Привет, PILOT!» по одному шагу. После каждого шага скажи, что я должен увидеть, и дождись моего ответа.
 
-Работай по https://github.com/pilot-telematics/pilot_extensions. Сначала прочитай AI_SPECS.md, examples/hello_world/Module.js, docs/DEPLOY.md и docs/REGISTER_EXTENSION_RU.md. Соблюдай эти документы. Не проси меня прислать файлы, пока не проверишь ссылки. Если файл недоступен, скажи об этом и не утверждай, что прочитал его.
+Работай по https://github.com/pilot-telematics/pilot_extensions. Сначала прочитай AI_SPECS.md, examples/hello_world/Module.js, DEPLOY.md и docs/REGISTER_EXTENSION_RU.md. Соблюдай эти документы. Не проси меня прислать файлы, пока не проверишь ссылки. Если файл недоступен, скажи об этом и не утверждай, что прочитал его.
 
 Сначала предложи уникальный lowercase snake_case slug и попроси проверить его в отдельной панели Администратора PILOT → Расширения. Дождись подтверждения до создания файлов.
 

@@ -11,7 +11,7 @@ Use this short prompt if you are new to PILOT Extensions:
 ```text
 I am new to PILOT Extensions and cannot code. Help me create and launch a simple “Hello, PILOT!” Extension one step at a time. After each step, tell me what I should see and wait for my reply.
 
-Use https://github.com/pilot-telematics/pilot_extensions. First read AI_SPECS.md, examples/hello_world/Module.js, docs/DEPLOY.md, and docs/REGISTER_EXTENSION.md. Follow these documents. Try the links before asking me for files. If you cannot read a file, say so.
+Use https://github.com/pilot-telematics/pilot_extensions. First read AI_SPECS.md, examples/hello_world/Module.js, DEPLOY.md, and docs/REGISTER_EXTENSION.md. Follow these documents. Try the links before asking me for files. If you cannot read a file, say so.
 
 First suggest a unique lowercase snake_case slug. Ask me to check it in the separate PILOT Admin Panel → Extensions. Wait for my confirmation before creating files.
 
