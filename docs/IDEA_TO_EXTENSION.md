@@ -16,6 +16,10 @@ Use https://github.com/pilot-telematics/pilot_extensions. First read AI_SPECS.md
 First suggest a unique lowercase snake_case slug. Ask me to check it in the separate PILOT Admin Panel → Extensions. Wait for my confirmation before creating files.
 
 Then create a minimal Extension with one left navigation tab and a panel that says “Hello, PILOT!”. Help me publish it, register it in the Admin Panel, grant my account access, enable it in PILOT, and verify it.
+
+Give one action per message. Stop and wait for my reply after each action. If I reply “Found” or “Done” but the next step depends on the exact screen or result, ask me to report the visible label or result. Do not claim that deployment, access, or launch succeeded until I confirm the corresponding check.
+
+When I request a menu item, confirm the exact PILOT section, tree name, selected item type (object, group, or folder), and menu gesture before you change files.
 ```
 
 Use the detailed guides below when you need the upload or registration steps.
@@ -45,6 +49,7 @@ Business idea:
 
 Where it should appear:
 - new left navigation tab / Online context menu / header button / existing map action
+- If it is a context menu, state the exact section, tree, selected item type, and gesture (right-click, arrow, or another control).
 
 Data:
 - required PILOT data
@@ -57,8 +62,8 @@ UI:
 - UI language: English / Russian / both
 
 Deployment:
-- Cloudflare Workers static-file upload (`Upload your static files`) / GitHub Pages / VPS / local folder for now
-- For Cloudflare, use only Workers and `Upload your static files`. Do not suggest another Cloudflare upload flow. If the option is missing, stop and ask me for a screenshot.
+- Cloudflare Pages Direct Upload (dashboard drag and drop of a ZIP or folder) / GitHub Pages / VPS / local folder for now
+- For browser upload, use Cloudflare Pages Direct Upload. Do not treat a Git-connected Workers screen as the upload screen. If the UI differs, ask the user to report its exact labels or share a screenshot before giving the next click. Do not tell the user to upload a ZIP on a Git connection screen.
 ```
 
 ## 2. How The AI Should Choose Architecture
@@ -134,13 +139,13 @@ For a fast test, use any public static hosting.
 
 | Need | Recommended hosting |
 |---|---|
-| Only `Module.js`, CSS, docs, public browser-friendly APIs | Cloudflare Workers static assets or GitHub Pages |
+| Only `Module.js`, CSS, docs, public browser-friendly APIs | Cloudflare Pages Direct Upload or GitHub Pages |
 | External API has CORS issues | Cloudflare Worker proxy |
 | API key/secret must not be exposed in browser | Backend/proxy: Cloudflare Worker or VPS |
 | PHP endpoints, database, files, logs | VPS/Nginx/PHP-FPM |
-| Fast workshop/demo | Cloudflare Workers static assets |
+| Fast workshop/demo | Cloudflare Pages Direct Upload |
 
-Cloudflare Workers static assets:
+Cloudflare Pages Direct Upload:
 
 ```text
 extension-upload/
@@ -151,7 +156,7 @@ extension-upload/
     └── index.html
 ```
 
-For Cloudflare, root `index.html` must be next to `Module.js`. It may be empty or the same as `doc/index.html`; it helps Cloudflare mark the uploaded folder as the assets root.
+For Cloudflare Pages, root `index.html` must be next to `Module.js`. It may be empty or the same as `doc/index.html`. The dashboard accepts a ZIP or one folder for Direct Upload. The production URL uses `pages.dev`. Do not confuse this with a Workers project on `workers.dev`.
 
 After deployment these URLs should work:
 

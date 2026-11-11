@@ -25,7 +25,7 @@ The PILOT Admin Panel is a separate web interface. Do not look for Extension reg
 1. Open the Admin Panel URL and sign in.
 2. Open **Extensions** in the left menu. This opens the **Extensions** list.
 3. Select **Add**.
-4. Edit the new row and enter these fields:
+4. Edit the new row and enter these fields. **Add** creates the row. **Update** saves the completed row or changes to an existing row.
 
 | Field | Value |
 |---|---|
@@ -56,7 +56,14 @@ In the current PILOT deployment, the store proxy configuration refreshes every 1
    - Clear it to select the accounts that can use the Extension. Mark each required account as available.
 4. Select **Save access**.
 
-Access controls whether an account can see and use an Extension. An Extension appears in PILOT only when it is published and available to the current account.
+Keep these states separate:
+
+- **Is Published** in the Admin Panel controls whether the Extension is published for users.
+- **Account access** controls whether the current account can see and use the Extension.
+- **Show drafts** changes which entries appear in the PILOT Extensions list. This filter does not publish an Extension or grant access.
+- The **active switch** in the PILOT user interface enables or disables the Extension for the current user.
+
+To make an Extension available to a user, confirm publication and access for that user's account. Then enable its active switch in PILOT.
 
 To set account-specific values while keeping the Extension available to all accounts, leave **Available to all accounts** selected. Then select **Choose accounts for individual settings** and link the accounts that need their own values. This list does not change who can access the Extension.
 
@@ -88,6 +95,8 @@ Values returned to Extension JavaScript are available in the browser. Do not sto
 
 The Extensions list shows the Extensions available to the current account. The active switch controls whether the Extension is loaded for the current PILOT user.
 
+If the list has a **Show drafts** option, do not use it as a substitute for publication or account access. If the Extension appears only when this option is selected, return to the Admin Panel and check **Is Published** and access for the current account. After configuration changes, allow up to 10 minutes and reload PILOT.
+
 ![Open Extensions from the PILOT menu](images/06-pilot-extensions-menu.png)
 
 ![PILOT Extensions list with the active switch](images/05-pilot-extensions.png)
@@ -96,11 +105,21 @@ The Extensions list shows the Extensions available to the current account. The a
 
 | Problem | Check |
 |---|---|
-| Extension is missing from the PILOT list | Confirm that **Is Published** is selected and that the current account has access. |
+| Extension is missing from the PILOT list | Confirm that the record is saved, **Is Published** is selected, and the current account has access. If the list has **Show drafts**, note whether visibility changes when you select it. Do not treat this filter as a substitute for publication. After a record or URL change, allow up to 10 minutes and reload PILOT. |
 | Extension appears but does not load | Confirm that the Admin Panel name matches `Store.<name>.Module` in `Module.js`. Check the base URL and confirm that `Module.js` opens directly. |
 | Changes do not appear | Reload PILOT, then reopen **Extensions**. |
 | Account setting cannot be added | Link the account in the **Access** tab first. |
 | Extension cannot reach its backend | Use the same-origin `/store/<extension>/backend/` proxy path. See [the deployment guide](../DEPLOY.md). |
+
+## Update an existing Extension
+
+1. Keep the Extension name and current base URL. Do not create a second Admin Panel record.
+2. Update the files in the same hosting project. For Cloudflare Pages, open the existing project and select **New deployment** or **Create new deployment**. Upload the ZIP or folder.
+3. Publish a Production deployment. Do not select Preview when PILOT must load the update.
+4. Open `Module.js` at the same public URL. Find the version marker or unique change that you selected before deployment.
+5. Reload PILOT and check the Extension.
+
+If the base URL changes, update the URL in the existing Admin Panel record. Then allow up to 10 minutes for the proxy configuration to refresh.
 
 ## Related guides
 

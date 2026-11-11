@@ -13,7 +13,7 @@ For your first Extension, read [From Business Idea To Working Extension](docs/ID
 
 For static hosting, choose one of these options:
 
-- **Cloudflare Workers:** upload the files through **Upload your static files**.
+- **Cloudflare Pages Direct Upload:** upload a ZIP or folder through the dashboard without Git. The project URL uses `pages.dev`.
 - **GitHub Pages:** store the files in a public repository and publish them from GitHub.
 
 For managers using an AI assistant:
@@ -124,7 +124,7 @@ Root `index.html` can be empty or mirror `doc/index.html`; it is required for Cl
 
 ## Deployment
 
-See [DEPLOY.md](DEPLOY.md) for Cloudflare Workers, GitHub Pages, and AWS EC2/Nginx/PHP-FPM hosting options.
+See [DEPLOY.md](DEPLOY.md) for Cloudflare Pages Direct Upload, Cloudflare Workers, GitHub Pages, and AWS EC2/Nginx/PHP-FPM hosting options.
 
 ## License
 

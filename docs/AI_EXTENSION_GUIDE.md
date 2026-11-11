@@ -24,6 +24,15 @@ Use `Context Menu Extension` when the user wants an action on an existing PILOT 
 - draw something on the existing map;
 - enrich the selected object with external data.
 
+Before choosing a context menu, confirm the exact target with the user:
+
+- PILOT section and tree name, such as `Main → Online`;
+- selected item type, such as an object, group, or folder;
+- how the user opens the menu, such as right-click or an arrow;
+- the action to add and what it should do.
+
+Do not infer that two menus are the same because both contain object actions. Use the documented host object for the confirmed menu and target PILOT version. Add the new item to the existing menu. Do not replace its entries.
+
 Use `Existing Map Interaction` when the user explicitly says to use the current PILOT map:
 
 - Online map: `window.mapContainer`;

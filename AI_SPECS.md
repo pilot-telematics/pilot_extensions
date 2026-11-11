@@ -223,6 +223,9 @@ Rules:
 - Use `tree.contextmenu || tree.context_menu` because builds may differ.
 - Use `scope: tree` when the handler needs `this.record`.
 - Validate `this.record`, `lat`, and `lon` before map actions.
+- Before choosing a host menu, ask where the user wants the item: section, tree name, selected item type (object, group, or folder), and gesture (right-click, arrow, or another control).
+- Do not infer the target menu from a label such as `Main` or from a screenshot of a different tree. Match the request to the exact host object and the target PILOT version.
+- Keep the existing menu entries. Add the Extension command to the confirmed menu only.
 
 ### Pattern C: Existing Map Interaction
 
@@ -605,11 +608,16 @@ Default deployment instructions must be manager-friendly.
 
 When the user chooses Cloudflare for a static Extension and does not explicitly ask for CLI:
 
-- Use Cloudflare dashboard / browser upload instructions.
-- Use only the Cloudflare Workers static-file upload flow for static `Module.js`, CSS, docs, JSON, and assets. Use the dashboard option **Upload your static files**. Do not suggest another Cloudflare hosting flow. If the option is not visible, stop and ask the user for a screenshot.
+- Ask whether the user wants a browser upload or a Git-connected project. For browser upload, use Cloudflare Pages **Direct Upload** and its drag-and-drop flow. The project URL uses `pages.dev`; a ZIP or a single assets folder is accepted by the dashboard. See the official [Pages Direct Upload guide](https://developers.cloudflare.com/pages/get-started/direct-upload/).
+- Treat Cloudflare Pages and Workers as separate project types. Do not tell the user that a Git connection screen is the browser upload screen. If the user is on a Git-connected Workers flow, explain how to return to Pages Direct Upload or choose a Git workflow. Do not ask the user to upload a ZIP until the current screen confirms that it accepts a ZIP or folder.
+- Use a Workers static-assets project only when the user selected a Workers workflow and its upload method is known. Do not assume that a Pages `pages.dev` URL and a Workers `workers.dev` URL are interchangeable.
 - Include a root `index.html` next to `Module.js`; it may be empty or duplicate `doc/index.html`. This helps Cloudflare mark the uploaded folder as the assets root.
 - Do not tell the user to install `npm`, Node.js, Wrangler, Git, or any terminal tool.
-- Tell the user to upload the generated zip archive or its extracted folder through the Cloudflare dashboard.
+- For Cloudflare Pages Direct Upload, tell the user to upload the generated ZIP or extracted folder through the dashboard. The ZIP must contain `Module.js` and `index.html` at its top level, unless the registered base URL includes the extra folder.
+- For an existing Cloudflare Pages project, use **New deployment** / **Create new deployment** in that same project. Do not create another project for an update. Confirm that the production deployment is selected before publishing.
+- After every update, verify the deployed file with a known version marker or a unique change that exists in the generated file. Do not invent a property name and tell the user to search for it. If the marker is absent, add it to the generated source before deployment.
+- Treat `Show drafts`, publication status, account access, and per-user active state as separate controls. Do not claim an Extension is published or available only because it appears in one list. Ask which screen and account the user is checking, then verify each required state.
+- Do not infer that a UI action succeeded from an ambiguous acknowledgement. Ask the user to confirm the exact visible label or result when the next step depends on it.
 - Tell the user to verify the public `https://.../Module.js` URL in a browser, then register the external base URL in the PILOT Admin Panel, for example `https://.../`. Explain that PILOT will proxy it as `/store/<extension>/...` at runtime for CORS compatibility.
 - When guiding the user through registration in the separate PILOT Admin Panel, list every field: unique Extension name/slug, full name, description, base URL, published state, icon class, and author. The default icon is a star. Explain that changing the icon is optional. Do not skip the description or icon field.
 - For the current PILOT deployment, explain that the store proxy configuration refreshes every 10 minutes. Tell the user to allow up to 10 minutes after registration or a URL change before they troubleshoot the proxy.
