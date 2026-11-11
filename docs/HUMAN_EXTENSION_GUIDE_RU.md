@@ -486,7 +486,7 @@ css.setAttribute('href', '/store/my_extension/style.css');
 document.head.appendChild(css);
 ```
 
-Для переносимых расширений лучше вычислять base URL от текущего `Module.js`, особенно при публикации на Cloudflare/GitHub Pages.
+Для переносимых расширений лучше вычислять base URL от текущего `Module.js`, особенно при публикации на Cloudflare Workers или GitHub Pages.
 
 Внутри PILOT текущий `Module.js` обычно загружается из `/store/<extension>/Module.js`, поэтому вычисленный base URL обычно становится `/store/<extension>/`.
 

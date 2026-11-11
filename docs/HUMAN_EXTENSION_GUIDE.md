@@ -484,7 +484,7 @@ css.setAttribute('href', '/store/my_extension/style.css');
 document.head.appendChild(css);
 ```
 
-For portable hosting, compute the base URL from the current `Module.js`, especially for Cloudflare/GitHub Pages.
+For portable hosting, compute the base URL from the current `Module.js`, especially for Cloudflare Workers or GitHub Pages.
 
 Inside PILOT, the current `Module.js` is normally loaded from `/store/<extension>/Module.js`, so this computed base URL usually becomes `/store/<extension>/`.
 

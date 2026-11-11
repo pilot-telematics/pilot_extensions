@@ -42,8 +42,7 @@ https://YOUR-HOST/loadshedding/Module.js
 
 | Hosting option | Use when | Backend/API proxy | PHP support | Difficulty |
 |---|---|---:|---:|---:|
-| Cloudflare Pages Direct Upload | Static module, browser upload, no Git required | No Pages Functions unless configured separately | No | Easy |
-| Cloudflare Workers static assets | Static module plus Worker code or bindings | Yes | No | Medium |
+| Cloudflare Workers static upload | Static module, browser upload, no Git required | Yes, with Worker code | No | Easy |
 | GitHub Pages | Static module only, no secrets, no proxy | No | No | Easy |
 | AWS EC2 VPS | You need Nginx, PHP-FPM, custom backend, private proxy, logs | Yes | Yes | Medium |
 
@@ -112,18 +111,18 @@ https://YOUR-HOST/Module.js
 
 ---
 
-# Option 1: Cloudflare Pages Direct Upload
+# Option 1: Cloudflare Workers static upload
 
-Use Pages Direct Upload when:
+Use the Cloudflare Workers dashboard upload when:
 
 - you need a free/easy static host;
-- you want to upload a folder or ZIP in a browser;
+- you want to upload a folder or ZIP in a browser without Git;
 - you want to demo an extension quickly during a workshop;
 - you do not want to manage a VPS.
 
-Cloudflare Pages serves static files from a `pages.dev` URL. It is separate from a Cloudflare Workers project, which uses a `workers.dev` URL. Do not follow a Git-connected Workers screen when you intend to upload a ZIP through Pages Direct Upload. The official [Pages Direct Upload guide](https://developers.cloudflare.com/pages/get-started/direct-upload/) describes the dashboard drag-and-drop flow and supported file types.
+The current Cloudflare dashboard offers **Upload your static files** on the **Make something new** screen. This creates a Workers project. Its public URL uses `workers.dev`. The dashboard labels the link to Pages as the legacy Pages workflow. Use Pages only when a project must use that legacy platform.
 
-## 1. First Pages deployment
+## 1. First Workers static upload
 
 Use this when the extension calls only browser-friendly APIs, for example:
 
@@ -135,22 +134,22 @@ Use this when the extension calls only browser-friendly APIs, for example:
 
 1. Create or log in to Cloudflare.
 2. Open **Workers & Pages**.
-3. Start a **Pages** project with **Direct Upload** / **Drag and drop**. Do not select Git integration if you want to upload files from your computer. Cloudflare does not let you change a Direct Upload project to Git integration later.
-4. Enter a Pages project name. The resulting URL uses `https://PROJECT.pages.dev/`.
-5. Upload the generated ZIP or one folder of assets. Cloudflare Pages dashboard drag-and-drop accepts either. Do not upload the ZIP contents as an extra nested folder unless the PILOT base URL includes that folder.
-6. Confirm the uploaded root contains `index.html` and `Module.js` side by side, then deploy.
+3. On **Make something new**, select **Upload your static files**. Do not select **Connect GitHub**, **Connect with GitLab**, **Start with Hello World!**, or **Select a template** for this workflow.
+4. Enter the Workers project name and upload the generated ZIP or folder when the page prompts you. If the next screen does not show an upload control, stop and ask the user for the exact visible labels or a screenshot.
+5. Confirm that the uploaded root contains `index.html` and `Module.js` side by side, then deploy.
+6. Open the assigned Workers URL. It uses `https://PROJECT.SUBDOMAIN.workers.dev/`.
 7. Verify these URLs:
 
 ```text
-https://PROJECT.pages.dev/
-https://PROJECT.pages.dev/Module.js
-https://PROJECT.pages.dev/doc/index.html
+https://PROJECT.SUBDOMAIN.workers.dev/
+https://PROJECT.SUBDOMAIN.workers.dev/Module.js
+https://PROJECT.SUBDOMAIN.workers.dev/doc/index.html
 ```
 
 8. Register the Extension in PILOT using the base URL, not the `Module.js` URL:
 
 ```text
-https://PROJECT.pages.dev/
+https://PROJECT.SUBDOMAIN.workers.dev/
 ```
 
 The ZIP or folder must have this layout at its top level:
@@ -162,9 +161,9 @@ extension.css
 doc/index.html
 ```
 
-If the browser opens a Git connection screen, stop. You are in the Git integration flow. Return to project setup and select Pages Direct Upload / Drag and drop, or choose Git integration and publish through the connected repository. Do not ask the user to select an option that is not on the screen.
+If the browser opens a Git connection screen, stop. Return to the **Make something new** screen and select **Upload your static files**. Do not tell the user to upload a ZIP on a Git connection screen. Do not select **Continue to Pages** for this workflow because the current dashboard marks Pages as legacy.
 
-## 2. Cloudflare Workers static assets and API Worker
+## 2. Add Worker code for an API proxy
 
 Use this when:
 
@@ -173,7 +172,7 @@ Use this when:
 - you need to hide or normalize API details;
 - you need one public `/api` endpoint for the extension.
 
-Use Workers when you need Worker code, bindings, or API proxy logic. This is a separate workflow from Pages Direct Upload. There are two common layouts.
+Use Worker code when the Extension needs an API proxy or server-side logic. You can host static assets and Worker code in one project, or use separate projects.
 
 ### Layout A: two Cloudflare projects
 
@@ -573,7 +572,7 @@ Use one of these:
 - Certbot on the instance;
 - Cloudflare in front of EC2.
 
-For public workshop/demo hosting, Cloudflare Pages Direct Upload or GitHub Pages is simpler. Use Workers when you need Worker code or a proxy. Use AWS when you need PHP or a custom server backend.
+For public workshop/demo hosting, Cloudflare Workers **Upload your static files** or GitHub Pages is simpler. Use Worker code when you need a proxy. Use AWS when you need PHP or a custom server backend.
 
 ## AWS troubleshooting
 

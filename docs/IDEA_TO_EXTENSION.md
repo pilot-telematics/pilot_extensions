@@ -62,8 +62,9 @@ UI:
 - UI language: English / Russian / both
 
 Deployment:
-- Cloudflare Pages Direct Upload (dashboard drag and drop of a ZIP or folder) / GitHub Pages / VPS / local folder for now
-- For browser upload, use Cloudflare Pages Direct Upload. Do not treat a Git-connected Workers screen as the upload screen. If the UI differs, ask the user to report its exact labels or share a screenshot before giving the next click. Do not tell the user to upload a ZIP on a Git connection screen.
+- Cloudflare Workers **Upload your static files** / GitHub Pages / VPS / local folder for now
+- For browser upload, use Workers and select **Upload your static files** on the **Make something new** screen. The project URL uses `workers.dev`. Do not select a Git connection, template, Hello World, or **Continue to Pages**. The current dashboard labels Pages as a legacy workflow.
+- If the UI differs, ask the user to report its exact labels or share a screenshot before giving the next click. Do not tell the user to upload a ZIP on a Git connection screen.
 ```
 
 ## 2. How The AI Should Choose Architecture
@@ -139,13 +140,13 @@ For a fast test, use any public static hosting.
 
 | Need | Recommended hosting |
 |---|---|
-| Only `Module.js`, CSS, docs, public browser-friendly APIs | Cloudflare Pages Direct Upload or GitHub Pages |
+| Only `Module.js`, CSS, docs, public browser-friendly APIs | Cloudflare Workers static upload or GitHub Pages |
 | External API has CORS issues | Cloudflare Worker proxy |
 | API key/secret must not be exposed in browser | Backend/proxy: Cloudflare Worker or VPS |
 | PHP endpoints, database, files, logs | VPS/Nginx/PHP-FPM |
-| Fast workshop/demo | Cloudflare Pages Direct Upload |
+| Fast workshop/demo | Cloudflare Workers static upload |
 
-Cloudflare Pages Direct Upload:
+Cloudflare Workers static upload:
 
 ```text
 extension-upload/
@@ -156,7 +157,7 @@ extension-upload/
     └── index.html
 ```
 
-For Cloudflare Pages, root `index.html` must be next to `Module.js`. It may be empty or the same as `doc/index.html`. The dashboard accepts a ZIP or one folder for Direct Upload. The production URL uses `pages.dev`. Do not confuse this with a Workers project on `workers.dev`.
+For Cloudflare Workers static upload, root `index.html` must be next to `Module.js`. It may be empty or the same as `doc/index.html`. The dashboard accepts a ZIP or folder. The project URL uses `workers.dev`. Do not select **Continue to Pages** because the dashboard marks that workflow as legacy.
 
 After deployment these URLs should work:
 

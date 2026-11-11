@@ -38,7 +38,7 @@ https://github.com/pilot-telematics/pilot_extensions
 <RU / EN / RU+EN>
 
 Куда публиковать:
-<Cloudflare / GitHub Pages / VPS / пока только структура файлов>
+<Cloudflare Workers: Upload your static files / GitHub Pages / VPS / пока только структура файлов>
 
 Требования к результату:
 - Сначала кратко опиши выбранную архитектуру и какие docs/examples из репозитория ты использовал.
@@ -46,6 +46,8 @@ https://github.com/pilot-telematics/pilot_extensions
 - Не печатай полный исходный код в чате по умолчанию.
 - Не придумывай фейковую ссылку на скачивание.
 - Не заменяй zip локальным Python/Node/PowerShell/Bash скриптом, если я явно не попросил developer workaround.
+- Для загрузки через браузер используй Cloudflare Workers и пункт **Upload your static files** на экране **Make something new**. Адрес проекта должен использовать `workers.dev`. Не выбирай GitHub, GitLab, Hello World, шаблон или **Continue to Pages**. В текущей панели Pages помечено как legacy workflow.
+- При обновлении используй **New deployment** в существующем проекте Workers. Не создавай второй проект. Проверь новую версию по маркеру или уникальному изменению в файле.
 - Включи дерево файлов, шаги загрузки, прямой URL проверки /Module.js, base URL для панели Администратора PILOT, proxied URLs /store/<extension>/..., launch checklist и troubleshooting.
 - При регистрации перечисли все поля: уникальный технический slug, полное название, описание, URL-адрес, признак публикации, класс значков и автор.
 - Укажи поле «Класс значков» и объясни, что по умолчанию выбрана звезда. Её можно оставить или выбрать другой значок. Не пропускай описание или поле значка.

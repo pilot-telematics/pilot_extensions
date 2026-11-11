@@ -6,7 +6,7 @@ Use this page to find the right guide for your task. Start with the section that
 
 Start with [From Business Idea To Working Extension](IDEA_TO_EXTENSION.md). It explains how to create and host an Extension, register it in the separate Admin Panel, grant access, and enable it in PILOT.
 
-For a static Extension, use Cloudflare Pages Direct Upload to send a ZIP or folder through the browser, or use GitHub Pages. Cloudflare Pages uses a `pages.dev` URL. Use Cloudflare Workers when the Extension needs Worker code, bindings, or proxy logic. See the [deployment guide](../DEPLOY.md) for the separate workflows.
+For a static Extension, use Cloudflare Workers and select **Upload your static files** to send a ZIP or folder through the browser. The project uses a `workers.dev` URL. Use GitHub Pages when you want to publish from a repository. The current Cloudflare dashboard labels Pages as a legacy workflow. See the [deployment guide](../DEPLOY.md) for details.
 
 ## I want to build an extension
 

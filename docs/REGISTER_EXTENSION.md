@@ -114,7 +114,7 @@ If the list has a **Show drafts** option, do not use it as a substitute for publ
 ## Update an existing Extension
 
 1. Keep the Extension name and current base URL. Do not create a second Admin Panel record.
-2. Update the files in the same hosting project. For Cloudflare Pages, open the existing project and select **New deployment** or **Create new deployment**. Upload the ZIP or folder.
+2. Update the files in the same hosting project. For Cloudflare Workers, open the existing project and select **New deployment**. Upload the new version to this project.
 3. Publish a Production deployment. Do not select Preview when PILOT must load the update.
 4. Open `Module.js` at the same public URL. Find the version marker or unique change that you selected before deployment.
 5. Reload PILOT and check the Extension.
